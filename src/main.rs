@@ -4,6 +4,9 @@ use bevy::{asset::AssetServerSettings, math::vec3, prelude::*};
 use bevy_rapier3d::prelude::*;
 
 use bevy_fps_controller::controller::*;
+use sidecar_asset::SidecarAssetPlugin;
+
+mod sidecar_asset;
 
 fn main() {
     App::new()
@@ -14,6 +17,7 @@ fn main() {
         .insert_resource(ClearColor(Color::BLACK))
         .insert_resource(RapierConfiguration::default())
         .add_plugins(DefaultPlugins)
+        .add_plugin(SidecarAssetPlugin)
         .add_plugin(RapierPhysicsPlugin::<NoUserData>::default())
         // .add_plugin(RapierDebugRenderPlugin::default())
         .add_plugin(FpsControllerPlugin)
@@ -27,7 +31,7 @@ fn setup(
     mut commands: Commands,
     mut meshes: ResMut<Assets<Mesh>>,
     mut materials: ResMut<Assets<StandardMaterial>>,
-    ass: Res<AssetServer>,
+    // ass: Res<AssetServer>,
 ) {
     // Note that we have two entities for the player
     // One is a "logical" player that handles the physics computation and collision

@@ -14,6 +14,8 @@ image = { version = "0.24", default-features = false }
 bevy_kira_audio = "0.12"
 bevy_fps_controller = { git = "https://github.com/qhdwight/bevy_fps_controller", rev = "cd5554901fcdec9eac96b7991c71be653702b39e" }
 bevy_rapier3d = "0.16"
+serde_json = "1.0"
+serde = { version = "1.0", features = ["derive"] }
 
 # Enable only a small amount of optimization in debug mode
 [profile.dev]

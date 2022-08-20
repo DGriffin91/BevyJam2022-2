@@ -536,6 +536,8 @@ dependencies = [
  "image 0.24.3",
  "pollster",
  "rand",
+ "serde",
+ "serde_json",
 ]
 
 [[package]]
