@@ -27,6 +27,7 @@ fn setup(
     mut commands: Commands,
     mut meshes: ResMut<Assets<Mesh>>,
     mut materials: ResMut<Assets<StandardMaterial>>,
+    ass: Res<AssetServer>,
 ) {
     // Note that we have two entities for the player
     // One is a "logical" player that handles the physics computation and collision
@@ -88,12 +89,29 @@ fn setup(
                 max_z: 1.0,
             })),
             material: materials.add(Color::rgb(0.8, 0.7, 0.6).into()),
-            transform: Transform::identity(),
+            transform: Transform::from_xyz(4.0, 1.0, 4.0),
             ..default()
         })
         .insert(Collider::cuboid(1.0, 1.0, 1.0))
-        .insert(RigidBody::Fixed)
-        .insert(Transform::from_xyz(4.0, 1.0, 4.0));
+        .insert(RigidBody::Fixed);
+
+    // Cube
+    commands
+        .spawn_bundle(PbrBundle {
+            mesh: meshes.add(Mesh::from(shape::Box {
+                min_x: -2.0,
+                max_x: 2.0,
+                min_y: -8.0,
+                max_y: 8.0,
+                min_z: -2.0,
+                max_z: 2.0,
+            })),
+            material: materials.add(Color::rgb(0.8, 0.7, 0.6).into()),
+            transform: Transform::from_xyz(45.0, 1.0, 4.0),
+            ..default()
+        })
+        .insert(Collider::cuboid(2.0, 8.0, 2.0))
+        .insert(RigidBody::Fixed);
 
     // plane
     commands.spawn_bundle(PbrBundle {
