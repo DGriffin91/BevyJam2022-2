@@ -14,6 +14,8 @@ pub enum MyStates {
 pub struct ModelAssets {
     #[asset(path = "models/map.gltf#Scene0")]
     pub map: Handle<Scene>,
+    #[asset(path = "models/test_area.gltf#Scene0")]
+    pub test_area: Handle<Scene>,
 }
 
 pub fn get_verts_indices(mesh: &Mesh) -> (Vec<Vec3>, Vec<[u32; 3]>) {

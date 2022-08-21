@@ -12,7 +12,7 @@ use bevy_fps_controller::controller::{FpsController, LogicalPlayer};
 
 use iyes_loopless::prelude::*;
 
-use crate::{assets::MyStates, MainCamera};
+use crate::{assets::MyStates, PlayerCamera};
 
 pub struct GameEditorPlugin;
 impl Plugin for GameEditorPlugin {
@@ -40,7 +40,7 @@ impl EditorWindow for MyEditorWindow {
 
         // FOV
         let mut projection = world
-            .query_filtered::<&mut Projection, With<MainCamera>>()
+            .query_filtered::<&mut Projection, With<PlayerCamera>>()
             .single_mut(world);
         let fov = match projection.as_mut() {
             Projection::Perspective(perspective) => &mut perspective.fov,

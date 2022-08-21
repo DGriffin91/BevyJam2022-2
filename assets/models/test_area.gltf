@@ -1,0 +1,252 @@
+{
+    "asset" : {
+        "generator" : "Khronos glTF Blender I/O v3.2.43",
+        "version" : "2.0"
+    },
+    "scene" : 0,
+    "scenes" : [
+        {
+            "extras" : {
+                "MM" : {
+                    "revision" : "9cc8f25fa43725a2b85459340e2086a68b537f53"
+                },
+                "DM" : {
+                    "revision" : "b62fce83f7d54c3b35499c7ad13ed5af80fde762",
+                    "export_atlas_texture_channel_packCOL" : [
+                        {
+                            "avoid_update" : 0,
+                            "name" : "ao_curv_height",
+                            "red" : 2,
+                            "green" : 3,
+                            "blue" : 4
+                        },
+                        {
+                            "avoid_update" : 0,
+                            "name" : "masks",
+                            "red" : 1,
+                            "green" : 9,
+                            "blue" : 10
+                        }
+                    ]
+                }
+            },
+            "name" : "Scene",
+            "nodes" : [
+                0,
+                1,
+                2,
+                3
+            ]
+        }
+    ],
+    "nodes" : [
+        {
+            "extras" : {
+                "MM" : {},
+                "DM" : {}
+            },
+            "mesh" : 0,
+            "name" : "(C) Floor"
+        },
+        {
+            "extras" : {
+                "MM" : {},
+                "DM" : {}
+            },
+            "mesh" : 1,
+            "name" : "(C) Cube",
+            "rotation" : [
+                0,
+                -0.3734285235404968,
+                0,
+                0.9276589751243591
+            ],
+            "translation" : [
+                -11.191001892089844,
+                5.725229263305664,
+                -4.031813144683838
+            ]
+        },
+        {
+            "extras" : {
+                "MM" : {},
+                "DM" : {}
+            },
+            "name" : "(C-SENS) Trigger 1",
+            "rotation" : [
+                0,
+                -0.3734285235404968,
+                0,
+                0.9276589751243591
+            ],
+            "scale" : [
+                6.0811004638671875,
+                6.0811004638671875,
+                66.57154846191406
+            ],
+            "translation" : [
+                -11.681151390075684,
+                5.737168788909912,
+                -3.8564682006835938
+            ]
+        },
+        {
+            "extras" : {
+                "MM" : {},
+                "DM" : {}
+            },
+            "name" : "(C-SENS) Trigger 2",
+            "rotation" : [
+                0,
+                -0.9984540939331055,
+                0,
+                0.055582430213689804
+            ],
+            "scale" : [
+                6.081100940704346,
+                6.0811004638671875,
+                66.57154846191406
+            ],
+            "translation" : [
+                -98.49581909179688,
+                6.667982578277588,
+                16.470176696777344
+            ]
+        }
+    ],
+    "meshes" : [
+        {
+            "name" : "Cube.001",
+            "primitives" : [
+                {
+                    "attributes" : {
+                        "POSITION" : 0,
+                        "NORMAL" : 1,
+                        "TEXCOORD_0" : 2
+                    },
+                    "indices" : 3
+                }
+            ]
+        },
+        {
+            "name" : "Cube.002",
+            "primitives" : [
+                {
+                    "attributes" : {
+                        "POSITION" : 4,
+                        "NORMAL" : 5,
+                        "TEXCOORD_0" : 6
+                    },
+                    "indices" : 3
+                }
+            ]
+        }
+    ],
+    "accessors" : [
+        {
+            "bufferView" : 0,
+            "componentType" : 5126,
+            "count" : 24,
+            "max" : [
+                128.92942810058594,
+                0.0872730016708374,
+                128.92942810058594
+            ],
+            "min" : [
+                -128.92942810058594,
+                -2.3513994216918945,
+                -128.92942810058594
+            ],
+            "type" : "VEC3"
+        },
+        {
+            "bufferView" : 1,
+            "componentType" : 5126,
+            "count" : 24,
+            "type" : "VEC3"
+        },
+        {
+            "bufferView" : 2,
+            "componentType" : 5126,
+            "count" : 24,
+            "type" : "VEC2"
+        },
+        {
+            "bufferView" : 3,
+            "componentType" : 5123,
+            "count" : 36,
+            "type" : "SCALAR"
+        },
+        {
+            "bufferView" : 4,
+            "componentType" : 5126,
+            "count" : 24,
+            "max" : [
+                5.88078498840332,
+                5.88078498840332,
+                65.79509735107422
+            ],
+            "min" : [
+                -5.88078498840332,
+                -5.88078498840332,
+                -65.79509735107422
+            ],
+            "type" : "VEC3"
+        },
+        {
+            "bufferView" : 5,
+            "componentType" : 5126,
+            "count" : 24,
+            "type" : "VEC3"
+        },
+        {
+            "bufferView" : 6,
+            "componentType" : 5126,
+            "count" : 24,
+            "type" : "VEC2"
+        }
+    ],
+    "bufferViews" : [
+        {
+            "buffer" : 0,
+            "byteLength" : 288,
+            "byteOffset" : 0
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 288,
+            "byteOffset" : 288
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 192,
+            "byteOffset" : 576
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 72,
+            "byteOffset" : 768
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 288,
+            "byteOffset" : 840
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 288,
+            "byteOffset" : 1128
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 192,
+            "byteOffset" : 1416
+        }
+    ],
+    "buffers" : [
+        {
+            "byteLength" : 1608,
+            "uri" : "test_area.bin"
+        }
+    ]
+}

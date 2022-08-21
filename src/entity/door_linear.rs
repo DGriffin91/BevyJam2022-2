@@ -17,10 +17,12 @@ spawn_from_scene!(door_linear, DoorLinear);
 
 pub(super) fn interact_open_door(
     doors: Query<&mut DoorLinear>,
+    names: Query<&Name>,
     mut interact_events: EventReader<InteractEvent>,
 ) {
     for InteractEvent(entity) in interact_events.iter() {
-        println!("Interaction {entity:?}");
+        let name = names.get(*entity).unwrap();
+        println!("Interaction {entity:?} {name}");
 
         if let Ok(door) = doors.get(*entity) {
             println!("Open door! {door:?}");

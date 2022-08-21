@@ -43,6 +43,7 @@ fn main() {
         .insert_resource(RapierConfiguration::default())
         .add_plugin(SidecarAssetPlugin)
         .add_plugin(RapierPhysicsPlugin::<NoUserData>::default())
+        .add_plugin(RapierDebugRenderPlugin::default())
         // .add_plugin(RapierDebugRenderPlugin::default())
         .add_plugin(FpsControllerPlugin)
         .add_plugin(GameEditorPlugin)
@@ -100,7 +101,7 @@ fn setup(mut cmds: Commands, model_assets: Res<ModelAssets>) {
     });
     cmds.spawn_bundle(camera_3d_bundle)
         .insert(RenderPlayer(0))
-        .insert(MainCamera);
+        .insert(PlayerCamera);
 
     // sun
     cmds.spawn_bundle(DirectionalLightBundle {
@@ -132,13 +133,26 @@ fn setup(mut cmds: Commands, model_assets: Res<ModelAssets>) {
 
     cmds.spawn_bundle(HookedSceneBundle {
         scene: SceneBundle {
-            scene: model_assets.map.clone(),
+            scene: model_assets.test_area.clone(),
             ..default()
         },
         hook: SceneHook::new(|entity, world, cmds| {
+            if let Some(name) = entity.get::<Name>() {
+                if name.contains("(C-SENS)") {
+                    // Cuboid sensor, will use scale/rotation from gltf
+                    cmds.insert(Collider::cuboid(1.0, 1.0, 1.0)).insert(Sensor);
+                }
+
+                // Triggering with ball Sensor seems inconsistent. Cuboid seems much better
+                // if name.contains("(S-SENS)") {
+                //     // Sphere sensor, will use scale/rotation from gltf
+                //     cmds.insert(Collider::ball(1.0)).insert(Sensor);
+                // }
+            }
+
             if let Some(parent) = entity.get::<Parent>() {
-                if let Some(name) = world.get::<Name>(parent.get()) {
-                    if name.contains("(C)") {
+                if let Some(parent_name) = world.get::<Name>(parent.get()) {
+                    if parent_name.contains("(C)") {
                         if let Some(mesh) = entity.get::<Handle<Mesh>>() {
                             let meshes = world.get_resource::<Assets<Mesh>>().unwrap();
                             let (vertices, indices) = get_verts_indices(meshes.get(mesh).unwrap());
@@ -155,11 +169,11 @@ fn setup(mut cmds: Commands, model_assets: Res<ModelAssets>) {
 pub struct Sun;
 
 #[derive(Component)]
-pub struct MainCamera;
+pub struct PlayerCamera;
 
 fn sun_follow_camera(
-    camera: Query<&Transform, (With<MainCamera>, Without<Sun>)>,
-    mut sun: Query<&mut Transform, (With<Sun>, Without<MainCamera>)>,
+    camera: Query<&Transform, (With<PlayerCamera>, Without<Sun>)>,
+    mut sun: Query<&mut Transform, (With<Sun>, Without<PlayerCamera>)>,
 ) {
     for mut sun in &mut sun {
         for camera in &camera {
