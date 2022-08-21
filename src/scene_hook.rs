@@ -2,14 +2,18 @@
 //!
 //! Please see the [`SceneHook`] documentation for detailed examples.
 
-use bevy::scene::{SceneInstance, SceneSpawner};
+use bevy::{
+    ecs::system::{SystemMeta, SystemParamFetch, SystemParamState},
+    scene::{SceneInstance, SceneSpawner},
+};
 use bevy::{
     ecs::{
         component::Component,
         entity::Entity,
+        event::ManualEventReader,
         prelude::{Without, World},
         schedule::ShouldRun,
-        system::{Commands, EntityCommands, Query, Res},
+        system::{Commands, EntityCommands, LocalState, Query, Res, ResState},
         world::EntityRef,
     },
     scene::InstanceId,
@@ -180,5 +184,86 @@ impl Plugin for HookPlugin {
         app.add_event::<SceneLoadedEvent>();
         app.add_system(run_hooks.label(Systems::SceneHookRunner));
         app.add_system(scene_loaded_events_system.label(Systems::SceneHookRunner));
+    }
+}
+
+pub struct SceneLoaded<'w, 's> {
+    world: &'w World,
+    reader: Local<'s, ManualEventReader<SceneLoadedEvent>>,
+    events: Res<'w, Events<SceneLoadedEvent>>,
+    scene_manager: Res<'w, SceneSpawner>,
+}
+
+impl<'w, 's> SceneLoaded<'w, 's> {
+    pub fn iter(&mut self) -> impl Iterator<Item = EntityRef<'_>> {
+        self.reader
+            .iter_with_id(&self.events)
+            .filter_map(|(event, _id)| {
+                self.scene_manager
+                    .iter_instance_entities(event.0)
+                    .map(|entities| entities.filter_map(|e| self.world.get_entity(e)))
+            })
+            .flatten()
+    }
+}
+
+impl<'w, 's> SystemParam for SceneLoaded<'w, 's> {
+    type Fetch = SceneLoadedState;
+}
+
+pub struct SceneLoadedState {
+    reader: LocalState<ManualEventReader<SceneLoadedEvent>>,
+    events: ResState<Events<SceneLoadedEvent>>,
+    scene_manager: ResState<SceneSpawner>,
+}
+
+unsafe impl SystemParamState for SceneLoadedState {
+    fn init(world: &mut World, system_meta: &mut SystemMeta) -> Self {
+        let reader = LocalState::<ManualEventReader<SceneLoadedEvent>>::init(world, system_meta);
+        let events = ResState::<Events<SceneLoadedEvent>>::init(world, system_meta);
+        let scene_manager = ResState::<SceneSpawner>::init(world, system_meta);
+
+        SceneLoadedState {
+            reader,
+            events,
+            scene_manager,
+        }
+    }
+}
+
+impl<'w, 's> SystemParamFetch<'w, 's> for SceneLoadedState {
+    type Item = SceneLoaded<'w, 's>;
+
+    unsafe fn get_param(
+        state: &'s mut Self,
+        system_meta: &bevy::ecs::system::SystemMeta,
+        world: &'w World,
+        change_tick: u32,
+    ) -> Self::Item {
+        let reader = SystemParamFetch::<'w, 's>::get_param(
+            &mut state.reader,
+            system_meta,
+            world,
+            change_tick,
+        );
+        let events = SystemParamFetch::<'w, 's>::get_param(
+            &mut state.events,
+            system_meta,
+            world,
+            change_tick,
+        );
+        let scene_manager = SystemParamFetch::<'w, 's>::get_param(
+            &mut state.scene_manager,
+            system_meta,
+            world,
+            change_tick,
+        );
+
+        SceneLoaded {
+            world,
+            reader,
+            events,
+            scene_manager,
+        }
     }
 }

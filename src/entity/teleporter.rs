@@ -2,7 +2,7 @@ use bevy::{gltf::GltfExtras, prelude::*};
 use bevy_fps_controller::controller::LogicalPlayer;
 use serde::Deserialize;
 
-use crate::scene_hook::SceneLoadedEvent;
+use crate::scene_hook::{SceneLoaded, SceneLoadedEvent};
 
 /// A teleporter component with a destination and activation radius.
 #[derive(Component)]
@@ -45,19 +45,13 @@ pub(super) fn teleport_player(
 ///
 /// Destination entities have no custom properties.
 pub(super) fn spawn_teleporter_destinations_from_scene(
-    world: &World,
     mut cmds: Commands,
-    mut scene_loaded_events: EventReader<SceneLoadedEvent>,
-    scene_manager: Res<SceneSpawner>,
+    mut scene_loaded: SceneLoaded,
 ) {
-    for SceneLoadedEvent(instance) in scene_loaded_events.iter() {
-        if let Some(entities) = scene_manager.iter_instance_entities(*instance) {
-            for entity in entities.filter_map(|e| world.get_entity(e)) {
-                if let Some(name) = entity.get::<Name>() {
-                    if name.starts_with("DESTINATION") {
-                        cmds.entity(entity.id()).insert(TeleporterDestination);
-                    }
-                }
+    for entity in scene_loaded.iter() {
+        if let Some(name) = entity.get::<Name>() {
+            if name.starts_with("DESTINATION") {
+                cmds.entity(entity.id()).insert(TeleporterDestination);
             }
         }
     }
@@ -67,35 +61,28 @@ pub(super) fn spawn_teleporter_destinations_from_scene(
 ///
 /// Teleporter entities should have gltf custom properties which can be deserialized into [`TeleporterGltfExtras`].
 pub(super) fn spawn_teleporters_from_scene(
-    world: &World,
     mut cmds: Commands,
-    mut scene_loaded_events: EventReader<SceneLoadedEvent>,
+    mut scene_loaded: SceneLoaded,
     entity_names: Query<(Entity, &Name), With<TeleporterDestination>>,
-    scene_manager: Res<SceneSpawner>,
 ) {
-    for SceneLoadedEvent(instance) in scene_loaded_events.iter() {
-        if let Some(entities) = scene_manager.iter_instance_entities(*instance) {
-            for entity in entities.filter_map(|e| world.get_entity(e)) {
-                if let Some(name) = entity.get::<Name>() {
-                    if name.starts_with("TELEPORTER") {
-                        if let Some(extras) = entity.get::<GltfExtras>() {
-                            let extras: TeleporterGltfExtras =
-                                serde_json::from_str(&extras.value).unwrap();
-                            let destination = entity_names.iter().find_map(|(entity, name)| {
-                                if **name == extras.destination {
-                                    Some(entity)
-                                } else {
-                                    None
-                                }
-                            });
-                            if let Some(destination) = destination {
-                                cmds.entity(entity.id()).insert(Teleporter {
-                                    destination,
-                                    enabled: extras.enabled,
-                                    radius: extras.radius,
-                                });
-                            }
+    for entity in scene_loaded.iter() {
+        if let Some(name) = entity.get::<Name>() {
+            if name.starts_with("TELEPORTER") {
+                if let Some(extras) = entity.get::<GltfExtras>() {
+                    let extras: TeleporterGltfExtras = serde_json::from_str(&extras.value).unwrap();
+                    let destination = entity_names.iter().find_map(|(entity, name)| {
+                        if **name == extras.destination {
+                            Some(entity)
+                        } else {
+                            None
                         }
+                    });
+                    if let Some(destination) = destination {
+                        cmds.entity(entity.id()).insert(Teleporter {
+                            destination,
+                            enabled: extras.enabled,
+                            radius: extras.radius,
+                        });
                     }
                 }
             }
