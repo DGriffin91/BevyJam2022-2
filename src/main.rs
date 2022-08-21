@@ -1,3 +1,5 @@
+#![allow(clippy::type_complexity)]
+
 use std::f32::consts::{PI, TAU};
 
 use assets::{get_verts_indices, ModelAssets, MyStates};

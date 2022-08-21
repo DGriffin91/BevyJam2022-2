@@ -619,6 +619,7 @@ dependencies = [
  "futures-intrusive",
  "image 0.24.3",
  "iyes_loopless",
+ "paste",
  "pollster",
  "rand",
  "serde",
