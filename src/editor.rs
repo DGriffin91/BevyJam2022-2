@@ -1,15 +1,18 @@
-use bevy::prelude::*;
+use std::f32::consts::PI;
+
+use bevy::{prelude::*, render::camera::Projection};
 use bevy_editor_pls::{
     controls::{self, EditorControls},
     default_windows::hierarchy::HierarchyWindow,
     editor_window::{EditorWindow, EditorWindowContext},
+    egui::Slider,
     AddEditorWindow, EditorEvent, EditorPlugin, EditorState,
 };
 use bevy_fps_controller::controller::FpsController;
 
 use iyes_loopless::prelude::*;
 
-use crate::assets::MyStates;
+use crate::{assets::MyStates, MainCamera};
 
 pub struct GameEditorPlugin;
 impl Plugin for GameEditorPlugin {
@@ -30,12 +33,21 @@ impl Plugin for GameEditorPlugin {
 pub struct MyEditorWindow;
 impl EditorWindow for MyEditorWindow {
     type State = ();
-    const NAME: &'static str = "Another editor panel";
+    const NAME: &'static str = "Settings";
 
     fn ui(_world: &mut World, cx: EditorWindowContext, ui: &mut bevy_editor_pls::egui::Ui) {
         let _currently_inspected = &cx.state::<HierarchyWindow>().unwrap().selected;
 
-        ui.label("Anything can go here");
+        let mut projection = world
+            .query_filtered::<&mut Projection, With<MainCamera>>()
+            .single_mut(world);
+        let fov = match projection.as_mut() {
+            Projection::Perspective(perspective) => &mut perspective.fov,
+            Projection::Orthographic(_) => panic!("Orthographic not supported"),
+        };
+
+        ui.label("FOV");
+        ui.add(Slider::new(fov, PI / 2.0..=PI / 4.0));
     }
 }
 
