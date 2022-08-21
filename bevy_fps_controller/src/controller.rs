@@ -245,8 +245,10 @@ pub fn fps_controller_move(
                     );
                     let cast_velocity = Vec3::Y * -1.0;
                     let max_distance = 0.125;
-                    // Avoid self collisions
-                    let groups = QueryFilter::default().exclude_rigid_body(entity);
+                    // Avoid self collisions and collisions with sensors
+                    let groups = QueryFilter::default()
+                        .exclude_rigid_body(entity)
+                        .exclude_sensors();
 
                     let ground_hit = physics_context
                         .cast_shape(
