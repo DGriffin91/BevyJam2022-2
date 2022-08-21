@@ -5,14 +5,15 @@ edition = "2021"
 license = "MIT OR Apache-2.0"
 
 [dependencies]
-bevy = { version  = "0.8", features = ["jpeg", "ktx2", "zstd"] }
+bevy = { version = "0.8", features = ["jpeg", "ktx2", "zstd"] }
 bevy_egui = "0.15"
 rand = "0.8"
 pollster = "0.2"
 futures-intrusive = "0.4"
 image = { version = "0.24", default-features = false }
 bevy_kira_audio = "0.12"
-bevy_fps_controller = { git = "https://github.com/qhdwight/bevy_fps_controller", rev = "cd5554901fcdec9eac96b7991c71be653702b39e" }
+bevy_fps_controller = { path = "./bevy_fps_controller" }
+# bevy_fps_controller = { git = "https://github.com/qhdwight/bevy_fps_controller", rev = "cd5554901fcdec9eac96b7991c71be653702b39e" }
 bevy_rapier3d = "0.16"
 serde_json = "1.0"
 serde = { version = "1.0", features = ["derive"] }

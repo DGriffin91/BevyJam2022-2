@@ -495,7 +495,6 @@ dependencies = [
 [[package]]
 name = "bevy_fps_controller"
 version = "0.1.2-dev"
-source = "git+https://github.com/qhdwight/bevy_fps_controller?rev=cd5554901fcdec9eac96b7991c71be653702b39e#cd5554901fcdec9eac96b7991c71be653702b39e"
 dependencies = [
  "bevy",
  "bevy_rapier3d",
