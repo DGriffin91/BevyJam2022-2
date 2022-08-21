@@ -183,7 +183,10 @@ impl Plugin for HookPlugin {
     fn build(&self, app: &mut App) {
         app.add_event::<SceneLoadedEvent>();
         app.add_system(run_hooks.label(Systems::SceneHookRunner));
-        app.add_system(scene_loaded_events_system.label(Systems::SceneHookRunner));
+        app.add_system_to_stage(
+            CoreStage::PreUpdate,
+            scene_loaded_events_system.label(Systems::SceneHookRunner),
+        );
     }
 }
 
