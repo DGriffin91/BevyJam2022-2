@@ -8,7 +8,7 @@ use bevy_editor_pls::{
     egui::Slider,
     AddEditorWindow, EditorEvent, EditorPlugin, EditorState,
 };
-use bevy_fps_controller::controller::FpsController;
+use bevy_fps_controller::controller::{FpsController, LogicalPlayer};
 use bevy_rapier3d::prelude::*;
 
 use iyes_loopless::prelude::*;
@@ -39,6 +39,7 @@ impl EditorWindow for MyEditorWindow {
     fn ui(world: &mut World, cx: EditorWindowContext, ui: &mut bevy_editor_pls::egui::Ui) {
         let currently_inspected = &cx.state::<HierarchyWindow>().unwrap().selected;
 
+        // FOV
         let mut projection = world
             .query_filtered::<&mut Projection, With<MainCamera>>()
             .single_mut(world);
@@ -49,6 +50,16 @@ impl EditorWindow for MyEditorWindow {
 
         ui.label("FOV");
         ui.add(Slider::new(fov, PI / 2.0..=PI / 4.0));
+
+        // Sensitivity
+        let mut fps_controller = world
+            .query_filtered::<&mut FpsController, With<LogicalPlayer>>()
+            .single_mut(world);
+        let mut sensitivity = fps_controller.sensitivity * 10_000.0;
+
+        ui.label("Sensitivity");
+        ui.add(Slider::new(&mut sensitivity, 1.0..=50.0));
+        fps_controller.sensitivity = sensitivity / 10_000.0;
     }
 }
 
