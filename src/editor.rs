@@ -13,7 +13,9 @@ use bevy_fps_controller::controller::{FpsController, LogicalPlayer};
 use bevy_rapier3d::render::DebugRenderContext;
 use iyes_loopless::prelude::*;
 
-use crate::{assets::MyStates, PlayerCamera};
+use crate::{
+    assets::MyStates, interact::InteractDebugMode, overlap::OverlapDebugMode, PlayerCamera,
+};
 
 pub struct GameEditorPlugin;
 impl Plugin for GameEditorPlugin {
@@ -63,6 +65,12 @@ impl EditorWindow for MyEditorWindow {
 
         if let Some(mut debug) = world.get_resource_mut::<DebugRenderContext>() {
             ui.checkbox(&mut debug.enabled, "Draw Rapier Debug");
+        }
+        if let Some(mut debug) = world.get_resource_mut::<InteractDebugMode>() {
+            ui.checkbox(&mut debug.0, "Interact Debug Mode");
+        }
+        if let Some(mut debug) = world.get_resource_mut::<OverlapDebugMode>() {
+            ui.checkbox(&mut debug.0, "Overlap Debug Mode");
         }
     }
 }

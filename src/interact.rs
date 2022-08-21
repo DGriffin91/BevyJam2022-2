@@ -10,9 +10,12 @@ impl Plugin for InteractPlugin {
     fn build(&self, app: &mut App) {
         app.add_event::<InteractEvent>();
         app.add_system(interaction);
+        app.add_system(interact_debug);
+        app.init_resource::<InteractDebugMode>();
     }
 }
-
+#[derive(Default)]
+pub struct InteractDebugMode(pub bool);
 pub struct InteractEvent(pub Entity);
 
 pub fn interaction(
@@ -35,6 +38,39 @@ pub fn interaction(
             if let Some((e, _)) = ray {
                 interact_events.send(InteractEvent(e));
             }
+        }
+    }
+}
+
+pub fn debug_event_print(
+    msg: &str,
+    entity: Entity,
+    transforms: &Query<&Transform>,
+    names: &Query<&Name>,
+) {
+    // position is just from origin of other entity currently
+    let mut pos_text = String::new();
+    if let Ok(t) = transforms.get(entity) {
+        pos_text = format!("{:?}", t.translation)
+    }
+    println!(
+        "{} with {:?} name {} at {}",
+        msg,
+        entity,
+        names.get(entity).unwrap_or(&Name::default()),
+        pos_text
+    )
+}
+
+pub fn interact_debug(
+    debug_mode: Res<InteractDebugMode>,
+    mut interact_events: EventReader<InteractEvent>,
+    transforms: Query<&Transform>,
+    names: Query<&Name>,
+) {
+    if debug_mode.0 {
+        for event in interact_events.iter() {
+            debug_event_print("InteractEvent", event.0, &transforms, &names);
         }
     }
 }

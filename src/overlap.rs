@@ -3,6 +3,8 @@ use bevy::prelude::*;
 use bevy_fps_controller::controller::LogicalPlayer;
 use bevy_rapier3d::{prelude::*, rapier::prelude::CollisionEventFlags};
 
+use crate::interact::debug_event_print;
+
 pub struct OverlapPlugin;
 
 impl Plugin for OverlapPlugin {
@@ -10,9 +12,12 @@ impl Plugin for OverlapPlugin {
         app.add_event::<OverlapStartEvent>();
         app.add_event::<OverlapStopEvent>();
         app.add_system(overlap);
+        app.add_system(overlap_debug);
+        app.init_resource::<OverlapDebugMode>();
     }
 }
-
+#[derive(Default)]
+pub struct OverlapDebugMode(pub bool);
 pub struct OverlapStartEvent(pub Entity);
 pub struct OverlapStopEvent(pub Entity);
 
@@ -44,6 +49,23 @@ pub fn overlap(
                     }
                 }
             }
+        }
+    }
+}
+
+pub fn overlap_debug(
+    debug_mode: Res<OverlapDebugMode>,
+    mut overlap_start_events: EventReader<OverlapStartEvent>,
+    mut overlap_stop_events: EventReader<OverlapStopEvent>,
+    transforms: Query<&Transform>,
+    names: Query<&Name>,
+) {
+    if debug_mode.0 {
+        for event in overlap_start_events.iter() {
+            debug_event_print("OverlapStartEvent", event.0, &transforms, &names);
+        }
+        for event in overlap_stop_events.iter() {
+            debug_event_print("OverlapStopEvent", event.0, &transforms, &names);
         }
     }
 }
