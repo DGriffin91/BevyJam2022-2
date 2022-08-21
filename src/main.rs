@@ -45,6 +45,7 @@ fn main() {
             ConditionSet::new()
                 .run_in_state(MyStates::Next)
                 .with_system(sun_follow_camera)
+                .with_system(teleport_player)
                 .into(),
         )
         .run();
@@ -66,7 +67,7 @@ fn setup(mut cmds: Commands, model_assets: Res<ModelAssets>) {
         .insert(LockedAxes::ROTATION_LOCKED)
         .insert(AdditionalMassProperties::Mass(1.0))
         .insert(GravityScale(0.0))
-        .insert(Ccd { enabled: true }) // Prevent clipping when going fast
+        .insert(Ccd { enabled: false }) // Prevent clipping when going fast
         .insert(LogicalPlayer(0))
         .insert(FpsControllerInput {
             pitch: -TAU / 12.0,
@@ -117,6 +118,13 @@ fn setup(mut cmds: Commands, model_assets: Res<ModelAssets>) {
             ..default()
         },
         hook: SceneHook::new(|entity, world, cmds| {
+            if let Some(name) = entity.get::<Name>() {
+                if name.contains("(POS) parking garage elevator") {
+                    cmds.insert(TeleportLocations::ParkingGarageElevator);
+                } else if name.contains("(POS) lobby elevator") {
+                    cmds.insert(TeleportLocations::LobbyElevator);
+                }
+            }
             if let Some(parent) = entity.get::<Parent>() {
                 if let Some(name) = world.get::<Name>(**parent.clone()) {
                     if name.contains("(C)") {
@@ -130,6 +138,55 @@ fn setup(mut cmds: Commands, model_assets: Res<ModelAssets>) {
             }
         }),
     });
+}
+
+fn teleport_player(
+    time: Res<Time>,
+    mut player: Query<(&LogicalPlayer, &mut Transform), Without<TeleportLocations>>,
+    teleports: Query<(&TeleportLocations, &Transform), Without<LogicalPlayer>>,
+    mut cooldown: Local<f32>,
+) {
+    let since_startup = time.seconds_since_startup() as f32;
+
+    if let Some((_player, mut player_trans)) = player.iter_mut().next() {
+        for (tele, tele_trans) in &teleports {
+            let dist = tele_trans.translation.distance(player_trans.translation);
+
+            //Need to be out of range for 1 second
+            if dist < 3.0 {
+                if since_startup - *cooldown > 1.0 {
+                    match tele {
+                        TeleportLocations::ParkingGarageElevator => {
+                            for (t, p) in &teleports {
+                                if let TeleportLocations::LobbyElevator = t {
+                                    player_trans.translation = p.translation;
+                                    *cooldown = since_startup;
+                                    return;
+                                }
+                            }
+                        }
+                        TeleportLocations::LobbyElevator => {
+                            for (t, p) in &teleports {
+                                if let TeleportLocations::ParkingGarageElevator = t {
+                                    player_trans.translation = p.translation;
+                                    *cooldown = since_startup;
+                                    return;
+                                }
+                            }
+                        }
+                    }
+                }
+                //we didn't return, so restart cooldown
+                *cooldown = since_startup;
+            }
+        }
+    }
+}
+
+#[derive(Component)]
+enum TeleportLocations {
+    ParkingGarageElevator,
+    LobbyElevator,
 }
 
 #[derive(Component)]

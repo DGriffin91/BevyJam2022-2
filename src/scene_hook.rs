@@ -136,12 +136,14 @@ pub struct HookedSceneState<'w, 's, M: Component> {
     query: Query<'w, 's, (), (With<M>, With<SceneHooked>)>,
 }
 impl<'w, 's, T: Component> HookedSceneState<'w, 's, T> {
+    #[allow(dead_code)]
     pub fn is_loaded(&self) -> bool {
         self.query.iter().next().is_some()
     }
 }
 
 /// Convenience run criteria to query if a scene marked with `M` has been loaded.
+#[allow(dead_code)]
 pub fn is_scene_hooked<M: Component>(state: HookedSceneState<M>) -> ShouldRun {
     match state.is_loaded() {
         true => ShouldRun::Yes,

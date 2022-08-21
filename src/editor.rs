@@ -6,7 +6,6 @@ use bevy_editor_pls::{
     AddEditorWindow, EditorEvent, EditorPlugin, EditorState,
 };
 use bevy_fps_controller::controller::FpsController;
-use bevy_rapier3d::prelude::*;
 
 use iyes_loopless::prelude::*;
 
@@ -33,8 +32,8 @@ impl EditorWindow for MyEditorWindow {
     type State = ();
     const NAME: &'static str = "Another editor panel";
 
-    fn ui(world: &mut World, cx: EditorWindowContext, ui: &mut bevy_editor_pls::egui::Ui) {
-        let currently_inspected = &cx.state::<HierarchyWindow>().unwrap().selected;
+    fn ui(_world: &mut World, cx: EditorWindowContext, ui: &mut bevy_editor_pls::egui::Ui) {
+        let _currently_inspected = &cx.state::<HierarchyWindow>().unwrap().selected;
 
         ui.label("Anything can go here");
     }
