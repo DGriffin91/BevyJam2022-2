@@ -1,7 +1,7 @@
-use std::f32::consts::TAU;
+use std::f32::consts::{PI, TAU};
 
 use assets::{get_verts_indices, ModelAssets, MyStates};
-use bevy::{asset::AssetServerSettings, math::vec3, prelude::*};
+use bevy::{asset::AssetServerSettings, math::vec3, prelude::*, render::camera::Projection};
 
 use bevy_rapier3d::prelude::*;
 
@@ -79,7 +79,12 @@ fn setup(mut cmds: Commands, model_assets: Res<ModelAssets>) {
             transform: Transform::from_translation(vec3(-75.0, 1.0, -40.0)),
             ..default()
         });
-    cmds.spawn_bundle(Camera3dBundle { ..default() })
+    let mut camera_3d_bundle = Camera3dBundle { ..default() };
+    camera_3d_bundle.projection = Projection::Perspective(PerspectiveProjection {
+        fov: PI / 3.0,
+        ..default()
+    });
+    cmds.spawn_bundle(camera_3d_bundle)
         .insert(RenderPlayer(0))
         .insert(MainCamera);
 
@@ -118,7 +123,7 @@ fn setup(mut cmds: Commands, model_assets: Res<ModelAssets>) {
         },
         hook: SceneHook::new(|entity, world, cmds| {
             if let Some(parent) = entity.get::<Parent>() {
-                if let Some(name) = world.get::<Name>(**parent.clone()) {
+                if let Some(name) = world.get::<Name>(parent.get()) {
                     if name.contains("(C)") {
                         if let Some(mesh) = entity.get::<Handle<Mesh>>() {
                             let meshes = world.get_resource::<Assets<Mesh>>().unwrap();
