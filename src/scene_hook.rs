@@ -2,15 +2,18 @@
 //!
 //! Please see the [`SceneHook`] documentation for detailed examples.
 
-use bevy::ecs::{
-    component::Component,
-    entity::Entity,
-    prelude::{Without, World},
-    schedule::ShouldRun,
-    system::{Commands, EntityCommands, Query, Res},
-    world::EntityRef,
-};
 use bevy::scene::{SceneInstance, SceneSpawner};
+use bevy::{
+    ecs::{
+        component::Component,
+        entity::Entity,
+        prelude::{Without, World},
+        schedule::ShouldRun,
+        system::{Commands, EntityCommands, Query, Res},
+        world::EntityRef,
+    },
+    scene::InstanceId,
+};
 
 use bevy::{ecs::system::SystemParam, prelude::*};
 
@@ -18,6 +21,8 @@ use bevy::{ecs::system::SystemParam, prelude::*};
 #[derive(Component, Debug)]
 #[non_exhaustive]
 pub struct SceneHooked;
+
+pub struct SceneLoadedEvent(pub InstanceId);
 
 /// Add this as a component to any entity to run `hook`
 /// when the scene is loaded.
@@ -116,10 +121,20 @@ pub fn run_hooks(
         if let Some(entities) = scene_manager.iter_instance_entities(**instance) {
             for entity_ref in entities.filter_map(|e| world.get_entity(e)) {
                 let mut cmd = cmds.entity(entity_ref.id());
-                (hooked.hook)(&entity_ref, &world, &mut cmd);
+                (hooked.hook)(&entity_ref, world, &mut cmd);
             }
             cmds.entity(entity).insert(SceneHooked);
         }
+    }
+}
+
+pub fn scene_loaded_events_system(
+    added_scenes: Query<&SceneInstance, Added<SceneInstance>>,
+    mut scene_loaded_events: EventWriter<SceneLoadedEvent>,
+) {
+    for scene in added_scenes.iter() {
+        let instance = **scene;
+        scene_loaded_events.send(SceneLoadedEvent(instance));
     }
 }
 
@@ -162,6 +177,8 @@ pub enum Systems {
 pub struct HookPlugin;
 impl Plugin for HookPlugin {
     fn build(&self, app: &mut App) {
+        app.add_event::<SceneLoadedEvent>();
         app.add_system(run_hooks.label(Systems::SceneHookRunner));
+        app.add_system(scene_loaded_events_system.label(Systems::SceneHookRunner));
     }
 }

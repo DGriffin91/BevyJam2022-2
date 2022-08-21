@@ -9,6 +9,7 @@ use bevy_asset_loader::prelude::*;
 
 use bevy_fps_controller::controller::*;
 use editor::GameEditorPlugin;
+use entity::EntityPlugin;
 use scene_hook::{HookPlugin, HookedSceneBundle, SceneHook};
 use sidecar_asset::SidecarAssetPlugin;
 
@@ -16,6 +17,7 @@ use iyes_loopless::prelude::*;
 
 mod assets;
 mod editor;
+mod entity;
 mod scene_hook;
 mod sidecar_asset;
 
@@ -40,12 +42,12 @@ fn main() {
         // .add_plugin(RapierDebugRenderPlugin::default())
         .add_plugin(FpsControllerPlugin)
         .add_plugin(GameEditorPlugin)
+        .add_plugin(EntityPlugin)
         .add_enter_system(MyStates::Next, setup)
         .add_system_set(
             ConditionSet::new()
                 .run_in_state(MyStates::Next)
                 .with_system(sun_follow_camera)
-                .with_system(teleport_player)
                 .into(),
         )
         .run();
@@ -123,13 +125,6 @@ fn setup(mut cmds: Commands, model_assets: Res<ModelAssets>) {
             ..default()
         },
         hook: SceneHook::new(|entity, world, cmds| {
-            if let Some(name) = entity.get::<Name>() {
-                if name.contains("(POS) parking garage elevator") {
-                    cmds.insert(TeleportLocations::ParkingGarageElevator);
-                } else if name.contains("(POS) lobby elevator") {
-                    cmds.insert(TeleportLocations::LobbyElevator);
-                }
-            }
             if let Some(parent) = entity.get::<Parent>() {
                 if let Some(name) = world.get::<Name>(parent.get()) {
                     if name.contains("(C)") {
@@ -143,55 +138,6 @@ fn setup(mut cmds: Commands, model_assets: Res<ModelAssets>) {
             }
         }),
     });
-}
-
-fn teleport_player(
-    time: Res<Time>,
-    mut player: Query<(&LogicalPlayer, &mut Transform), Without<TeleportLocations>>,
-    teleports: Query<(&TeleportLocations, &Transform), Without<LogicalPlayer>>,
-    mut cooldown: Local<f32>,
-) {
-    let since_startup = time.seconds_since_startup() as f32;
-
-    if let Some((_player, mut player_trans)) = player.iter_mut().next() {
-        for (tele, tele_trans) in &teleports {
-            let dist = tele_trans.translation.distance(player_trans.translation);
-
-            //Need to be out of range for 1 second
-            if dist < 3.0 {
-                if since_startup - *cooldown > 1.0 {
-                    match tele {
-                        TeleportLocations::ParkingGarageElevator => {
-                            for (t, p) in &teleports {
-                                if let TeleportLocations::LobbyElevator = t {
-                                    player_trans.translation = p.translation;
-                                    *cooldown = since_startup;
-                                    return;
-                                }
-                            }
-                        }
-                        TeleportLocations::LobbyElevator => {
-                            for (t, p) in &teleports {
-                                if let TeleportLocations::ParkingGarageElevator = t {
-                                    player_trans.translation = p.translation;
-                                    *cooldown = since_startup;
-                                    return;
-                                }
-                            }
-                        }
-                    }
-                }
-                //we didn't return, so restart cooldown
-                *cooldown = since_startup;
-            }
-        }
-    }
-}
-
-#[derive(Component)]
-enum TeleportLocations {
-    ParkingGarageElevator,
-    LobbyElevator,
 }
 
 #[derive(Component)]
