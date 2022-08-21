@@ -76,7 +76,13 @@ fn setup(mut cmds: Commands, model_assets: Res<ModelAssets>) {
             yaw: TAU * 5.0 / 8.0,
             ..default()
         })
-        .insert(FpsController { ..default() })
+        .insert(FpsController {
+            run_speed: 12.0,
+            forward_speed: 12.0,
+            max_air_speed: 12.0,
+            walk_speed: 6.0,
+            ..default()
+        })
         .insert_bundle(SpatialBundle {
             visibility: Visibility { is_visible: false },
             transform: Transform::from_translation(vec3(-75.0, 1.0, -40.0)),

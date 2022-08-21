@@ -105,15 +105,12 @@ pub fn manage_cursor(
         set_cursor_mode = true;
     }
     for e in editor_events.iter() {
-        match &e {
-            EditorEvent::Toggle { now_active } => {
-                if *now_active {
-                    set_cursor_mode = true;
-                } else {
-                    set_fps_mode = true;
-                }
+        if let EditorEvent::Toggle { now_active } = &e {
+            if *now_active {
+                set_cursor_mode = true;
+            } else {
+                set_fps_mode = true;
             }
-            _ => (),
         }
     }
     if set_fps_mode {
