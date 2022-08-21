@@ -37,7 +37,7 @@ impl EditorWindow for MyEditorWindow {
     const NAME: &'static str = "Settings";
 
     fn ui(world: &mut World, cx: EditorWindowContext, ui: &mut bevy_editor_pls::egui::Ui) {
-        let currently_inspected = &cx.state::<HierarchyWindow>().unwrap().selected;
+        let _currently_inspected = &cx.state::<HierarchyWindow>().unwrap().selected;
 
         // FOV
         let mut projection = world
