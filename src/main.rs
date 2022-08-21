@@ -13,6 +13,7 @@ use bevy_fps_controller::controller::*;
 use editor::GameEditorPlugin;
 use entity::EntityPlugin;
 use interact::InteractPlugin;
+use overlap::OverlapPlugin;
 use scene_hook::{HookPlugin, HookedSceneBundle, SceneHook};
 use sidecar_asset::SidecarAssetPlugin;
 
@@ -22,6 +23,7 @@ mod assets;
 mod editor;
 mod entity;
 mod interact;
+mod overlap;
 mod scene_hook;
 mod sidecar_asset;
 
@@ -44,11 +46,11 @@ fn main() {
         .add_plugin(SidecarAssetPlugin)
         .add_plugin(RapierPhysicsPlugin::<NoUserData>::default())
         .add_plugin(RapierDebugRenderPlugin::default())
-        // .add_plugin(RapierDebugRenderPlugin::default())
         .add_plugin(FpsControllerPlugin)
         .add_plugin(GameEditorPlugin)
         .add_plugin(EntityPlugin)
         .add_plugin(InteractPlugin)
+        .add_plugin(OverlapPlugin)
         .add_enter_system(MyStates::Next, setup)
         .add_system_set(
             ConditionSet::new()
