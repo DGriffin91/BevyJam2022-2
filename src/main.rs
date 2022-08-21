@@ -1,6 +1,6 @@
 #![allow(clippy::type_complexity)]
 
-use std::f32::consts::{PI, TAU};
+use std::f32::consts::PI;
 
 use assets::{get_verts_indices, ModelAssets, MyStates};
 use bevy::{asset::AssetServerSettings, math::vec3, prelude::*, render::camera::Projection};
@@ -12,6 +12,7 @@ use bevy_asset_loader::prelude::*;
 use bevy_fps_controller::controller::*;
 use editor::GameEditorPlugin;
 use entity::EntityPlugin;
+use interact::InteractPlugin;
 use scene_hook::{HookPlugin, HookedSceneBundle, SceneHook};
 use sidecar_asset::SidecarAssetPlugin;
 
@@ -20,6 +21,7 @@ use iyes_loopless::prelude::*;
 mod assets;
 mod editor;
 mod entity;
+mod interact;
 mod scene_hook;
 mod sidecar_asset;
 
@@ -45,6 +47,7 @@ fn main() {
         .add_plugin(FpsControllerPlugin)
         .add_plugin(GameEditorPlugin)
         .add_plugin(EntityPlugin)
+        .add_plugin(InteractPlugin)
         .add_enter_system(MyStates::Next, setup)
         .add_system_set(
             ConditionSet::new()
@@ -74,8 +77,8 @@ fn setup(mut cmds: Commands, model_assets: Res<ModelAssets>) {
         .insert(Ccd { enabled: false }) // Prevent clipping when going fast
         .insert(LogicalPlayer(0))
         .insert(FpsControllerInput {
-            pitch: -TAU / 12.0,
-            yaw: TAU * 5.0 / 8.0,
+            pitch: 0.0,
+            yaw: -PI / 2.0,
             ..default()
         })
         .insert(FpsController {
@@ -87,7 +90,7 @@ fn setup(mut cmds: Commands, model_assets: Res<ModelAssets>) {
         })
         .insert_bundle(SpatialBundle {
             visibility: Visibility { is_visible: false },
-            transform: Transform::from_translation(vec3(-75.0, 1.0, -40.0)),
+            transform: Transform::from_translation(vec3(-78.0, 1.0, -40.0)),
             ..default()
         });
     let mut camera_3d_bundle = Camera3dBundle { ..default() };

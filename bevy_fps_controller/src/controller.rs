@@ -9,13 +9,16 @@ pub struct FpsControllerPlugin;
 impl Plugin for FpsControllerPlugin {
     fn build(&self, app: &mut App) {
         // TODO: these need to be sequential (exclusive system set)
-        app.add_system(fps_controller_input)
+        app.register_type::<FpsController>()
+            .register_type::<FpsControllerInput>()
+            .add_system(fps_controller_input)
             .add_system(fps_controller_look)
             .add_system(fps_controller_move)
             .add_system(fps_controller_render);
     }
 }
 
+#[derive(Clone, Copy, Debug, Reflect)]
 pub enum MoveMode {
     Noclip,
     Ground,
@@ -27,7 +30,8 @@ pub struct LogicalPlayer(pub u8);
 #[derive(Component)]
 pub struct RenderPlayer(pub u8);
 
-#[derive(Component, Default)]
+#[derive(Component, Default, Reflect)]
+#[reflect(Component)]
 pub struct FpsControllerInput {
     pub fly: bool,
     pub sprint: bool,
@@ -38,7 +42,8 @@ pub struct FpsControllerInput {
     pub movement: Vec3,
 }
 
-#[derive(Component)]
+#[derive(Component, Reflect)]
+#[reflect(Component)]
 pub struct FpsController {
     pub move_mode: MoveMode,
     pub gravity: f32,
@@ -63,15 +68,25 @@ pub struct FpsController {
     pub stop_speed: f32,
     pub sensitivity: f32,
     pub enable_input: bool,
+    #[reflect(ignore)]
     pub key_forward: KeyCode,
+    #[reflect(ignore)]
     pub key_back: KeyCode,
+    #[reflect(ignore)]
     pub key_left: KeyCode,
+    #[reflect(ignore)]
     pub key_right: KeyCode,
+    #[reflect(ignore)]
     pub key_up: KeyCode,
+    #[reflect(ignore)]
     pub key_down: KeyCode,
+    #[reflect(ignore)]
     pub key_sprint: KeyCode,
+    #[reflect(ignore)]
     pub key_jump: KeyCode,
+    #[reflect(ignore)]
     pub key_fly: KeyCode,
+    #[reflect(ignore)]
     pub key_crouch: KeyCode,
 }
 

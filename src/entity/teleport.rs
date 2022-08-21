@@ -7,7 +7,8 @@ use crate::spawn_from_scene;
 use super::teleport_destination::TeleportDestination;
 
 /// A teleport component with a destination and activation radius.
-#[derive(Clone, Debug, Component, Serialize, Deserialize)]
+#[derive(Clone, Debug, Component, Reflect, Serialize, Deserialize)]
+#[reflect(Component)]
 #[serde(default)]
 pub struct Teleport {
     pub destination: String,

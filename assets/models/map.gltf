@@ -370,7 +370,8 @@
         },
         {
             "extras" : {
-                "destination" : "TELEPORT_DESTINATION lobby elevator"
+                "destination" : "TELEPORT_DESTINATION lobby elevator",
+                "radius" : 1.0
             },
             "name" : "TELEPORT parking garage elevator",
             "rotation" : [
@@ -386,9 +387,6 @@
             ]
         },
         {
-            "extras" : {
-               
-            },
             "name" : "TELEPORT_DESTINATION lobby elevator",
             "rotation" : [
                 0.7071068286895752,
@@ -662,7 +660,7 @@
                 "DM" : {}
             },
             "mesh" : 31,
-            "name" : "Elevator Doors Stand-In",
+            "name" : "DOOR_LINEAR Elevator Doors Stand-In",
             "scale" : [
                 1,
                 3.9354422092437744,
@@ -816,7 +814,7 @@
                 "distance" : 2.0
             },
             "mesh" : 39,
-            "name" : "Cube.001",
+            "name" : "Elevator right door",
             "scale" : [
                 1,
                 4.29295015335083,
@@ -2569,7 +2567,7 @@
             "extras" : {
                 "angle" : 0.0
             },
-            "name" : "DOOR_LINEAR elevator right door",
+            "name" : "DOOR_LINEAR door right",
             "primitives" : [
                 {
                     "attributes" : {
