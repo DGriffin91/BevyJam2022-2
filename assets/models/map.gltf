@@ -223,7 +223,7 @@
         "destination": "DESTINATION lobby elevator",
         "radius": 3.0
       },
-      "name": "TELEPORTER parking garage elevator",
+      "name": "TELEPORT parking garage elevator",
       "rotation": [0.7071068286895752, 0, 0, 0.7071068286895752],
       "translation": [
         -71.8543930053711, 3.1009511947631836, -40.387325286865234
