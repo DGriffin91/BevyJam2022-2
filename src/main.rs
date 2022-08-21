@@ -141,6 +141,10 @@ fn setup(mut cmds: Commands, model_assets: Res<ModelAssets>) {
                 if name.contains("(C-SENS)") {
                     // Cuboid sensor, will use scale/rotation from gltf
                     cmds.insert(Collider::cuboid(1.0, 1.0, 1.0)).insert(Sensor);
+                } else if name.contains("(C-BLOCK)") {
+                    // Cuboid block Collider, will use scale/rotation from gltf
+                    // For things like invisible walls, platforms, etc...
+                    cmds.insert(Collider::cuboid(1.0, 1.0, 1.0));
                 }
 
                 // Triggering with ball Sensor seems inconsistent. Cuboid seems much better
