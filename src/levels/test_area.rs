@@ -3,7 +3,10 @@ use iyes_loopless::prelude::*;
 
 use crate::{
     assets::{GameState, ModelAssets},
-    entity::{door_linear::DoorLinear, trigger::NamedTriggerStatuses, NamedIterator},
+    entity::{
+        button::NamedButtonStatuses, door_linear::DoorLinear, trigger::NamedTriggerStatuses,
+        NamedIterator,
+    },
     Sun,
 };
 
@@ -14,7 +17,7 @@ impl Plugin for TestAreaLevelPlugin {
         app.add_system_set(
             ConditionSet::new()
                 .run_in_state(GameState::RunLevel)
-                .with_system(door_triggers)
+                .with_system(doors)
                 .into(),
         );
     }
@@ -55,16 +58,26 @@ fn setup(mut cmds: Commands, model_assets: Res<ModelAssets>) {
     });
 }
 
-fn door_triggers(mut doors: Query<(&Name, &mut DoorLinear)>, triggers: Res<NamedTriggerStatuses>) {
-    if let Some(status) = triggers.any("TRIGGER DOOR TRIG 1") {
+fn doors(
+    mut doors: Query<(&Name, &mut DoorLinear)>,
+    triggers: Res<NamedTriggerStatuses>,
+    buttons: Res<NamedButtonStatuses>,
+) {
+    if let Some(status) = triggers.any("TRIGGER Door trigger 1") {
         for (_, mut door) in doors.iter_mut().filter_name_contains("DOOR_LINEAR Door 1") {
             door.is_open = status.exit_enter;
         }
     }
 
-    if let Some(status) = triggers.any("TRIGGER DOOR TRIG 2") {
+    if let Some(status) = triggers.any("TRIGGER Door trigger 2") {
         for (_, mut door) in doors.iter_mut().filter_name_contains("DOOR_LINEAR Door 2") {
             door.is_open = status.exit_enter;
+        }
+    }
+
+    if buttons.any("BUTTON Door trigger 3").is_some() {
+        for (_, mut door) in doors.iter_mut().filter_name_contains("DOOR_LINEAR Door 3") {
+            door.is_open = !door.is_open;
         }
     }
 }

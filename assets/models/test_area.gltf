@@ -47,7 +47,10 @@
                 7,
                 8,
                 9,
-                10
+                10,
+                11,
+                12,
+                13
             ]
         }
     ],
@@ -81,7 +84,8 @@
         },
         {
             "extras" : {
-                "name": "Trigger 1"
+                "MM" : {},
+                "DM" : {}
             },
             "name" : "TRIGGER Trigger 1",
             "rotation" : [
@@ -103,7 +107,8 @@
         },
         {
             "extras" : {
-                "name": "Trigger 2"
+                "MM" : {},
+                "DM" : {}
             },
             "name" : "TRIGGER Trigger 2",
             "rotation" : [
@@ -128,7 +133,7 @@
                 "MM" : {},
                 "DM" : {}
             },
-            "name" : "(C-BLOCK) Blocks Stuff",
+            "name" : "BLOCK Blocks Stuff",
             "rotation" : [
                 0,
                 0.6282137632369995,
@@ -198,9 +203,10 @@
         },
         {
             "extras" : {
-                "name": "DOOR TRIG 1"
+                "MM" : {},
+                "DM" : {}
             },
-            "name" : "TRIGGER DOOR TRIG 1",
+            "name" : "TRIGGER Door trigger 1",
             "rotation" : [
                 0,
                 0.6043234467506409,
@@ -270,9 +276,10 @@
         },
         {
             "extras" : {
-                "name": "DOOR TRIG 2"
+                "MM" : {},
+                "DM" : {}
             },
-            "name" : "TRIGGER DOOR TRIG 2",
+            "name" : "TRIGGER Door trigger 2",
             "rotation" : [
                 0,
                 0.7957630157470703,
@@ -288,6 +295,79 @@
                 -42.070762634277344,
                 1.9755759239196777,
                 -51.15861129760742
+            ]
+        },
+        {
+            "extras" : {
+                "MM" : {},
+                "DM" : {},
+                "move_to" : [
+                    -4.0,
+                    0.0,
+                    0.0
+                ],
+                "speed" : 1.0
+            },
+            "mesh" : 6,
+            "name" : "COLLIDER DOOR_LINEAR Door 3 Right",
+            "rotation" : [
+                0,
+                -0.9456776976585388,
+                0,
+                0.32510560750961304
+            ],
+            "translation" : [
+                -51.195465087890625,
+                0.593948245048523,
+                -24.119792938232422
+            ]
+        },
+        {
+            "extras" : {
+                "MM" : {},
+                "DM" : {},
+                "move_to" : [
+                    4.0,
+                    0.0,
+                    0.0
+                ],
+                "speed" : 1.0
+            },
+            "mesh" : 7,
+            "name" : "COLLIDER DOOR_LINEAR Door 3 Left",
+            "rotation" : [
+                0,
+                -0.9456776976585388,
+                0,
+                0.32510560750961304
+            ],
+            "translation" : [
+                -54.15285873413086,
+                0.593948245048523,
+                -21.813879013061523
+            ]
+        },
+        {
+            "extras" : {
+                "MM" : {},
+                "DM" : {}
+            },
+            "name" : "BUTTON Door trigger 3",
+            "rotation" : [
+                0,
+                0.325151264667511,
+                0,
+                0.9456620216369629
+            ],
+            "scale" : [
+                4.081169605255127,
+                1.9085296392440796,
+                2.4527196884155273
+            ],
+            "translation" : [
+                -54.12456130981445,
+                1.9755759239196777,
+                -24.842979431152344
             ]
         }
     ],
@@ -365,6 +445,32 @@
                         "POSITION" : 17,
                         "NORMAL" : 18,
                         "TEXCOORD_0" : 19
+                    },
+                    "indices" : 10
+                }
+            ]
+        },
+        {
+            "name" : "Cube.007",
+            "primitives" : [
+                {
+                    "attributes" : {
+                        "POSITION" : 20,
+                        "NORMAL" : 21,
+                        "TEXCOORD_0" : 22
+                    },
+                    "indices" : 10
+                }
+            ]
+        },
+        {
+            "name" : "Cube.008",
+            "primitives" : [
+                {
+                    "attributes" : {
+                        "POSITION" : 23,
+                        "NORMAL" : 24,
+                        "TEXCOORD_0" : 25
                     },
                     "indices" : 10
                 }
@@ -551,6 +657,62 @@
             "componentType" : 5126,
             "count" : 24,
             "type" : "VEC2"
+        },
+        {
+            "bufferView" : 20,
+            "componentType" : 5126,
+            "count" : 24,
+            "max" : [
+                1.8724383115768433,
+                4.347236156463623,
+                0.128268301486969
+            ],
+            "min" : [
+                -1.8724366426467896,
+                -0.3086683452129364,
+                -0.12827816605567932
+            ],
+            "type" : "VEC3"
+        },
+        {
+            "bufferView" : 21,
+            "componentType" : 5126,
+            "count" : 24,
+            "type" : "VEC3"
+        },
+        {
+            "bufferView" : 22,
+            "componentType" : 5126,
+            "count" : 24,
+            "type" : "VEC2"
+        },
+        {
+            "bufferView" : 23,
+            "componentType" : 5126,
+            "count" : 24,
+            "max" : [
+                1.8724383115768433,
+                4.347236156463623,
+                0.128268301486969
+            ],
+            "min" : [
+                -1.8724366426467896,
+                -0.3086683452129364,
+                -0.12827816605567932
+            ],
+            "type" : "VEC3"
+        },
+        {
+            "bufferView" : 24,
+            "componentType" : 5126,
+            "count" : 24,
+            "type" : "VEC3"
+        },
+        {
+            "bufferView" : 25,
+            "componentType" : 5126,
+            "count" : 24,
+            "type" : "VEC2"
         }
     ],
     "bufferViews" : [
@@ -653,11 +815,41 @@
             "buffer" : 0,
             "byteLength" : 192,
             "byteOffset" : 4560
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 288,
+            "byteOffset" : 4752
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 288,
+            "byteOffset" : 5040
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 192,
+            "byteOffset" : 5328
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 288,
+            "byteOffset" : 5520
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 288,
+            "byteOffset" : 5808
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 192,
+            "byteOffset" : 6096
         }
     ],
     "buffers" : [
         {
-            "byteLength" : 4752,
+            "byteLength" : 6288,
             "uri" : "test_area.bin"
         }
     ]

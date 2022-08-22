@@ -1,4 +1,4 @@
-use bevy::prelude::*;
+use bevy::{prelude::*, utils::hashbrown::HashMap};
 use bevy_rapier3d::prelude::*;
 use serde::{Deserialize, Serialize};
 
@@ -23,6 +23,20 @@ impl Default for Button {
     }
 }
 
+#[derive(Default)]
+pub struct NamedButtonStatuses(HashMap<String, Entity>);
+
+impl NamedButtonStatuses {
+    pub fn any(&self, pat: &str) -> Option<Entity> {
+        for (name, status) in &self.0 {
+            if name.contains(pat) {
+                return Some(*status);
+            }
+        }
+        None
+    }
+}
+
 spawn_from_scene!(button, Button, |cmds, _entity, _button| {
     cmds.insert(Collider::cuboid(1.0, 1.0, 1.0)).insert(Sensor);
 });
@@ -33,7 +47,9 @@ pub(super) fn button_interact_events(
     keys: Res<Input<KeyCode>>,
     mut button_press_events: EventWriter<ButtonPressEvent>,
     physics_context: Res<RapierContext>,
+    mut named_button_statuses: ResMut<NamedButtonStatuses>,
 ) {
+    named_button_statuses.0 = HashMap::new();
     if keys.just_pressed(KeyCode::E) {
         for transform in player_camera.iter() {
             let max_dist = 2.0;
@@ -50,7 +66,13 @@ pub(super) fn button_interact_events(
                     if button.enabled {
                         let name = name.map(|name| name.to_string());
                         debug!(name = ?name, "Button pressed");
-                        button_press_events.send(ButtonPressEvent { name, entity });
+                        button_press_events.send(ButtonPressEvent {
+                            name: name.clone(),
+                            entity,
+                        });
+                        if let Some(name) = name {
+                            named_button_statuses.0.insert(name, entity);
+                        }
                     }
                 }
             }

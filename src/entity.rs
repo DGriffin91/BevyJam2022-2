@@ -8,7 +8,10 @@ pub mod trigger;
 
 use bevy::prelude::*;
 
-use crate::{entity::trigger::NamedTriggerStatuses, impl_named, register_entity};
+use crate::{
+    entity::{button::NamedButtonStatuses, trigger::NamedTriggerStatuses},
+    impl_named, register_entity,
+};
 
 pub struct EntityPlugin;
 
@@ -24,6 +27,7 @@ impl Plugin for EntityPlugin {
             events = [ButtonPressEvent],
             systems = [button_interact_events]
         );
+        app.init_resource::<NamedButtonStatuses>();
 
         // Collider
         register_entity!(app, collider);
