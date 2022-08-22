@@ -7,54 +7,43 @@ pub mod teleport_destination;
 pub mod trigger;
 
 use bevy::prelude::*;
-use iyes_loopless::prelude::*;
 
-use crate::{assets::MyStates, impl_named};
+use crate::{impl_named, register_entity};
 
 pub struct EntityPlugin;
 
 impl Plugin for EntityPlugin {
     fn build(&self, app: &mut App) {
-        let set = ConditionSet::new().run_in_state(MyStates::RunLevel);
-
         // Block
-        app.register_type::<self::block::Block>();
-        let set = set.with_system(self::block::spawn_block_from_scene);
+        register_entity!(app, block);
 
         // Button
-        app.register_type::<self::button::Button>();
-        app.add_event::<self::button::ButtonPressEvent>();
-        let set = set.with_system(self::button::spawn_button_from_scene);
-        let set = set.with_system(self::button::button_interact_events);
+        register_entity!(
+            app,
+            button,
+            events = [ButtonPressEvent],
+            systems = [button_interact_events]
+        );
 
         // Collider
-        app.register_type::<self::collider::Collider>();
-        let set = set.with_system(self::collider::spawn_collider_from_scene);
+        register_entity!(app, collider);
 
         // Door linear
-        app.register_type::<self::door_linear::DoorLinear>();
-        let set = set.with_system(self::door_linear::spawn_door_linear_from_scene);
-        let set = set.with_system(self::door_linear::update_door);
-        let set = set.with_system(self::door_linear::door_sounds);
-
-        // Teleport
-        app.register_type::<self::teleport::Teleport>();
-        let set = set.with_system(self::teleport::spawn_teleport_from_scene);
-        let set = set.with_system(self::teleport::teleport_player);
+        register_entity!(app, door_linear, systems = [door_sounds, update_door]);
 
         // Teleport destination
-        app.register_type::<self::teleport_destination::TeleportDestination>();
-        let set =
-            set.with_system(self::teleport_destination::spawn_teleport_destination_from_scene);
+        register_entity!(app, teleport_destination);
+
+        // Teleport
+        register_entity!(app, teleport, systems = [teleport_player]);
 
         // Trigger
-        app.register_type::<self::trigger::Trigger>();
-        app.add_event::<self::trigger::TriggerEnterEvent>();
-        app.add_event::<self::trigger::TriggerExitEvent>();
-        let set = set.with_system(self::trigger::spawn_trigger_from_scene);
-        let set = set.with_system(self::trigger::trigger_collision_events);
-
-        app.add_system_set(set.into());
+        register_entity!(
+            app,
+            trigger,
+            events = [TriggerEnterEvent, TriggerExitEvent],
+            systems = [trigger_collision_events]
+        );
     }
 }
 

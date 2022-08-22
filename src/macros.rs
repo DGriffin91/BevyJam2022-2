@@ -51,10 +51,33 @@ macro_rules! spawn_from_scene {
 #[macro_export]
 macro_rules! impl_named {
     ($( $args:ident ),*) => {
-        impl<$( $args ),*> Named for (&Name $(, $args )*) {
+        impl<$( $args ),*> Named for (&bevy::prelude::Name $(, $args )*) {
             fn name(&self) -> Option<&str> {
                 Some(self.0.as_str())
             }
+        }
+    };
+}
+
+/// Register an entity into the app with its type, events and systems.
+#[macro_export]
+macro_rules! register_entity {
+    (
+        $app:ident,
+        $id:ident
+        $(, events = [ $( $event:ident ),* ] )?
+        $(, systems = [ $( $system:ident ),* ] )?
+    ) => {
+        paste::paste! {
+            $app.register_type::< self::$id::[< $id:camel >] >();
+            $( $( $app.add_event::<self::$id::$event>(); )* )?
+            $app.add_system_set(
+                iyes_loopless::prelude::ConditionSet::new()
+                    .run_in_state($crate::assets::MyStates::RunLevel)
+                    .with_system(self::$id::[< spawn_ $id:snake _from_scene >])
+                    $( $( .with_system(self::$id::$system) )* )?
+                    .into()
+            )
         }
     };
 }
