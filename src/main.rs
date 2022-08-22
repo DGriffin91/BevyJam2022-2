@@ -3,6 +3,7 @@
 use std::f32::consts::PI;
 
 use assets::SoundAssets;
+use audio::AudioComponentPlugin;
 use bevy::{asset::AssetServerSettings, math::vec3, prelude::*, render::camera::Projection};
 use bevy_asset_loader::prelude::*;
 use bevy_fps_controller::controller::*;
@@ -18,6 +19,7 @@ use crate::scene_hook::HookPlugin;
 use crate::sidecar_asset::SidecarAssetPlugin;
 
 mod assets;
+mod audio;
 mod editor;
 mod entity;
 mod levels;
@@ -40,6 +42,7 @@ fn main() {
         })
         .add_plugins(DefaultPlugins)
         .add_plugin(AudioPlugin)
+        .add_plugin(AudioComponentPlugin)
         .add_plugin(HookPlugin)
         .insert_resource(ClearColor(Color::BLACK))
         .insert_resource(RapierConfiguration::default())

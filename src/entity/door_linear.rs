@@ -1,9 +1,9 @@
 use bevy::{prelude::*, utils::HashSet};
-use bevy_kira_audio::{Audio, AudioControl};
+use bevy_kira_audio::{AudioControl, DynamicAudioChannels};
 use interpolation::lerp;
 use serde::{Deserialize, Serialize};
 
-use crate::{assets::SoundAssets, spawn_from_scene};
+use crate::{assets::SoundAssets, audio::AudioComponent, spawn_from_scene};
 
 /// A door which moves linearly based on [`move_to`].
 #[derive(Clone, Copy, Debug, Default, Component, Reflect, Serialize, Deserialize)]
@@ -23,16 +23,18 @@ spawn_from_scene!(door_linear, DoorLinear, |_cmds, entity, door_linear| {
 });
 
 pub(super) fn door_sounds(
-    doors: Query<(Entity, &DoorLinear), Changed<DoorLinear>>,
+    mut cmds: Commands,
+    doors: Query<(Entity, &DoorLinear, Option<&AudioComponent>), Changed<DoorLinear>>,
     mut open_doors: Local<HashSet<Entity>>,
-    audio: Res<Audio>,
     sound_assets: Res<SoundAssets>,
+    mut channels: ResMut<DynamicAudioChannels>,
 ) {
-    for (entity, door) in doors.iter() {
+    for (entity, door, audio_comp) in doors.iter() {
         if door.is_open {
             if open_doors.insert(entity) {
-                // Play sound
-                audio.play(sound_assets.door_open.clone());
+                AudioComponent::get_or_insert(&mut cmds, entity, audio_comp, &mut channels)
+                    .channel(&channels)
+                    .play(sound_assets.door_open.clone());
             }
         } else {
             open_doors.remove(&entity);
