@@ -1,4 +1,7 @@
-use bevy::{ecs::world::EntityRef, prelude::*};
+use bevy::{
+    ecs::{system::EntityCommands, world::EntityRef},
+    prelude::*,
+};
 
 use interpolation::lerp;
 use serde::{Deserialize, Serialize};
@@ -16,14 +19,14 @@ pub struct DoorLinear {
     pub origin: Vec3,
 }
 
-fn hook(_cmds: &mut Commands, entity: &EntityRef, door_linear: &mut DoorLinear) {
+fn hook(_cmds: &mut EntityCommands, entity: &EntityRef, door_linear: &mut DoorLinear) {
     let trans = entity.get::<Transform>().unwrap();
     door_linear.origin = trans.translation;
 }
 
 spawn_from_scene!(door_linear, DoorLinear, hook);
 
-pub fn update_door(time: Res<Time>, mut doors: Query<(&mut Transform, &mut DoorLinear)>) {
+pub(super) fn update_door(time: Res<Time>, mut doors: Query<(&mut Transform, &mut DoorLinear)>) {
     for (mut trans, mut door) in doors.iter_mut() {
         // TODO: player can get stuck in doors.
         // Workaround is to make sure trigger to open doors overlaps doors.

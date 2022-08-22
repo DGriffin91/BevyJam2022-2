@@ -81,10 +81,9 @@
         },
         {
             "extras" : {
-                "MM" : {},
-                "DM" : {}
+                "name": "Trigger 1"
             },
-            "name" : "(C-SENS) Trigger 1",
+            "name" : "TRIGGER Trigger 1",
             "rotation" : [
                 0,
                 -0.3734285235404968,
@@ -104,10 +103,9 @@
         },
         {
             "extras" : {
-                "MM" : {},
-                "DM" : {}
+                "name": "Trigger 2"
             },
-            "name" : "(C-SENS) Trigger 2",
+            "name" : "TRIGGER Trigger 2",
             "rotation" : [
                 0,
                 -0.9984540939331055,
@@ -200,10 +198,9 @@
         },
         {
             "extras" : {
-                "MM" : {},
-                "DM" : {}
+                "name": "DOOR TRIG 1"
             },
-            "name" : "(C-SENS) DOOR TRIG 1",
+            "name" : "TRIGGER DOOR TRIG 1",
             "rotation" : [
                 0,
                 0.6043234467506409,
@@ -273,10 +270,9 @@
         },
         {
             "extras" : {
-                "MM" : {},
-                "DM" : {}
+                "name": "DOOR TRIG 2"
             },
-            "name" : "(C-SENS) DOOR TRIG 2",
+            "name" : "TRIGGER DOOR TRIG 2",
             "rotation" : [
                 0,
                 0.7957630157470703,

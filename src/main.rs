@@ -12,9 +12,7 @@ use bevy_asset_loader::prelude::*;
 use bevy_fps_controller::controller::*;
 use editor::GameEditorPlugin;
 use entity::EntityPlugin;
-use interact::InteractPlugin;
 use levels::test_area::TestAreaLevelPlugin;
-use overlap::OverlapPlugin;
 use scene_hook::HookPlugin;
 use sidecar_asset::SidecarAssetPlugin;
 
@@ -23,9 +21,7 @@ use iyes_loopless::prelude::*;
 mod assets;
 mod editor;
 mod entity;
-mod interact;
 mod levels;
-mod overlap;
 mod scene_hook;
 mod sidecar_asset;
 
@@ -52,8 +48,6 @@ fn main() {
         .add_plugin(GameEditorPlugin)
         .add_plugin(TestAreaLevelPlugin)
         .add_plugin(EntityPlugin)
-        .add_plugin(InteractPlugin)
-        .add_plugin(OverlapPlugin)
         .add_enter_system(MyStates::RunLevel, setup_player)
         .add_system_set(
             ConditionSet::new()

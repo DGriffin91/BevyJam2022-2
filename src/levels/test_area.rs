@@ -4,9 +4,10 @@ use iyes_loopless::prelude::*;
 
 use crate::{
     assets::{ModelAssets, MyStates},
-    entities_containing_name,
-    entity::{door_linear::DoorLinear, entity_name_contains},
-    overlap::OverlapEvent,
+    entity::{
+        door_linear::DoorLinear,
+        trigger::{TriggerEnterEvent, TriggerExitEvent},
+    },
     scene_hook::{HookedSceneBundle, SceneHook},
     Sun,
 };
@@ -20,7 +21,7 @@ impl Plugin for TestAreaLevelPlugin {
         app.add_system_set(
             ConditionSet::new()
                 .run_in_state(MyStates::RunLevel)
-                .with_system(overlap_door_trigger)
+                .with_system(door_triggers)
                 .into(),
         );
     }
@@ -64,25 +65,57 @@ pub fn setup(mut cmds: Commands, model_assets: Res<ModelAssets>) {
     });
 }
 
-pub fn overlap_door_trigger(
-    mut overlap_events: EventReader<OverlapEvent>,
-    mut doors: Query<&mut DoorLinear>,
-    names: Query<(Entity, &Name)>,
+pub fn door_triggers(
+    mut doors: Query<(&Name, &mut DoorLinear)>,
+    mut trigger_enter_events: EventReader<TriggerEnterEvent>,
+    mut trigger_exit_events: EventReader<TriggerExitEvent>,
 ) {
-    for event in overlap_events.iter() {
-        if entity_name_contains("DOOR TRIG 1", event.entity, &names) {
-            for door in entities_containing_name!("DOOR_LINEAR Door 1", names) {
-                if let Ok(mut door) = doors.get_mut(door) {
-                    door.is_open = event.start;
+    iter_trigger_events(
+        trigger_enter_events
+            .iter()
+            .map(|event| event.trigger_name.as_str()),
+        &mut doors,
+        true,
+    );
+    iter_trigger_events(
+        trigger_exit_events
+            .iter()
+            .map(|event| event.trigger_name.as_str()),
+        &mut doors,
+        false,
+    );
+}
+
+fn iter_trigger_events<'a>(
+    events: impl Iterator<Item = &'a str>,
+    doors: &mut Query<(&Name, &mut DoorLinear)>,
+    open: bool,
+) {
+    for name in events {
+        match name {
+            "DOOR TRIG 1" => {
+                for mut door in doors.iter_mut().filter_map(|(name, door)| {
+                    if name.contains("DOOR_LINEAR Door 1") {
+                        Some(door)
+                    } else {
+                        None
+                    }
+                }) {
+                    door.is_open = open;
                 }
             }
-        }
-        if entity_name_contains("DOOR TRIG 2", event.entity, &names) {
-            for door in entities_containing_name!("DOOR_LINEAR Door 2", names) {
-                if let Ok(mut door) = doors.get_mut(door) {
-                    door.is_open = event.start;
+            "DOOR TRIG 2" => {
+                for mut door in doors.iter_mut().filter_map(|(name, door)| {
+                    if name.contains("DOOR_LINEAR Door 2") {
+                        Some(door)
+                    } else {
+                        None
+                    }
+                }) {
+                    door.is_open = open;
                 }
             }
+            _ => {}
         }
     }
 }
