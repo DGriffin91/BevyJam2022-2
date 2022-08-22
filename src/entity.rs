@@ -1,3 +1,4 @@
+pub mod block;
 pub mod button;
 pub mod collider;
 pub mod door_linear;
@@ -11,6 +12,10 @@ pub struct EntityPlugin;
 
 impl Plugin for EntityPlugin {
     fn build(&self, app: &mut App) {
+        // Block
+        app.register_type::<self::block::Block>();
+        app.add_system(self::block::spawn_block_from_scene);
+
         // Button
         app.register_type::<self::button::Button>();
         app.add_event::<self::button::ButtonPressEvent>();
