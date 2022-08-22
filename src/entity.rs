@@ -8,6 +8,8 @@ pub mod trigger;
 
 use bevy::prelude::*;
 
+use crate::impl_named;
+
 pub struct EntityPlugin;
 
 impl Plugin for EntityPlugin {
@@ -59,23 +61,13 @@ impl Named for &Name {
     }
 }
 
-impl<A> Named for (&Name, A) {
-    fn name(&self) -> Option<&str> {
-        Some(self.0.as_str())
-    }
-}
-
-impl<A, B> Named for (&Name, A, B) {
-    fn name(&self) -> Option<&str> {
-        Some(self.0.as_str())
-    }
-}
-
-impl<A, B, C> Named for (&Name, A, B, C) {
-    fn name(&self) -> Option<&str> {
-        Some(self.0.as_str())
-    }
-}
+impl_named!(A);
+impl_named!(A, B);
+impl_named!(A, B, C);
+impl_named!(A, B, C, D);
+impl_named!(A, B, C, D, E);
+impl_named!(A, B, C, D, E, F);
+impl_named!(A, B, C, D, E, F, G);
 
 pub struct NamedFilterMap<'a, I> {
     iter: I,

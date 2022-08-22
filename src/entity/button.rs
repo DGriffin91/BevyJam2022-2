@@ -5,8 +5,8 @@ use serde::{Deserialize, Serialize};
 use crate::{spawn_from_scene, PlayerCamera};
 
 pub struct ButtonPressEvent {
-    pub button_name: String,
-    pub button_entity: Entity,
+    pub name: Option<String>,
+    pub entity: Entity,
 }
 
 /// A button which emits [`ButtonPressEvent`] when pressed.
@@ -14,16 +14,12 @@ pub struct ButtonPressEvent {
 #[reflect(Component)]
 #[serde(default)]
 pub struct Button {
-    pub name: String,
     pub enabled: bool,
 }
 
 impl Default for Button {
     fn default() -> Self {
-        Self {
-            name: Default::default(),
-            enabled: true,
-        }
+        Self { enabled: true }
     }
 }
 
@@ -33,7 +29,7 @@ spawn_from_scene!(button, Button, |cmds, _entity, _button| {
 
 pub(super) fn button_interact_events(
     player_camera: Query<&Transform, With<PlayerCamera>>,
-    buttons: Query<&Button>,
+    buttons: Query<(Option<&Name>, &Button)>,
     keys: Res<Input<KeyCode>>,
     mut button_press_events: EventWriter<ButtonPressEvent>,
     physics_context: Res<RapierContext>,
@@ -50,12 +46,11 @@ pub(super) fn button_interact_events(
                 QueryFilter::default().exclude_solids(), // Only interact with sensors
             );
             if let Some((entity, _)) = ray {
-                if let Ok(button) = buttons.get(entity) {
+                if let Ok((name, button)) = buttons.get(entity) {
                     if button.enabled {
-                        button_press_events.send(ButtonPressEvent {
-                            button_name: button.name.clone(),
-                            button_entity: entity,
-                        });
+                        let name = name.map(|name| name.to_string());
+                        debug!(name = ?name, "Button pressed");
+                        button_press_events.send(ButtonPressEvent { name, entity });
                     }
                 }
             }

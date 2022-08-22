@@ -8,24 +8,24 @@ use crate::spawn_from_scene;
 use super::Named;
 
 pub struct TriggerEnterEvent {
-    pub trigger_name: Option<String>,
-    pub trigger_entity: Entity,
+    pub name: Option<String>,
+    pub entity: Entity,
 }
 
 impl Named for TriggerEnterEvent {
     fn name(&self) -> Option<&str> {
-        self.trigger_name.as_deref()
+        self.name.as_deref()
     }
 }
 
 pub struct TriggerExitEvent {
-    pub trigger_name: Option<String>,
-    pub trigger_entity: Entity,
+    pub name: Option<String>,
+    pub entity: Entity,
 }
 
 impl Named for TriggerExitEvent {
     fn name(&self) -> Option<&str> {
-        self.trigger_name.as_deref()
+        self.name.as_deref()
     }
 }
 
@@ -75,11 +75,9 @@ pub(super) fn trigger_collision_events(
 
                         if let Some((name, trigger, entity)) = trigger {
                             if trigger.enabled {
+                                let name = name.map(|name| name.to_string());
                                 debug!(name = ?name, "Enter trigger");
-                                trigger_entered_events.send(TriggerEnterEvent {
-                                    trigger_name: name.map(|name| name.to_string()),
-                                    trigger_entity: entity,
-                                });
+                                trigger_entered_events.send(TriggerEnterEvent { name, entity });
                             }
                         }
                     }
@@ -102,11 +100,9 @@ pub(super) fn trigger_collision_events(
 
                         if let Some((name, trigger, entity)) = trigger {
                             if trigger.enabled {
+                                let name = name.map(|name| name.to_string());
                                 debug!(name = ?name, "Exit trigger");
-                                trigger_exit_events.send(TriggerExitEvent {
-                                    trigger_name: name.map(|name| name.to_string()),
-                                    trigger_entity: entity,
-                                });
+                                trigger_exit_events.send(TriggerExitEvent { name, entity });
                             }
                         }
                     }

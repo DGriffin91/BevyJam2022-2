@@ -66,22 +66,19 @@ fn door_triggers(
 ) {
     let trigger_events = trigger_enter_events
         .iter()
-        .map(|event| (&event.trigger_name, true))
-        .chain(
-            trigger_exit_events
-                .iter()
-                .map(|event| (&event.trigger_name, false)),
-        );
+        .map(|event| (&event.name, true))
+        .chain(trigger_exit_events.iter().map(|event| (&event.name, false)));
 
     for (trigger_name, is_open) in trigger_events {
+        println!("{trigger_name:?}");
         match trigger_name.as_deref() {
-            Some("DOOR TRIG 1") => {
+            Some("TRIGGER DOOR TRIG 1") => {
                 for (_, mut door) in doors.iter_mut().filter_name_contains("DOOR_LINEAR Door 1") {
                     door.is_open = is_open;
                 }
             }
-            Some("DOOR TRIG 2") => {
-                for (_, mut door) in doors.iter_mut().filter_name_contains("DOOR_LINEAR Door 1") {
+            Some("TRIGGER DOOR TRIG 2") => {
+                for (_, mut door) in doors.iter_mut().filter_name_contains("DOOR_LINEAR Door 2") {
                     door.is_open = is_open;
                 }
             }

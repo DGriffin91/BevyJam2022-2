@@ -47,54 +47,13 @@ macro_rules! spawn_from_scene {
     };
 }
 
-/// Implements [`NamedItems`] for queries.
+/// Helper macro to assign a component based on new entities name.
 #[macro_export]
-macro_rules! impl_named_items {
-    ($t:ident $(, $types:ident )*) => {
-        impl<'w, 's, 'a, $t $(, $types )* , Filter> $crate::entity::NamedItems<'a, <<<$t as bevy::ecs::query::WorldQuery>::ReadOnly as bevy::ecs::query::WorldQueryGats<'a>>::Fetch as bevy::ecs::query::Fetch<'a>>::Item> for Query<'w, 's, (&Name, $t $(, $types )*), Filter>
-        where
-            $t: bevy::ecs::query::WorldQuery,
-            $( $types: bevy::ecs::query::WorldQuery, )*
-            Filter: bevy::ecs::query::WorldQuery,
-        {
-            fn find_named(
-                &mut self,
-                name: &str,
-            ) -> Option<<<<$t as bevy::ecs::query::WorldQuery>::ReadOnly as bevy::ecs::query::WorldQueryGats<'_>>::Fetch as bevy::ecs::query::Fetch<'_>>::Item>
-            {
-                self.iter().find_map(|(entity_name, value, ..)| {
-                    if entity_name.contains(name) {
-                        Some(value)
-                    } else {
-                        None
-                    }
-                })
-            }
-        }
-    };
-}
-
-/// Implements [`NamedItemsMut`] for queries.
-#[macro_export]
-macro_rules! impl_named_items_mut {
-    ($t:ident $(, $types:ident )*) => {
-        impl<'w, 's, 'a, $t $(, $types )* , Filter> $crate::entity::NamedItemsMut<'a, <<$t as bevy::ecs::query::WorldQueryGats<'a>>::Fetch as bevy::ecs::query::Fetch<'a>>::Item> for Query<'w, 's, (&Name, $t $(, $types )*), Filter>
-        where
-            $t: bevy::ecs::query::WorldQuery,
-            $( $types: bevy::ecs::query::WorldQuery, )*
-            Filter: bevy::ecs::query::WorldQuery,
-        {
-            fn find_named_mut(
-                &mut self,
-                name: &str,
-            ) -> Option<<<$t as bevy::ecs::query::WorldQueryGats<'_>>::Fetch as bevy::ecs::query::Fetch<'_>>::Item> {
-                self.iter_mut().find_map(|(entity_name, value, ..)| {
-                    if entity_name.contains(name) {
-                        Some(value)
-                    } else {
-                        None
-                    }
-                })
+macro_rules! impl_named {
+    ($( $args:ident ),*) => {
+        impl<$( $args ),*> Named for (&Name $(, $args )*) {
+            fn name(&self) -> Option<&str> {
+                Some(self.0.as_str())
             }
         }
     };
