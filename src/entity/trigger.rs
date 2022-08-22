@@ -5,14 +5,28 @@ use serde::{Deserialize, Serialize};
 
 use crate::spawn_from_scene;
 
+use super::NamedItems;
+
 pub struct TriggerEnterEvent {
     pub trigger_name: String,
     pub trigger_entity: Entity,
 }
 
+impl<'w, 's, 'a> NamedItems<'a, &'a TriggerEnterEvent> for EventReader<'w, 's, TriggerEnterEvent> {
+    fn find_named(&mut self, name: &str) -> Option<&TriggerEnterEvent> {
+        self.iter().find(|event| event.trigger_name == name)
+    }
+}
+
 pub struct TriggerExitEvent {
     pub trigger_name: String,
     pub trigger_entity: Entity,
+}
+
+impl<'w, 's, 'a> NamedItems<'a, &'a TriggerExitEvent> for EventReader<'w, 's, TriggerExitEvent> {
+    fn find_named(&mut self, name: &str) -> Option<&TriggerExitEvent> {
+        self.iter().find(|event| event.trigger_name == name)
+    }
 }
 
 /// A trigger which emits [`TriggerEnterEvent`] and [`TriggerExitEvent`] events when the player enters the region.

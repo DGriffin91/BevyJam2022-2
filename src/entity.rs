@@ -98,26 +98,20 @@ macro_rules! spawn_from_scene {
     };
 }
 
-pub trait NamedItems<T>
-where
-    T: bevy::ecs::query::WorldQuery,
-{
-    fn find_named(
-        &self,
-        name: &str,
-    ) -> Option<<<<T as bevy::ecs::query::WorldQuery>::ReadOnly as bevy::ecs::query::WorldQueryGats<'_>>::Fetch as bevy::ecs::query::Fetch<'_>>::Item>;
+pub trait NamedItems<'a, T> {
+    fn find_named(&'a mut self, name: &str) -> Option<T>;
 }
 
 macro_rules! impl_named_items {
     ($t:ident $(, $types:ident )*) => {
-        impl<'w, 's, $t $(, $types )* , Filter> NamedItems<$t> for Query<'w, 's, (&Name, $t $(, $types )*), Filter>
+        impl<'w, 's, 'a, $t $(, $types )* , Filter> NamedItems<'a, <<<$t as bevy::ecs::query::WorldQuery>::ReadOnly as bevy::ecs::query::WorldQueryGats<'a>>::Fetch as bevy::ecs::query::Fetch<'a>>::Item> for Query<'w, 's, (&Name, $t $(, $types )*), Filter>
         where
             $t: bevy::ecs::query::WorldQuery,
             $( $types: bevy::ecs::query::WorldQuery, )*
             Filter: bevy::ecs::query::WorldQuery,
         {
             fn find_named(
-                &self,
+                &mut self,
                 name: &str,
             ) -> Option<<<<$t as bevy::ecs::query::WorldQuery>::ReadOnly as bevy::ecs::query::WorldQueryGats<'_>>::Fetch as bevy::ecs::query::Fetch<'_>>::Item>
             {
@@ -142,21 +136,13 @@ impl_named_items!(A, B, C, D, E, F);
 impl_named_items!(A, B, C, D, E, F, G);
 impl_named_items!(A, B, C, D, E, F, G, H);
 
-pub trait NamedItemsMut<T>
-where
-    T: bevy::ecs::query::WorldQuery,
-{
-    fn find_named_mut(
-        &mut self,
-        name: &str,
-    ) -> Option<
-        <<T as bevy::ecs::query::WorldQueryGats<'_>>::Fetch as bevy::ecs::query::Fetch<'_>>::Item,
-    >;
+pub trait NamedItemsMut<'a, T> {
+    fn find_named_mut(&'a mut self, name: &str) -> Option<T>;
 }
 
 macro_rules! impl_named_items_mut {
     ($t:ident $(, $types:ident )*) => {
-        impl<'w, 's, $t $(, $types )* , Filter> NamedItemsMut<$t> for Query<'w, 's, (&Name, $t $(, $types )*), Filter>
+        impl<'w, 's, 'a, $t $(, $types )* , Filter> NamedItemsMut<'a, <<$t as bevy::ecs::query::WorldQueryGats<'a>>::Fetch as bevy::ecs::query::Fetch<'a>>::Item> for Query<'w, 's, (&Name, $t $(, $types )*), Filter>
         where
             $t: bevy::ecs::query::WorldQuery,
             $( $types: bevy::ecs::query::WorldQuery, )*
