@@ -2,27 +2,24 @@
 
 use std::f32::consts::PI;
 
-use assets::{ModelAssets, MyStates};
 use bevy::{asset::AssetServerSettings, math::vec3, prelude::*, render::camera::Projection};
-
-use bevy_rapier3d::prelude::*;
-
 use bevy_asset_loader::prelude::*;
-
 use bevy_fps_controller::controller::*;
-use editor::GameEditorPlugin;
-use entity::EntityPlugin;
-use levels::test_area::TestAreaLevelPlugin;
-use scene_hook::HookPlugin;
-use sidecar_asset::SidecarAssetPlugin;
-
+use bevy_rapier3d::prelude::*;
 use iyes_loopless::prelude::*;
+
+use crate::assets::{ModelAssets, MyStates};
+use crate::editor::GameEditorPlugin;
+use crate::entity::EntityPlugin;
+use crate::levels::test_area::TestAreaLevelPlugin;
+use crate::scene_hook::HookPlugin;
+use crate::sidecar_asset::SidecarAssetPlugin;
 
 mod assets;
 mod editor;
 mod entity;
 mod levels;
-pub mod macros;
+mod macros;
 mod scene_hook;
 mod sidecar_asset;
 

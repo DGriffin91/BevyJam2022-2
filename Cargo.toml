@@ -6,23 +6,21 @@ license = "MIT OR Apache-2.0"
 
 [dependencies]
 bevy = { version = "0.8", features = ["jpeg", "ktx2", "zstd"] }
+bevy_asset_loader = { version = "0.12", features = ["stageless"] }
+bevy_editor_pls = { git = "https://github.com/jakobhellermann/bevy_editor_pls", rev = "9aa28e3f1b6b804eefeb4b976143ca075b4e8697" }
 bevy_egui = "0.15"
-rand = "0.8"
-pollster = "0.2"
+bevy_fps_controller = { path = "./bevy_fps_controller" }
+bevy_kira_audio = "0.12"
+bevy_rapier3d = "0.16"
 futures-intrusive = "0.4"
 image = { version = "0.24", default-features = false }
-bevy_kira_audio = "0.12"
-bevy_fps_controller = { path = "./bevy_fps_controller" }
-# bevy_fps_controller = { git = "https://github.com/qhdwight/bevy_fps_controller", rev = "cd5554901fcdec9eac96b7991c71be653702b39e" }
-bevy_rapier3d = "0.16"
-serde_json = "1.0"
-serde = { version = "1.0", features = ["derive"] }
-iyes_loopless = "0.7"
-bevy_asset_loader = { version = "0.12", features = ["stageless"] }
-# bevy-scene-hook = "4.0"
-bevy_editor_pls = { git = "https://github.com/jakobhellermann/bevy_editor_pls", rev = "9aa28e3f1b6b804eefeb4b976143ca075b4e8697" }
-paste = "1.0"
 interpolation = "0.2"
+iyes_loopless = "0.7"
+paste = "1.0"
+pollster = "0.2"
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+rand = "0.8"
 
 # Enable only a small amount of optimization in debug mode
 [profile.dev]

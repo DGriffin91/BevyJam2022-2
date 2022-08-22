@@ -1,5 +1,4 @@
 use bevy::prelude::*;
-
 use interpolation::lerp;
 use serde::{Deserialize, Serialize};
 

@@ -9,7 +9,6 @@ use bevy_editor_pls::{
     AddEditorWindow, EditorEvent, EditorPlugin, EditorState,
 };
 use bevy_fps_controller::controller::{FpsController, LogicalPlayer};
-
 use bevy_rapier3d::render::DebugRenderContext;
 use iyes_loopless::prelude::*;
 
