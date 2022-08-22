@@ -3,6 +3,7 @@ use bevy::{
     render::mesh::{Indices, VertexAttributeValues},
 };
 use bevy_asset_loader::prelude::*;
+use bevy_kira_audio::AudioSource;
 
 #[derive(Clone, Eq, PartialEq, Debug, Hash)]
 pub enum MyStates {
@@ -16,6 +17,12 @@ pub struct ModelAssets {
     pub map: Handle<Scene>,
     #[asset(path = "models/test_area.gltf#Scene0")]
     pub test_area: Handle<Scene>,
+}
+
+#[derive(AssetCollection)]
+pub struct SoundAssets {
+    #[asset(path = "sounds/door_open.mp3")]
+    pub door_open: Handle<AudioSource>,
 }
 
 pub fn get_verts_indices(mesh: &Mesh) -> (Vec<Vec3>, Vec<[u32; 3]>) {

@@ -2,9 +2,11 @@
 
 use std::f32::consts::PI;
 
+use assets::SoundAssets;
 use bevy::{asset::AssetServerSettings, math::vec3, prelude::*, render::camera::Projection};
 use bevy_asset_loader::prelude::*;
 use bevy_fps_controller::controller::*;
+use bevy_kira_audio::prelude::*;
 use bevy_rapier3d::prelude::*;
 use iyes_loopless::prelude::*;
 
@@ -29,13 +31,15 @@ fn main() {
         .add_loading_state(
             LoadingState::new(MyStates::AssetLoading)
                 .continue_to_state(MyStates::RunLevel)
-                .with_collection::<ModelAssets>(),
+                .with_collection::<ModelAssets>()
+                .with_collection::<SoundAssets>(),
         )
         .insert_resource(AssetServerSettings {
             watch_for_changes: true,
             ..default()
         })
         .add_plugins(DefaultPlugins)
+        .add_plugin(AudioPlugin)
         .add_plugin(HookPlugin)
         .insert_resource(ClearColor(Color::BLACK))
         .insert_resource(RapierConfiguration::default())

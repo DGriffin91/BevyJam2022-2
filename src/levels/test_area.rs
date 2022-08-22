@@ -70,7 +70,6 @@ fn door_triggers(
         .chain(trigger_exit_events.iter().map(|event| (&event.name, false)));
 
     for (trigger_name, is_open) in trigger_events {
-        println!("{trigger_name:?}");
         match trigger_name.as_deref() {
             Some("TRIGGER DOOR TRIG 1") => {
                 for (_, mut door) in doors.iter_mut().filter_name_contains("DOOR_LINEAR Door 1") {

@@ -5,12 +5,12 @@ edition = "2021"
 license = "MIT OR Apache-2.0"
 
 [dependencies]
-bevy = { version = "0.8", features = ["jpeg", "ktx2", "zstd"] }
+bevy = { version = "0.8", features = ["jpeg", "ktx2", "mp3", "zstd"] }
 bevy_asset_loader = { version = "0.12", features = ["stageless"] }
 bevy_editor_pls = { git = "https://github.com/jakobhellermann/bevy_editor_pls", rev = "9aa28e3f1b6b804eefeb4b976143ca075b4e8697" }
 bevy_egui = "0.15"
 bevy_fps_controller = { path = "./bevy_fps_controller" }
-bevy_kira_audio = "0.12"
+bevy_kira_audio = { version = "0.12", features = ["mp3"] }
 bevy_rapier3d = "0.16"
 futures-intrusive = "0.4"
 image = { version = "0.24", default-features = false }

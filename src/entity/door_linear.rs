@@ -1,8 +1,9 @@
-use bevy::prelude::*;
+use bevy::{prelude::*, utils::HashSet};
+use bevy_kira_audio::{Audio, AudioControl};
 use interpolation::lerp;
 use serde::{Deserialize, Serialize};
 
-use crate::spawn_from_scene;
+use crate::{assets::SoundAssets, spawn_from_scene};
 
 /// A door which moves linearly based on [`move_to`].
 #[derive(Clone, Copy, Debug, Default, Component, Reflect, Serialize, Deserialize)]
@@ -20,6 +21,24 @@ spawn_from_scene!(door_linear, DoorLinear, |_cmds, entity, door_linear| {
     let trans = entity.get::<Transform>().unwrap();
     door_linear.origin = trans.translation;
 });
+
+pub(super) fn door_sounds(
+    doors: Query<(Entity, &DoorLinear), Changed<DoorLinear>>,
+    mut open_doors: Local<HashSet<Entity>>,
+    audio: Res<Audio>,
+    sound_assets: Res<SoundAssets>,
+) {
+    for (entity, door) in doors.iter() {
+        if door.is_open {
+            if open_doors.insert(entity) {
+                // Play sound
+                audio.play(sound_assets.door_open.clone());
+            }
+        } else {
+            open_doors.remove(&entity);
+        }
+    }
+}
 
 pub(super) fn update_door(time: Res<Time>, mut doors: Query<(&mut Transform, &mut DoorLinear)>) {
     for (mut trans, mut door) in doors.iter_mut() {
