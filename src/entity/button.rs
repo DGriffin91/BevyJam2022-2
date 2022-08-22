@@ -2,16 +2,12 @@ use bevy::prelude::*;
 use bevy_rapier3d::prelude::*;
 use serde::{Deserialize, Serialize};
 
-use crate::{spawn_from_scene, PlayerCamera, impl_named_items_events};
+use crate::{spawn_from_scene, PlayerCamera};
 
 pub struct ButtonPressEvent {
     pub button_name: String,
     pub button_entity: Entity,
 }
-
-impl_named_items_events!(ButtonPressEvent, |name, event| {
-    event.button_name == name
-});
 
 /// A button which emits [`ButtonPressEvent`] when pressed.
 #[derive(Clone, Debug, Component, Reflect, Serialize, Deserialize)]

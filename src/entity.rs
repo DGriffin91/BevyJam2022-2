@@ -8,8 +8,6 @@ pub mod trigger;
 
 use bevy::prelude::*;
 
-use crate::{impl_named_items, impl_named_items_mut};
-
 pub struct EntityPlugin;
 
 impl Plugin for EntityPlugin {
@@ -51,28 +49,77 @@ impl Plugin for EntityPlugin {
     }
 }
 
-pub trait NamedItems<'a, T> {
-    fn find_named(&'a mut self, name: &str) -> Option<T>;
+pub trait Named {
+    fn name(&self) -> Option<&str>;
 }
 
-impl_named_items!(A);
-impl_named_items!(A, B);
-impl_named_items!(A, B, C);
-impl_named_items!(A, B, C, D);
-impl_named_items!(A, B, C, D, E);
-impl_named_items!(A, B, C, D, E, F);
-impl_named_items!(A, B, C, D, E, F, G);
-impl_named_items!(A, B, C, D, E, F, G, H);
-
-pub trait NamedItemsMut<'a, T> {
-    fn find_named_mut(&'a mut self, name: &str) -> Option<T>;
+impl Named for &Name {
+    fn name(&self) -> Option<&str> {
+        Some(self.as_str())
+    }
 }
 
-impl_named_items_mut!(A);
-impl_named_items_mut!(A, B);
-impl_named_items_mut!(A, B, C);
-impl_named_items_mut!(A, B, C, D);
-impl_named_items_mut!(A, B, C, D, E);
-impl_named_items_mut!(A, B, C, D, E, F);
-impl_named_items_mut!(A, B, C, D, E, F, G);
-impl_named_items_mut!(A, B, C, D, E, F, G, H);
+impl<A> Named for (&Name, A) {
+    fn name(&self) -> Option<&str> {
+        Some(self.0.as_str())
+    }
+}
+
+impl<A, B> Named for (&Name, A, B) {
+    fn name(&self) -> Option<&str> {
+        Some(self.0.as_str())
+    }
+}
+
+impl<A, B, C> Named for (&Name, A, B, C) {
+    fn name(&self) -> Option<&str> {
+        Some(self.0.as_str())
+    }
+}
+
+pub struct NamedFilterMap<'a, I> {
+    iter: I,
+    name: &'a str,
+}
+
+impl<'a, I: Iterator> Iterator for NamedFilterMap<'a, I>
+where
+    I::Item: Named,
+{
+    type Item = I::Item;
+
+    #[inline]
+    fn next(&mut self) -> Option<I::Item> {
+        self.iter.find_map(|item| {
+            if let Some(item_name) = item.name() {
+                if item_name.contains(self.name) {
+                    Some(item)
+                } else {
+                    None
+                }
+            } else {
+                None
+            }
+        })
+    }
+
+    #[inline]
+    fn size_hint(&self) -> (usize, Option<usize>) {
+        let (_, upper) = self.iter.size_hint();
+        (0, upper) // can't know a lower bound, due to the predicate
+    }
+}
+
+pub trait NamedIterator<I> {
+    fn filter_name_contains(self, name: &str) -> NamedFilterMap<I>;
+}
+
+impl<T, I> NamedIterator<T> for T
+where
+    T: Iterator<Item = I>,
+    I: Named,
+{
+    fn filter_name_contains(self, name: &str) -> NamedFilterMap<T> {
+        NamedFilterMap { iter: self, name }
+    }
+}

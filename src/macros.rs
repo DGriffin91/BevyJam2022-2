@@ -47,18 +47,6 @@ macro_rules! spawn_from_scene {
     };
 }
 
-/// Implements [`NamedItems`] for events.
-#[macro_export]
-macro_rules! impl_named_items_events {
-    ($event:ident, |$name:ident, $event_param:ident| { $( $body:tt )* }) => {
-        impl<'w, 's, 'a> $crate::entity::NamedItems<'a, &'a $event> for EventReader<'w, 's, $event> {
-            fn find_named(&mut self, $name: &str) -> Option<&$event> {
-                self.iter().find(|$event_param| { $( $body )* })
-            }
-        }
-    };
-}
-
 /// Implements [`NamedItems`] for queries.
 #[macro_export]
 macro_rules! impl_named_items {

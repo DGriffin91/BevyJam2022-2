@@ -6,7 +6,7 @@ use crate::{
     entity::{
         door_linear::DoorLinear,
         trigger::{TriggerEnterEvent, TriggerExitEvent},
-        NamedItems, NamedItemsMut,
+        NamedIterator,
     },
     Sun,
 };
@@ -64,15 +64,28 @@ fn door_triggers(
     mut trigger_enter_events: EventReader<TriggerEnterEvent>,
     mut trigger_exit_events: EventReader<TriggerExitEvent>,
 ) {
-    if trigger_enter_events.find_named("DOOR TRIG 1").is_some() {
-        doors.find_named_mut("DOOR_LINEAR Door 1").unwrap().is_open = true;
-    } else if trigger_exit_events.find_named("DOOR TRIG 1").is_some() {
-        doors.find_named_mut("DOOR_LINEAR Door 1").unwrap().is_open = false;
-    }
+    let trigger_events = trigger_enter_events
+        .iter()
+        .map(|event| (&event.trigger_name, true))
+        .chain(
+            trigger_exit_events
+                .iter()
+                .map(|event| (&event.trigger_name, false)),
+        );
 
-    if trigger_enter_events.find_named("DOOR TRIG 2").is_some() {
-        doors.find_named_mut("DOOR_LINEAR Door 2").unwrap().is_open = true;
-    } else if trigger_exit_events.find_named("DOOR TRIG 2").is_some() {
-        doors.find_named_mut("DOOR_LINEAR Door 2").unwrap().is_open = false;
+    for (trigger_name, is_open) in trigger_events {
+        match trigger_name.as_deref() {
+            Some("DOOR TRIG 1") => {
+                for (_, mut door) in doors.iter_mut().filter_name_contains("DOOR_LINEAR Door 1") {
+                    door.is_open = is_open;
+                }
+            }
+            Some("DOOR TRIG 2") => {
+                for (_, mut door) in doors.iter_mut().filter_name_contains("DOOR_LINEAR Door 1") {
+                    door.is_open = is_open;
+                }
+            }
+            _ => {}
+        }
     }
 }
