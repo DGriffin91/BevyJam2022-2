@@ -3,19 +3,11 @@ use bevy_fps_controller::controller::LogicalPlayer;
 use bevy_rapier3d::{prelude::*, rapier::prelude::CollisionEventFlags};
 use serde::{Deserialize, Serialize};
 
-use crate::spawn_from_scene;
-
-use super::NamedItems;
+use crate::{impl_named_items_events, spawn_from_scene};
 
 pub struct TriggerEnterEvent {
     pub trigger_name: String,
     pub trigger_entity: Entity,
-}
-
-impl<'w, 's, 'a> NamedItems<'a, &'a TriggerEnterEvent> for EventReader<'w, 's, TriggerEnterEvent> {
-    fn find_named(&mut self, name: &str) -> Option<&TriggerEnterEvent> {
-        self.iter().find(|event| event.trigger_name == name)
-    }
 }
 
 pub struct TriggerExitEvent {
@@ -23,11 +15,13 @@ pub struct TriggerExitEvent {
     pub trigger_entity: Entity,
 }
 
-impl<'w, 's, 'a> NamedItems<'a, &'a TriggerExitEvent> for EventReader<'w, 's, TriggerExitEvent> {
-    fn find_named(&mut self, name: &str) -> Option<&TriggerExitEvent> {
-        self.iter().find(|event| event.trigger_name == name)
-    }
-}
+impl_named_items_events!(TriggerEnterEvent, |name, event| {
+    event.trigger_name == name
+});
+
+impl_named_items_events!(TriggerExitEvent, |name, event| {
+    event.trigger_name == name
+});
 
 /// A trigger which emits [`TriggerEnterEvent`] and [`TriggerExitEvent`] events when the player enters the region.
 #[derive(Clone, Debug, Component, Reflect, Serialize, Deserialize)]

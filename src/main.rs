@@ -22,6 +22,7 @@ mod assets;
 mod editor;
 mod entity;
 mod levels;
+pub mod macros;
 mod scene_hook;
 mod sidecar_asset;
 
