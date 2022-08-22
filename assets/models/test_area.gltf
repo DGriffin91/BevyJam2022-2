@@ -28,6 +28,11 @@
                             "blue" : 10
                         }
                     ]
+                },
+                "bc" : {
+                    "snap" : {
+                        "hit" : 0
+                    }
                 }
             },
             "name" : "Scene",
@@ -36,7 +41,13 @@
                 1,
                 2,
                 3,
-                4
+                4,
+                5,
+                6,
+                7,
+                8,
+                9,
+                10
             ]
         }
     ],
@@ -136,6 +147,152 @@
                 4.089340686798096,
                 -82.10377502441406
             ]
+        },
+        {
+            "extras" : {
+                "MM" : {},
+                "DM" : {},
+                "move_to" : [
+                    -4.0,
+                    0.0,
+                    0.0
+                ],
+                "speed" : 1.0
+            },
+            "mesh" : 2,
+            "name" : "(C) DOOR_LINEAR Door 1 Left",
+            "rotation" : [
+                0,
+                -0.7967684268951416,
+                0,
+                0.6042847633361816
+            ],
+            "translation" : [
+                -39.98151397705078,
+                0.593948245048523,
+                -36.893959045410156
+            ]
+        },
+        {
+            "extras" : {
+                "MM" : {},
+                "DM" : {},
+                "move_to" : [
+                    4.0,
+                    0.0,
+                    0.0
+                ],
+                "speed" : 1.0
+            },
+            "mesh" : 3,
+            "name" : "(C) DOOR_LINEAR Door 1 Right",
+            "rotation" : [
+                0,
+                -0.7967684268951416,
+                0,
+                0.6042847633361816
+            ],
+            "translation" : [
+                -40.99284744262695,
+                0.593948245048523,
+                -33.28277587890625
+            ]
+        },
+        {
+            "extras" : {
+                "MM" : {},
+                "DM" : {}
+            },
+            "name" : "(C-SENS) DOOR TRIG 1",
+            "rotation" : [
+                0,
+                0.6043234467506409,
+                0,
+                0.7967391014099121
+            ],
+            "scale" : [
+                4.081169605255127,
+                1.9085296392440796,
+                2.4527199268341064
+            ],
+            "translation" : [
+                -42.76805877685547,
+                1.9755759239196777,
+                -35.73733901977539
+            ]
+        },
+        {
+            "extras" : {
+                "MM" : {},
+                "DM" : {},
+                "move_to" : [
+                    -4.0,
+                    0.0,
+                    0.0
+                ],
+                "speed" : 1.0
+            },
+            "mesh" : 4,
+            "name" : "(C) DOOR_LINEAR Door 2 a",
+            "rotation" : [
+                0,
+                -0.605646550655365,
+                0,
+                0.7957337498664856
+            ],
+            "translation" : [
+                -40.485172271728516,
+                0.593948245048523,
+                -53.17274475097656
+            ]
+        },
+        {
+            "extras" : {
+                "MM" : {},
+                "DM" : {},
+                "move_to" : [
+                    -7.0,
+                    0.0,
+                    0.0
+                ],
+                "speed" : 1.0
+            },
+            "mesh" : 5,
+            "name" : "(C) DOOR_LINEAR Door 2 b",
+            "rotation" : [
+                0,
+                -0.605646550655365,
+                0,
+                0.7957337498664856
+            ],
+            "translation" : [
+                -39.91995620727539,
+                0.593948245048523,
+                -50.2205924987793
+            ]
+        },
+        {
+            "extras" : {
+                "MM" : {},
+                "DM" : {}
+            },
+            "name" : "(C-SENS) DOOR TRIG 2",
+            "rotation" : [
+                0,
+                0.7957630157470703,
+                0,
+                0.6056081056594849
+            ],
+            "scale" : [
+                4.081169605255127,
+                1.9085296392440796,
+                2.20648455619812
+            ],
+            "translation" : [
+                -42.070762634277344,
+                1.9755759239196777,
+                -51.15861129760742
+            ]
         }
     ],
     "meshes" : [
@@ -162,6 +319,58 @@
                         "TEXCOORD_0" : 6
                     },
                     "indices" : 3
+                }
+            ]
+        },
+        {
+            "name" : "Cube.004",
+            "primitives" : [
+                {
+                    "attributes" : {
+                        "POSITION" : 7,
+                        "NORMAL" : 8,
+                        "TEXCOORD_0" : 9
+                    },
+                    "indices" : 10
+                }
+            ]
+        },
+        {
+            "name" : "Cube.005",
+            "primitives" : [
+                {
+                    "attributes" : {
+                        "POSITION" : 11,
+                        "NORMAL" : 12,
+                        "TEXCOORD_0" : 13
+                    },
+                    "indices" : 10
+                }
+            ]
+        },
+        {
+            "name" : "Cube.003",
+            "primitives" : [
+                {
+                    "attributes" : {
+                        "POSITION" : 14,
+                        "NORMAL" : 15,
+                        "TEXCOORD_0" : 16
+                    },
+                    "indices" : 10
+                }
+            ]
+        },
+        {
+            "name" : "Cube.006",
+            "primitives" : [
+                {
+                    "attributes" : {
+                        "POSITION" : 17,
+                        "NORMAL" : 18,
+                        "TEXCOORD_0" : 19
+                    },
+                    "indices" : 10
                 }
             ]
         }
@@ -228,6 +437,124 @@
             "componentType" : 5126,
             "count" : 24,
             "type" : "VEC2"
+        },
+        {
+            "bufferView" : 7,
+            "componentType" : 5126,
+            "count" : 24,
+            "max" : [
+                1.8724383115768433,
+                4.347236156463623,
+                0.128268301486969
+            ],
+            "min" : [
+                -1.8724366426467896,
+                -0.3086683452129364,
+                -0.12827816605567932
+            ],
+            "type" : "VEC3"
+        },
+        {
+            "bufferView" : 8,
+            "componentType" : 5126,
+            "count" : 24,
+            "type" : "VEC3"
+        },
+        {
+            "bufferView" : 9,
+            "componentType" : 5126,
+            "count" : 24,
+            "type" : "VEC2"
+        },
+        {
+            "bufferView" : 10,
+            "componentType" : 5123,
+            "count" : 36,
+            "type" : "SCALAR"
+        },
+        {
+            "bufferView" : 11,
+            "componentType" : 5126,
+            "count" : 24,
+            "max" : [
+                1.8724383115768433,
+                4.347236156463623,
+                0.128268301486969
+            ],
+            "min" : [
+                -1.8724366426467896,
+                -0.3086683452129364,
+                -0.12827816605567932
+            ],
+            "type" : "VEC3"
+        },
+        {
+            "bufferView" : 12,
+            "componentType" : 5126,
+            "count" : 24,
+            "type" : "VEC3"
+        },
+        {
+            "bufferView" : 13,
+            "componentType" : 5126,
+            "count" : 24,
+            "type" : "VEC2"
+        },
+        {
+            "bufferView" : 14,
+            "componentType" : 5126,
+            "count" : 24,
+            "max" : [
+                1.8124107122421265,
+                4.207870006561279,
+                0.12415621429681778
+            ],
+            "min" : [
+                -1.8124091625213623,
+                -0.2987728714942932,
+                -0.12416575849056244
+            ],
+            "type" : "VEC3"
+        },
+        {
+            "bufferView" : 15,
+            "componentType" : 5126,
+            "count" : 24,
+            "type" : "VEC3"
+        },
+        {
+            "bufferView" : 16,
+            "componentType" : 5126,
+            "count" : 24,
+            "type" : "VEC2"
+        },
+        {
+            "bufferView" : 17,
+            "componentType" : 5126,
+            "count" : 24,
+            "max" : [
+                1.8124107122421265,
+                4.207870006561279,
+                0.12415621429681778
+            ],
+            "min" : [
+                -1.8124091625213623,
+                -0.2987728714942932,
+                -0.12416575849056244
+            ],
+            "type" : "VEC3"
+        },
+        {
+            "bufferView" : 18,
+            "componentType" : 5126,
+            "count" : 24,
+            "type" : "VEC3"
+        },
+        {
+            "bufferView" : 19,
+            "componentType" : 5126,
+            "count" : 24,
+            "type" : "VEC2"
         }
     ],
     "bufferViews" : [
@@ -265,11 +592,76 @@
             "buffer" : 0,
             "byteLength" : 192,
             "byteOffset" : 1416
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 288,
+            "byteOffset" : 1608
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 288,
+            "byteOffset" : 1896
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 192,
+            "byteOffset" : 2184
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 72,
+            "byteOffset" : 2376
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 288,
+            "byteOffset" : 2448
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 288,
+            "byteOffset" : 2736
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 192,
+            "byteOffset" : 3024
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 288,
+            "byteOffset" : 3216
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 288,
+            "byteOffset" : 3504
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 192,
+            "byteOffset" : 3792
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 288,
+            "byteOffset" : 3984
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 288,
+            "byteOffset" : 4272
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 192,
+            "byteOffset" : 4560
         }
     ],
     "buffers" : [
         {
-            "byteLength" : 1608,
+            "byteLength" : 4752,
             "uri" : "test_area.bin"
         }
     ]

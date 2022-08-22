@@ -7,7 +7,7 @@ use bevy_asset_loader::prelude::*;
 #[derive(Clone, Eq, PartialEq, Debug, Hash)]
 pub enum MyStates {
     AssetLoading,
-    Next,
+    RunLevel,
 }
 
 #[derive(AssetCollection)]

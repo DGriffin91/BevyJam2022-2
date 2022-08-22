@@ -2,7 +2,7 @@
 
 use std::f32::consts::PI;
 
-use assets::{get_verts_indices, ModelAssets, MyStates};
+use assets::{ModelAssets, MyStates};
 use bevy::{asset::AssetServerSettings, math::vec3, prelude::*, render::camera::Projection};
 
 use bevy_rapier3d::prelude::*;
@@ -13,8 +13,9 @@ use bevy_fps_controller::controller::*;
 use editor::GameEditorPlugin;
 use entity::EntityPlugin;
 use interact::InteractPlugin;
+use levels::test_area::TestAreaLevelPlugin;
 use overlap::OverlapPlugin;
-use scene_hook::{HookPlugin, HookedSceneBundle, SceneHook};
+use scene_hook::HookPlugin;
 use sidecar_asset::SidecarAssetPlugin;
 
 use iyes_loopless::prelude::*;
@@ -23,6 +24,7 @@ mod assets;
 mod editor;
 mod entity;
 mod interact;
+mod levels;
 mod overlap;
 mod scene_hook;
 mod sidecar_asset;
@@ -32,7 +34,7 @@ fn main() {
         .add_loopless_state(MyStates::AssetLoading)
         .add_loading_state(
             LoadingState::new(MyStates::AssetLoading)
-                .continue_to_state(MyStates::Next)
+                .continue_to_state(MyStates::RunLevel)
                 .with_collection::<ModelAssets>(),
         )
         .insert_resource(AssetServerSettings {
@@ -48,20 +50,21 @@ fn main() {
         .add_plugin(RapierDebugRenderPlugin::default())
         .add_plugin(FpsControllerPlugin)
         .add_plugin(GameEditorPlugin)
+        .add_plugin(TestAreaLevelPlugin)
         .add_plugin(EntityPlugin)
         .add_plugin(InteractPlugin)
         .add_plugin(OverlapPlugin)
-        .add_enter_system(MyStates::Next, setup)
+        .add_enter_system(MyStates::RunLevel, setup_player)
         .add_system_set(
             ConditionSet::new()
-                .run_in_state(MyStates::Next)
+                .run_in_state(MyStates::RunLevel)
                 .with_system(sun_follow_camera)
                 .into(),
         )
         .run();
 }
 
-fn setup(mut cmds: Commands, model_assets: Res<ModelAssets>) {
+fn setup_player(mut cmds: Commands) {
     // Note that we have two entities for the player
     // One is a "logical" player that handles the physics computation and collision
     // The other is a "render" player that is what is displayed to the user
@@ -104,71 +107,6 @@ fn setup(mut cmds: Commands, model_assets: Res<ModelAssets>) {
     cmds.spawn_bundle(camera_3d_bundle)
         .insert(RenderPlayer(0))
         .insert(PlayerCamera);
-
-    // sun
-    cmds.spawn_bundle(DirectionalLightBundle {
-        directional_light: DirectionalLight {
-            illuminance: 100000.0,
-            shadow_projection: OrthographicProjection {
-                left: -100.0,
-                right: 100.0,
-                bottom: -100.0,
-                top: 100.0,
-                near: -500.0,
-                far: 500.0,
-                scale: 1.0,
-                ..default()
-            },
-            //shadow_depth_bias: 0.1,
-            //shadows_enabled: true,
-            ..default()
-        },
-        transform: Transform::from_rotation(Quat::from_euler(
-            EulerRot::XYZ,
-            -45.0f32.to_radians(),
-            45.0f32.to_radians(),
-            0.0,
-        )),
-        ..default()
-    })
-    .insert(Sun);
-
-    cmds.spawn_bundle(HookedSceneBundle {
-        scene: SceneBundle {
-            scene: model_assets.test_area.clone(),
-            ..default()
-        },
-        hook: SceneHook::new(|entity, world, cmds| {
-            if let Some(name) = entity.get::<Name>() {
-                if name.contains("(C-SENS)") {
-                    // Cuboid sensor, will use scale/rotation from gltf
-                    cmds.insert(Collider::cuboid(1.0, 1.0, 1.0)).insert(Sensor);
-                } else if name.contains("(C-BLOCK)") {
-                    // Cuboid block Collider, will use scale/rotation from gltf
-                    // For things like invisible walls, platforms, etc...
-                    cmds.insert(Collider::cuboid(1.0, 1.0, 1.0));
-                }
-
-                // Triggering with ball Sensor seems inconsistent. Cuboid seems much better
-                // if name.contains("(S-SENS)") {
-                //     // Sphere sensor, will use scale/rotation from gltf
-                //     cmds.insert(Collider::ball(1.0)).insert(Sensor);
-                // }
-            }
-
-            if let Some(parent) = entity.get::<Parent>() {
-                if let Some(parent_name) = world.get::<Name>(parent.get()) {
-                    if parent_name.contains("(C)") {
-                        if let Some(mesh) = entity.get::<Handle<Mesh>>() {
-                            let meshes = world.get_resource::<Assets<Mesh>>().unwrap();
-                            let (vertices, indices) = get_verts_indices(meshes.get(mesh).unwrap());
-                            cmds.insert(Collider::trimesh(vertices, indices));
-                        }
-                    }
-                }
-            }
-        }),
-    });
 }
 
 #[derive(Component)]

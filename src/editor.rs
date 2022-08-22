@@ -25,7 +25,7 @@ impl Plugin for GameEditorPlugin {
             .insert_resource(editor_controls())
             .add_system_set(
                 ConditionSet::new()
-                    .run_in_state(MyStates::Next)
+                    .run_in_state(MyStates::RunLevel)
                     .with_system(manage_cursor)
                     .into(),
             )
