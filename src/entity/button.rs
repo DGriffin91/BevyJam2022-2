@@ -1,7 +1,4 @@
-use bevy::{
-    ecs::{system::EntityCommands, world::EntityRef},
-    prelude::*,
-};
+use bevy::prelude::*;
 use bevy_rapier3d::prelude::*;
 use serde::{Deserialize, Serialize};
 
@@ -29,11 +26,9 @@ impl Default for Button {
     }
 }
 
-spawn_from_scene!(button, Button, spawn_hook);
-
-fn spawn_hook(cmds: &mut EntityCommands, _entity: &EntityRef, _trigger: &mut Button) {
+spawn_from_scene!(button, Button, |cmds, _entity, _button| {
     cmds.insert(Collider::cuboid(1.0, 1.0, 1.0)).insert(Sensor);
-}
+});
 
 pub(super) fn button_interact_events(
     player_camera: Query<&Transform, With<PlayerCamera>>,

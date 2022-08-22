@@ -1,7 +1,4 @@
-use bevy::{
-    ecs::{system::EntityCommands, world::EntityRef},
-    prelude::*,
-};
+use bevy::prelude::*;
 
 use interpolation::lerp;
 use serde::{Deserialize, Serialize};
@@ -19,12 +16,10 @@ pub struct DoorLinear {
     pub origin: Vec3,
 }
 
-fn hook(_cmds: &mut EntityCommands, entity: &EntityRef, door_linear: &mut DoorLinear) {
+spawn_from_scene!(door_linear, DoorLinear, |_cmds, entity, door_linear| {
     let trans = entity.get::<Transform>().unwrap();
     door_linear.origin = trans.translation;
-}
-
-spawn_from_scene!(door_linear, DoorLinear, hook);
+});
 
 pub(super) fn update_door(time: Res<Time>, mut doors: Query<(&mut Transform, &mut DoorLinear)>) {
     for (mut trans, mut door) in doors.iter_mut() {

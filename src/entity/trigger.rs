@@ -1,7 +1,4 @@
-use bevy::{
-    ecs::{system::EntityCommands, world::EntityRef},
-    prelude::*,
-};
+use bevy::prelude::*;
 use bevy_fps_controller::controller::LogicalPlayer;
 use bevy_rapier3d::{prelude::*, rapier::prelude::CollisionEventFlags};
 use serde::{Deserialize, Serialize};
@@ -35,11 +32,9 @@ impl Default for Trigger {
     }
 }
 
-spawn_from_scene!(trigger, Trigger, spawn_hook);
-
-fn spawn_hook(cmds: &mut EntityCommands, _entity: &EntityRef, _trigger: &mut Trigger) {
+spawn_from_scene!(trigger, Trigger, |cmds, _entity, _trigger| {
     cmds.insert(Collider::cuboid(1.0, 1.0, 1.0)).insert(Sensor);
-}
+});
 
 pub(super) fn trigger_collision_events(
     player: Query<Entity, With<LogicalPlayer>>,

@@ -58,7 +58,7 @@
                 "DM" : {}
             },
             "mesh" : 0,
-            "name" : "(C) Floor"
+            "name" : "COLLIDER Floor"
         },
         {
             "extras" : {
@@ -66,7 +66,7 @@
                 "DM" : {}
             },
             "mesh" : 1,
-            "name" : "(C) Cube",
+            "name" : "COLLIDER Cube",
             "rotation" : [
                 0,
                 -0.3734285235404968,
@@ -158,7 +158,7 @@
                 "speed" : 1.0
             },
             "mesh" : 2,
-            "name" : "(C) DOOR_LINEAR Door 1 Left",
+            "name" : "COLLIDER DOOR_LINEAR Door 1 Left",
             "rotation" : [
                 0,
                 -0.7967684268951416,
@@ -183,7 +183,7 @@
                 "speed" : 1.0
             },
             "mesh" : 3,
-            "name" : "(C) DOOR_LINEAR Door 1 Right",
+            "name" : "COLLIDER DOOR_LINEAR Door 1 Right",
             "rotation" : [
                 0,
                 -0.7967684268951416,
@@ -230,7 +230,7 @@
                 "speed" : 1.0
             },
             "mesh" : 4,
-            "name" : "(C) DOOR_LINEAR Door 2 a",
+            "name" : "COLLIDER DOOR_LINEAR Door 2 a",
             "rotation" : [
                 0,
                 -0.605646550655365,
@@ -255,7 +255,7 @@
                 "speed" : 1.0
             },
             "mesh" : 5,
-            "name" : "(C) DOOR_LINEAR Door 2 b",
+            "name" : "COLLIDER DOOR_LINEAR Door 2 b",
             "rotation" : [
                 0,
                 -0.605646550655365,

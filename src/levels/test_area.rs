@@ -8,11 +8,8 @@ use crate::{
         door_linear::DoorLinear,
         trigger::{TriggerEnterEvent, TriggerExitEvent},
     },
-    scene_hook::{HookedSceneBundle, SceneHook},
     Sun,
 };
-
-use super::standard_level_hooks;
 
 pub struct TestAreaLevelPlugin;
 impl Plugin for TestAreaLevelPlugin {
@@ -27,7 +24,7 @@ impl Plugin for TestAreaLevelPlugin {
     }
 }
 
-pub fn setup(mut cmds: Commands, model_assets: Res<ModelAssets>) {
+fn setup(mut cmds: Commands, model_assets: Res<ModelAssets>) {
     // sun, TODO: pull from blender
     cmds.spawn_bundle(DirectionalLightBundle {
         directional_light: DirectionalLight {
@@ -56,16 +53,13 @@ pub fn setup(mut cmds: Commands, model_assets: Res<ModelAssets>) {
     })
     .insert(Sun);
 
-    cmds.spawn_bundle(HookedSceneBundle {
-        scene: SceneBundle {
-            scene: model_assets.test_area.clone(),
-            ..default()
-        },
-        hook: SceneHook::new(standard_level_hooks),
+    cmds.spawn_bundle(SceneBundle {
+        scene: model_assets.test_area.clone(),
+        ..default()
     });
 }
 
-pub fn door_triggers(
+fn door_triggers(
     mut doors: Query<(&Name, &mut DoorLinear)>,
     mut trigger_enter_events: EventReader<TriggerEnterEvent>,
     mut trigger_exit_events: EventReader<TriggerExitEvent>,

@@ -1,4 +1,5 @@
 pub mod button;
+pub mod collider;
 pub mod door_linear;
 pub mod teleport;
 pub mod teleport_destination;
@@ -15,6 +16,10 @@ impl Plugin for EntityPlugin {
         app.add_event::<self::button::ButtonPressEvent>();
         app.add_system(self::button::spawn_button_from_scene);
         app.add_system(self::button::button_interact_events);
+
+        // Collider
+        app.register_type::<self::collider::Collider>();
+        app.add_system(self::collider::spawn_collider_from_scene);
 
         // Door linear
         app.register_type::<self::door_linear::DoorLinear>();
@@ -42,12 +47,17 @@ impl Plugin for EntityPlugin {
 /// Helper macro to assign a component based on new entities name.
 #[macro_export]
 macro_rules! spawn_from_scene {
-    ($id:ident, $component:ident $(, $hook:ident)?) => {
+    (
+        $id:ident,
+        $component:ident
+        $(, |$cmds:ident, $entity:ident, $comp:ident $(, $( $args:ident : $arg_ty:ty ),* )? | { $( $body:tt )* } )?
+    ) => {
         paste::paste! {
             #[doc = "Add [`" $component "`] component to entities containing uppercase \"" $id "\"."]
             pub(super) fn [<spawn_ $id _from_scene>](
                 mut cmds: bevy::prelude::Commands,
                 mut scene_loaded: $crate::scene_hook::SceneLoaded,
+                $( $( $( #[allow(unused_mut)] mut $args: $arg_ty ),* )? )?
             ) {
                 for entity in scene_loaded.iter() {
                     if let Some(name) = entity.get::<bevy::prelude::Name>() {
@@ -67,7 +77,13 @@ macro_rules! spawn_from_scene {
                             debug!(id = ?entity.id(), name = %&name[stringify!($id).len()..].trim(), properties = ?component, concat!("Registered ", stringify!($id)));
 
                             let mut entity_cmd = cmds.entity(entity.id());
-                            $ ( $hook( &mut entity_cmd, &entity, &mut component ); )?
+                            $({
+                                let $entity = entity;
+                                let $cmds = &mut entity_cmd;
+                                let $comp = &mut component;
+
+                                $( $body )*
+                            })?
                             entity_cmd.insert(component);
                         }
                     }
