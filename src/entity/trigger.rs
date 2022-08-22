@@ -15,6 +15,7 @@ pub struct TriggerExitEvent {
     pub trigger_entity: Entity,
 }
 
+/// A trigger which emits [`TriggerEnterEvent`] and [`TriggerExitEvent`] events when the player enters the region.
 #[derive(Clone, Debug, Component, Reflect, Serialize, Deserialize)]
 #[reflect(Component)]
 #[serde(default)]

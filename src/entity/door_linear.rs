@@ -5,6 +5,7 @@ use serde::{Deserialize, Serialize};
 
 use crate::spawn_from_scene;
 
+/// A door which moves linearly based on [`move_to`].
 #[derive(Clone, Copy, Debug, Default, Component, Reflect, Serialize, Deserialize)]
 #[reflect(Component)]
 #[serde(default)]

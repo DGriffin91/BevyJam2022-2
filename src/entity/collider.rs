@@ -4,6 +4,7 @@ use serde::{Deserialize, Serialize};
 use crate::assets::get_verts_indices;
 use crate::spawn_from_scene;
 
+/// A physics collider.
 #[derive(Clone, Debug, Default, Component, Reflect, Serialize, Deserialize)]
 #[reflect(Component)]
 pub struct Collider {}

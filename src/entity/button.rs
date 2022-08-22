@@ -9,6 +9,7 @@ pub struct ButtonPressEvent {
     pub button_entity: Entity,
 }
 
+/// A button which emits [`ButtonPressEvent`] when pressed.
 #[derive(Clone, Debug, Component, Reflect, Serialize, Deserialize)]
 #[reflect(Component)]
 #[serde(default)]

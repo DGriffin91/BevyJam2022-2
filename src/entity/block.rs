@@ -4,6 +4,9 @@ use serde::{Deserialize, Serialize};
 
 use crate::spawn_from_scene;
 
+/// A cuboid collider.
+///
+/// Useful for invisible walls, etc.
 #[derive(Clone, Debug, Default, Component, Reflect, Serialize, Deserialize)]
 #[reflect(Component)]
 pub struct Block {}
