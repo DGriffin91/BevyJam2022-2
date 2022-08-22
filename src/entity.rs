@@ -8,7 +8,7 @@ pub mod trigger;
 
 use bevy::prelude::*;
 
-use crate::{impl_named, register_entity};
+use crate::{entity::trigger::NamedTriggerStatuses, impl_named, register_entity};
 
 pub struct EntityPlugin;
 
@@ -44,6 +44,7 @@ impl Plugin for EntityPlugin {
             events = [TriggerEnterEvent, TriggerExitEvent],
             systems = [trigger_collision_events]
         );
+        app.init_resource::<NamedTriggerStatuses>();
     }
 }
 

@@ -3,11 +3,7 @@ use iyes_loopless::prelude::*;
 
 use crate::{
     assets::{GameState, ModelAssets},
-    entity::{
-        door_linear::DoorLinear,
-        trigger::{TriggerEnterEvent, TriggerExitEvent},
-        NamedIterator,
-    },
+    entity::{door_linear::DoorLinear, trigger::NamedTriggerStatuses, NamedIterator},
     Sun,
 };
 
@@ -59,29 +55,16 @@ fn setup(mut cmds: Commands, model_assets: Res<ModelAssets>) {
     });
 }
 
-fn door_triggers(
-    mut doors: Query<(&Name, &mut DoorLinear)>,
-    mut trigger_enter_events: EventReader<TriggerEnterEvent>,
-    mut trigger_exit_events: EventReader<TriggerExitEvent>,
-) {
-    let trigger_events = trigger_enter_events
-        .iter()
-        .map(|event| (&event.name, true))
-        .chain(trigger_exit_events.iter().map(|event| (&event.name, false)));
+fn door_triggers(mut doors: Query<(&Name, &mut DoorLinear)>, triggers: Res<NamedTriggerStatuses>) {
+    if let Some(status) = triggers.any("TRIGGER DOOR TRIG 1") {
+        for (_, mut door) in doors.iter_mut().filter_name_contains("DOOR_LINEAR Door 1") {
+            door.is_open = status.exit_enter;
+        }
+    }
 
-    for (trigger_name, is_open) in trigger_events {
-        match trigger_name.as_deref() {
-            Some("TRIGGER DOOR TRIG 1") => {
-                for (_, mut door) in doors.iter_mut().filter_name_contains("DOOR_LINEAR Door 1") {
-                    door.is_open = is_open;
-                }
-            }
-            Some("TRIGGER DOOR TRIG 2") => {
-                for (_, mut door) in doors.iter_mut().filter_name_contains("DOOR_LINEAR Door 2") {
-                    door.is_open = is_open;
-                }
-            }
-            _ => {}
+    if let Some(status) = triggers.any("TRIGGER DOOR TRIG 2") {
+        for (_, mut door) in doors.iter_mut().filter_name_contains("DOOR_LINEAR Door 2") {
+            door.is_open = status.exit_enter;
         }
     }
 }
