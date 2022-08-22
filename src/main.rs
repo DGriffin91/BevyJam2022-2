@@ -10,7 +10,7 @@ use bevy_kira_audio::prelude::*;
 use bevy_rapier3d::prelude::*;
 use iyes_loopless::prelude::*;
 
-use crate::assets::{ModelAssets, MyStates};
+use crate::assets::{GameState, ModelAssets};
 use crate::editor::GameEditorPlugin;
 use crate::entity::EntityPlugin;
 use crate::levels::test_area::TestAreaLevelPlugin;
@@ -27,10 +27,10 @@ mod sidecar_asset;
 
 fn main() {
     App::new()
-        .add_loopless_state(MyStates::AssetLoading)
+        .add_loopless_state(GameState::AssetLoading)
         .add_loading_state(
-            LoadingState::new(MyStates::AssetLoading)
-                .continue_to_state(MyStates::RunLevel)
+            LoadingState::new(GameState::AssetLoading)
+                .continue_to_state(GameState::RunLevel)
                 .with_collection::<ModelAssets>()
                 .with_collection::<SoundAssets>(),
         )
@@ -50,10 +50,10 @@ fn main() {
         .add_plugin(GameEditorPlugin)
         .add_plugin(TestAreaLevelPlugin)
         .add_plugin(EntityPlugin)
-        .add_enter_system(MyStates::RunLevel, setup_player)
+        .add_enter_system(GameState::RunLevel, setup_player)
         .add_system_set(
             ConditionSet::new()
-                .run_in_state(MyStates::RunLevel)
+                .run_in_state(GameState::RunLevel)
                 .with_system(sun_follow_camera)
                 .into(),
         )

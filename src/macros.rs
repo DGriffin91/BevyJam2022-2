@@ -73,7 +73,7 @@ macro_rules! register_entity {
             $( $( $app.add_event::<self::$id::$event>(); )* )?
             $app.add_system_set(
                 iyes_loopless::prelude::ConditionSet::new()
-                    .run_in_state($crate::assets::MyStates::RunLevel)
+                    .run_in_state($crate::assets::GameState::RunLevel)
                     .with_system(self::$id::[< spawn_ $id:snake _from_scene >])
                     $( $( .with_system(self::$id::$system) )* )?
                     .into()

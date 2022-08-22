@@ -2,7 +2,7 @@ use bevy::prelude::*;
 use iyes_loopless::prelude::*;
 
 use crate::{
-    assets::{ModelAssets, MyStates},
+    assets::{GameState, ModelAssets},
     entity::{
         door_linear::DoorLinear,
         trigger::{TriggerEnterEvent, TriggerExitEvent},
@@ -14,10 +14,10 @@ use crate::{
 pub struct TestAreaLevelPlugin;
 impl Plugin for TestAreaLevelPlugin {
     fn build(&self, app: &mut App) {
-        app.add_enter_system(MyStates::RunLevel, setup);
+        app.add_enter_system(GameState::RunLevel, setup);
         app.add_system_set(
             ConditionSet::new()
-                .run_in_state(MyStates::RunLevel)
+                .run_in_state(GameState::RunLevel)
                 .with_system(door_triggers)
                 .into(),
         );

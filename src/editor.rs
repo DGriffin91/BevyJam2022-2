@@ -12,7 +12,7 @@ use bevy_fps_controller::controller::{FpsController, LogicalPlayer};
 use bevy_rapier3d::render::DebugRenderContext;
 use iyes_loopless::prelude::*;
 
-use crate::{assets::MyStates, PlayerCamera};
+use crate::{assets::GameState, PlayerCamera};
 
 pub struct GameEditorPlugin;
 impl Plugin for GameEditorPlugin {
@@ -22,7 +22,7 @@ impl Plugin for GameEditorPlugin {
             .insert_resource(editor_controls())
             .add_system_set(
                 ConditionSet::new()
-                    .run_in_state(MyStates::RunLevel)
+                    .run_in_state(GameState::RunLevel)
                     .with_system(manage_cursor)
                     .into(),
             )

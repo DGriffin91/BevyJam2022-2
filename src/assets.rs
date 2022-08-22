@@ -6,7 +6,7 @@ use bevy_asset_loader::prelude::*;
 use bevy_kira_audio::AudioSource;
 
 #[derive(Clone, Eq, PartialEq, Debug, Hash)]
-pub enum MyStates {
+pub enum GameState {
     AssetLoading,
     RunLevel,
 }
