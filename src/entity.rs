@@ -98,23 +98,91 @@ macro_rules! spawn_from_scene {
     };
 }
 
-// #[macro_export]
-// macro_rules! entities_containing_name {
-//     ($contains:expr, $names:ident) => {
-//         $names
-//             .iter()
-//             .filter(|(_, n)| n.contains($contains))
-//             .map(|(e, _)| e)
-//     };
-// }
+pub trait NamedItems<T>
+where
+    T: bevy::ecs::query::WorldQuery,
+{
+    fn find_named(
+        &self,
+        name: &str,
+    ) -> Option<<<<T as bevy::ecs::query::WorldQuery>::ReadOnly as bevy::ecs::query::WorldQueryGats<'_>>::Fetch as bevy::ecs::query::Fetch<'_>>::Item>;
+}
 
-// pub fn entity_name_contains(
-//     contains: &str,
-//     entity: Entity,
-//     names: &Query<(Entity, &Name)>,
-// ) -> bool {
-//     if names.get(entity).unwrap().1.contains(contains) {
-//         return true;
-//     }
-//     false
-// }
+macro_rules! impl_named_items {
+    ($t:ident $(, $types:ident )*) => {
+        impl<'w, 's, $t $(, $types )* , Filter> NamedItems<$t> for Query<'w, 's, (&Name, $t $(, $types )*), Filter>
+        where
+            $t: bevy::ecs::query::WorldQuery,
+            $( $types: bevy::ecs::query::WorldQuery, )*
+            Filter: bevy::ecs::query::WorldQuery,
+        {
+            fn find_named(
+                &self,
+                name: &str,
+            ) -> Option<<<<$t as bevy::ecs::query::WorldQuery>::ReadOnly as bevy::ecs::query::WorldQueryGats<'_>>::Fetch as bevy::ecs::query::Fetch<'_>>::Item>
+            {
+                self.iter().find_map(|(entity_name, value, ..)| {
+                    if entity_name.contains(name) {
+                        Some(value)
+                    } else {
+                        None
+                    }
+                })
+            }
+        }
+    };
+}
+
+impl_named_items!(A);
+impl_named_items!(A, B);
+impl_named_items!(A, B, C);
+impl_named_items!(A, B, C, D);
+impl_named_items!(A, B, C, D, E);
+impl_named_items!(A, B, C, D, E, F);
+impl_named_items!(A, B, C, D, E, F, G);
+impl_named_items!(A, B, C, D, E, F, G, H);
+
+pub trait NamedItemsMut<T>
+where
+    T: bevy::ecs::query::WorldQuery,
+{
+    fn find_named_mut(
+        &mut self,
+        name: &str,
+    ) -> Option<
+        <<T as bevy::ecs::query::WorldQueryGats<'_>>::Fetch as bevy::ecs::query::Fetch<'_>>::Item,
+    >;
+}
+
+macro_rules! impl_named_items_mut {
+    ($t:ident $(, $types:ident )*) => {
+        impl<'w, 's, $t $(, $types )* , Filter> NamedItemsMut<$t> for Query<'w, 's, (&Name, $t $(, $types )*), Filter>
+        where
+            $t: bevy::ecs::query::WorldQuery,
+            $( $types: bevy::ecs::query::WorldQuery, )*
+            Filter: bevy::ecs::query::WorldQuery,
+        {
+            fn find_named_mut(
+                &mut self,
+                name: &str,
+            ) -> Option<<<$t as bevy::ecs::query::WorldQueryGats<'_>>::Fetch as bevy::ecs::query::Fetch<'_>>::Item> {
+                self.iter_mut().find_map(|(entity_name, value, ..)| {
+                    if entity_name.contains(name) {
+                        Some(value)
+                    } else {
+                        None
+                    }
+                })
+            }
+        }
+    };
+}
+
+impl_named_items_mut!(A);
+impl_named_items_mut!(A, B);
+impl_named_items_mut!(A, B, C);
+impl_named_items_mut!(A, B, C, D);
+impl_named_items_mut!(A, B, C, D, E);
+impl_named_items_mut!(A, B, C, D, E, F);
+impl_named_items_mut!(A, B, C, D, E, F, G);
+impl_named_items_mut!(A, B, C, D, E, F, G, H);

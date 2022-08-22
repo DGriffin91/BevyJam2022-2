@@ -7,6 +7,7 @@ use crate::{
     entity::{
         door_linear::DoorLinear,
         trigger::{TriggerEnterEvent, TriggerExitEvent},
+        NamedItemsMut,
     },
     Sun,
 };
@@ -64,49 +65,25 @@ fn door_triggers(
     mut trigger_enter_events: EventReader<TriggerEnterEvent>,
     mut trigger_exit_events: EventReader<TriggerExitEvent>,
 ) {
-    iter_trigger_events(
-        trigger_enter_events
-            .iter()
-            .map(|event| event.trigger_name.as_str()),
-        &mut doors,
-        true,
-    );
-    iter_trigger_events(
-        trigger_exit_events
-            .iter()
-            .map(|event| event.trigger_name.as_str()),
-        &mut doors,
-        false,
-    );
-}
+    let trigger_events = trigger_enter_events
+        .iter()
+        .map(|event| (&event.trigger_name, true))
+        .chain(
+            trigger_exit_events
+                .iter()
+                .map(|event| (&event.trigger_name, false)),
+        );
 
-fn iter_trigger_events<'a>(
-    events: impl Iterator<Item = &'a str>,
-    doors: &mut Query<(&Name, &mut DoorLinear)>,
-    open: bool,
-) {
-    for name in events {
-        match name {
+    for (trigger_name, is_open) in trigger_events {
+        match trigger_name.as_str() {
             "DOOR TRIG 1" => {
-                for mut door in doors.iter_mut().filter_map(|(name, door)| {
-                    if name.contains("DOOR_LINEAR Door 1") {
-                        Some(door)
-                    } else {
-                        None
-                    }
-                }) {
-                    door.is_open = open;
+                if let Some(mut door) = doors.find_named_mut("DOOR_LINEAR Door 1") {
+                    door.is_open = is_open;
                 }
             }
             "DOOR TRIG 2" => {
-                for mut door in doors.iter_mut().filter_map(|(name, door)| {
-                    if name.contains("DOOR_LINEAR Door 2") {
-                        Some(door)
-                    } else {
-                        None
-                    }
-                }) {
-                    door.is_open = open;
+                if let Some(mut door) = doors.find_named_mut("DOOR_LINEAR Door 2") {
+                    door.is_open = is_open;
                 }
             }
             _ => {}
