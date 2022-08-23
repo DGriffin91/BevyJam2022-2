@@ -612,6 +612,7 @@ dependencies = [
  "bevy",
  "bevy_asset_loader",
  "bevy_editor_pls",
+ "bevy_editor_pls_default_windows",
  "bevy_egui",
  "bevy_fps_controller",
  "bevy_kira_audio",

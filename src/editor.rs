@@ -8,6 +8,7 @@ use bevy_editor_pls::{
     egui::Slider,
     AddEditorWindow, EditorEvent, EditorPlugin, EditorState,
 };
+use bevy_editor_pls_default_windows::cameras::EditorCamera;
 use bevy_fps_controller::controller::{FpsController, LogicalPlayer};
 use bevy_rapier3d::render::DebugRenderContext;
 use iyes_loopless::prelude::*;
@@ -24,14 +25,15 @@ impl Plugin for GameEditorPlugin {
                 ConditionSet::new()
                     .run_in_state(GameState::RunLevel)
                     .with_system(manage_cursor)
+                    .with_system(sync_editor_free_camera)
                     .into(),
             )
-            .add_editor_window::<MyEditorWindow>();
+            .add_editor_window::<SettingsWindow>();
     }
 }
 
-pub struct MyEditorWindow;
-impl EditorWindow for MyEditorWindow {
+pub struct SettingsWindow;
+impl EditorWindow for SettingsWindow {
     type State = ();
     const NAME: &'static str = "Settings";
 
@@ -90,6 +92,22 @@ fn set_cam3d_controls(
     let mut controls = query.single_mut();
     controls.key_up = KeyCode::E;
     controls.key_down = KeyCode::Q;
+}
+
+fn sync_editor_free_camera(
+    mut d3_cam: Query<&mut Transform, (With<EditorCamera>, Without<PlayerCamera>)>,
+    player_cam: Query<&Transform, With<PlayerCamera>>,
+    mut editor_events: EventReader<EditorEvent>,
+) {
+    for editor_event in editor_events.iter() {
+        if let EditorEvent::Toggle { now_active } = editor_event {
+            if *now_active {
+                for mut cam in d3_cam.iter_mut() {
+                    *cam = *player_cam.single();
+                }
+            }
+        }
+    }
 }
 
 pub fn manage_cursor(
