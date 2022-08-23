@@ -66,11 +66,13 @@ macro_rules! register_entity {
         $app:ident,
         $id:ident
         $(, events = [ $( $event:ident ),* ] )?
+        $(, resources = [ $( $resource:ident ),* ] )?
         $(, systems = [ $( $system:ident ),* ] )?
     ) => {
         paste::paste! {
             $app.register_type::< self::$id::[< $id:camel >] >();
             $( $( $app.add_event::<self::$id::$event>(); )* )?
+            $( $( $app.init_resource::<self::$id::$resource>(); )* )?
             $app.add_system_set(
                 iyes_loopless::prelude::ConditionSet::new()
                     .run_in_state($crate::assets::GameState::RunLevel)
