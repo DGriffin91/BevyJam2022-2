@@ -1,6 +1,8 @@
-use bevy::{prelude::*, utils::Uuid};
+use std::time::Duration;
 
+use bevy::{prelude::*, utils::Uuid};
 use bevy_kira_audio::prelude::{AudioControl, DynamicAudioChannel, DynamicAudioChannels};
+use iyes_loopless::prelude::*;
 
 use crate::PlayerCamera;
 
@@ -8,7 +10,15 @@ pub struct AudioComponentPlugin;
 
 impl Plugin for AudioComponentPlugin {
     fn build(&self, app: &mut App) {
-        app.add_system(pan);
+        let mut audio_stage = SystemStage::parallel();
+        audio_stage.add_system(pan);
+
+        app.add_stage_before(
+            CoreStage::Update,
+            "audio_fixed_update",
+            FixedTimestepStage::new(Duration::from_millis(32)) // 30 fps
+                .with_stage(audio_stage),
+        );
     }
 }
 
@@ -28,12 +38,12 @@ impl AudioComponent {
         cmds: &mut Commands,
         entity: Entity,
         component: Option<&AudioComponent>,
-        mut channels: &'a mut DynamicAudioChannels,
+        channels: &'a mut DynamicAudioChannels,
     ) -> AudioComponent {
         if let Some(c) = component {
             c.clone()
         } else {
-            let c = AudioComponent::new(&mut channels);
+            let c = AudioComponent::new(channels);
             cmds.entity(entity).insert(c.clone());
             c
         }

@@ -4,7 +4,14 @@ use std::f32::consts::PI;
 
 use assets::SoundAssets;
 use audio::AudioComponentPlugin;
-use bevy::{asset::AssetServerSettings, math::vec3, prelude::*, render::camera::Projection};
+use bevy::{
+    asset::AssetServerSettings,
+    diagnostic::{FrameTimeDiagnosticsPlugin, LogDiagnosticsPlugin},
+    math::vec3,
+    prelude::*,
+    render::camera::Projection,
+    window::PresentMode,
+};
 use bevy_asset_loader::prelude::*;
 use bevy_fps_controller::controller::*;
 use bevy_kira_audio::prelude::*;
@@ -40,7 +47,14 @@ fn main() {
             watch_for_changes: true,
             ..default()
         })
+        .insert_resource(WindowDescriptor {
+            title: "BevyJam 2022 - 2".to_string(),
+            present_mode: PresentMode::AutoNoVsync,
+            ..default()
+        })
         .add_plugins(DefaultPlugins)
+        .add_plugin(LogDiagnosticsPlugin::default())
+        .add_plugin(FrameTimeDiagnosticsPlugin::default())
         .add_plugin(AudioPlugin)
         .add_plugin(AudioComponentPlugin)
         .add_plugin(HookPlugin)
@@ -91,6 +105,7 @@ fn setup_player(mut cmds: Commands) {
             forward_speed: 12.0,
             max_air_speed: 12.0,
             walk_speed: 6.0,
+            air_acceleration: 800.0, // bhop :D
             ..default()
         })
         .insert_bundle(SpatialBundle {
