@@ -28,7 +28,7 @@ macro_rules! spawn_from_scene {
                                 })
                                 .unwrap_or_default();
 
-                            debug!(id = ?entity.id(), name = %&name[stringify!($id).len()..].trim(), properties = ?component, concat!("Registered ", stringify!($id)));
+                            bevy::prelude::debug!(id = ?entity.id(), name = %&name[stringify!($id).len()..].trim(), properties = ?component, concat!("Registered ", stringify!($id)));
 
                             let mut entity_cmd = cmds.entity(entity.id());
                             $({
