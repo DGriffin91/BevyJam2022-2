@@ -104,7 +104,8 @@ impl SceneHook {
     ///     });
     /// }
     /// ```
-    pub fn _new<F: Fn(&EntityRef, &World, &mut EntityCommands) + Send + Sync + 'static>(
+    #[allow(dead_code)]
+    pub fn new<F: Fn(&EntityRef, &World, &mut EntityCommands) + Send + Sync + 'static>(
         hook: F,
     ) -> Self {
         Self {
