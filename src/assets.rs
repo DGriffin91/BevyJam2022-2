@@ -19,8 +19,12 @@ pub struct ImageAssets {
 
 #[derive(AssetCollection)]
 pub struct ModelAssets {
-    #[asset(path = "models/map.gltf#Scene0")]
-    pub map: Handle<Scene>,
+    #[asset(path = "models/Level 1 Parking Garage Export.gltf#Scene0")]
+    pub level1_garage: Handle<Scene>,
+    #[asset(path = "models/Level 2 Lobby Export.gltf#Scene0")]
+    pub level2_lobby: Handle<Scene>,
+    #[asset(path = "models/Elevator Export.gltf#Scene0")]
+    pub elevator_level: Handle<Scene>,
     #[asset(path = "models/test_area.gltf#Scene0")]
     pub test_area: Handle<Scene>,
 }

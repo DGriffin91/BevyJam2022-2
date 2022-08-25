@@ -1,9 +1,14 @@
 PREVIEW_MODE = True
 SPLIT_EVERYTHING = True
+SPLIT_ANYTHING = True
 DENOISE_TEX = True
+DENOISE_VERT = False
 TEX_SAMPLES = 256
+VERT_SAMPLES = 4096
 MEDIAN_FILTER = False
 RES_MULT = 2.0
+VERT_COL_METHOD = "POINT" #'POINT', 'EDGE', 'FACE', 'CORNER', 'CURVE', 'INSTANCE'
+VERT_COL_CONVERT_TO = "CORNER"
 
 # Not using an operator because it seems that apply modifiers is broken if used in a operator
 
@@ -56,7 +61,7 @@ def create_material_if_needed(ob):
 def setup_vertex_bake(ob):
     mesh = ob.data
     if "Bake" not in mesh.attributes:
-        mesh.attributes.new("Bake", "BYTE_COLOR", "CORNER")
+        mesh.attributes.new("Bake", "BYTE_COLOR", VERT_COL_METHOD) #CORNER
     
     bake_index = mesh.attributes.keys().index("Bake")
     mesh.attributes.render_color_index = bake_index
@@ -251,17 +256,20 @@ def process_collection(collection, root_col_name, vlayer):
 
 
         if "VERT" in root_col_name:
-            scene.cycles.samples = 4096
-            scene.view_layers[0].cycles.use_denoising = False
+            scene.cycles.samples = VERT_SAMPLES
+            scene.view_layers[0].cycles.use_denoising = DENOISE_VERT
 
             setup_vertex_bake(ob)
-            # setup_edge_split(ob)
+            if SPLIT_ANYTHING:
+                setup_edge_split(ob)
             apply_modifiers_scale_deselect(ob)
 
             ob.select_set(True)
             vlayer.objects.active = ob
 
             bake("COMBINED", "VERTEX_COLORS")
+            if VERT_COL_METHOD != VERT_COL_CONVERT_TO:
+                bpy.ops.geometry.attribute_convert(mode='GENERIC', domain=VERT_COL_CONVERT_TO, data_type='BYTE_COLOR')
 
 
         if "TEX" in root_col_name:

@@ -13,7 +13,7 @@ use bevy::{
             Extent3d, TextureDescriptor, TextureDimension, TextureFormat, TextureUsages,
         },
         texture::{BevyDefault, ImageSampler, ImageSettings},
-        view::RenderLayers,
+        view::{NoFrustumCulling, RenderLayers},
     },
     sprite::{Material2dPlugin, MaterialMesh2dBundle, Mesh2dHandle},
     window::{PresentMode, WindowMode, WindowResized},
@@ -23,14 +23,16 @@ use bevy_fps_controller::controller::*;
 use bevy_kira_audio::prelude::*;
 use bevy_rapier3d::prelude::*;
 use iyes_loopless::prelude::*;
+use levels::{elevator_level::ElevatorLevelPlugin, level2_lobby::Level2LobbyPlugin};
 use materials::general::GeneralMaterial;
+use scene_hook::SceneLoaded;
 
 use crate::assets::{GameState, ImageAssets, ModelAssets, SoundAssets};
 // use crate::editor::GameEditorPlugin;
 use crate::audio::AudioComponentPlugin;
 use crate::entity::EntityPlugin;
 use crate::inventory::InventoryPlugin;
-use crate::levels::map::MapLevelPlugin;
+use crate::levels::level1_garage::Level1GaragePlugin;
 use crate::materials::post_process::PostProcessingMaterial;
 use crate::scene_hook::HookPlugin;
 use crate::sidecar_asset::SidecarAssetPlugin;
@@ -63,7 +65,7 @@ fn main() {
         })
         .insert_resource(WindowDescriptor {
             title: "BevyJam 2022 - 2".to_string(),
-            present_mode: PresentMode::AutoNoVsync,
+            present_mode: PresentMode::AutoVsync,
             mode: WindowMode::Windowed,
             ..default()
         })
@@ -81,7 +83,9 @@ fn main() {
         .add_plugin(RapierPhysicsPlugin::<NoUserData>::default())
         .add_plugin(FpsControllerPlugin)
         // .add_plugin(GameEditorPlugin)
-        .add_plugin(MapLevelPlugin)
+        .add_plugin(Level1GaragePlugin)
+        //.add_plugin(Level2LobbyPlugin)
+        .add_plugin(ElevatorLevelPlugin)
         .add_plugin(EntityPlugin)
         .add_plugin(InventoryPlugin)
         .add_enter_system(GameState::RunLevel, hide_mouse)
@@ -92,6 +96,7 @@ fn main() {
                 .with_system(sun_follow_camera)
                 .with_system(window_resized)
                 .with_system(toggle_mouse)
+                .with_system(swap_materials)
                 .into(),
         )
         .run();
@@ -173,7 +178,7 @@ fn setup_player(
         })
         .insert_bundle(SpatialBundle {
             visibility: Visibility { is_visible: false },
-            transform: Transform::from_translation(vec3(14.6, 1.0, 2.0)),
+            transform: Transform::from_translation(vec3(0.0, 1.0, 0.0)),
             ..default()
         });
 
@@ -316,6 +321,36 @@ fn sun_follow_camera(
     for mut sun in &mut sun {
         for camera in &camera {
             sun.translation = camera.translation;
+        }
+    }
+}
+
+fn swap_materials(
+    mut cmds: Commands,
+    mut scene_loaded: SceneLoaded,
+    mut standard_mats: ResMut<Assets<StandardMaterial>>,
+    //mut general_mats: ResMut<Assets<GeneralMaterial>>,
+) {
+    for entity in scene_loaded.iter() {
+        if entity.get::<Handle<Mesh>>().is_some() {
+            cmds.entity(entity.id()).insert(NoFrustumCulling); // Also remove AABBs
+        }
+        //let mut cmds = cmds.entity(entity.id());
+        if let Some(std_mat_handle) = entity.get::<Handle<StandardMaterial>>() {
+            if let Some(std_mat) = standard_mats.get_mut(std_mat_handle) {
+                if std_mat.emissive_texture.is_none() {
+                    std_mat.unlit = true; // Workaround
+                }
+
+                // TODO Not showing general material
+                // let mut tex = std_mat.emissive_texture.clone();
+                // if tex.is_none() {
+                //     tex = std_mat.base_color_texture.clone();
+                // }
+                // let mat_handle_1 = general_mats.add(GeneralMaterial { color: tex });
+                // cmds.remove::<Handle<StandardMaterial>>();
+                // cmds.insert(mat_handle_1);
+            }
         }
     }
 }

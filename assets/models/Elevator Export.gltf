@@ -1,0 +1,541 @@
+{
+    "asset" : {
+        "generator" : "Khronos glTF Blender I/O v3.2.43",
+        "version" : "2.0"
+    },
+    "scene" : 0,
+    "scenes" : [
+        {
+            "extras" : {
+                "MM" : {
+                    "revision" : "9cc8f25fa43725a2b85459340e2086a68b537f53"
+                },
+                "DM" : {
+                    "revision" : "b62fce83f7d54c3b35499c7ad13ed5af80fde762",
+                    "export_atlas_texture_channel_packCOL" : [
+                        {
+                            "avoid_update" : 0,
+                            "name" : "ao_curv_height",
+                            "red" : 2,
+                            "green" : 3,
+                            "blue" : 4
+                        },
+                        {
+                            "avoid_update" : 0,
+                            "name" : "masks",
+                            "red" : 1,
+                            "green" : 9,
+                            "blue" : 10
+                        }
+                    ]
+                },
+                "bc" : {
+                    "snap" : {
+                        "hit" : 0
+                    }
+                },
+                "C_Slots_settings" : {
+                    "Terrain_pointer" : {}
+                },
+                "automirror" : {
+                    "orientation" : 2,
+                    "axis" : 3
+                }
+            },
+            "name" : "Scene",
+            "nodes" : [
+                0,
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8,
+                9,
+                10,
+                11
+            ]
+        }
+    ],
+    "nodes" : [
+        {
+            "extras" : {
+                "MM" : {},
+                "DM" : {}
+            },
+            "name" : "Area",
+            "rotation" : [
+                -0.7071068286895752,
+                0,
+                0,
+                0.7071068286895752
+            ],
+            "translation" : [
+                0,
+                3.3578834533691406,
+                0
+            ]
+        },
+        {
+            "extras" : {
+                "MM" : {},
+                "DM" : {}
+            },
+            "name" : "Area.001",
+            "rotation" : [
+                0.70710688829422,
+                0,
+                0,
+                0.7071066498756409
+            ],
+            "translation" : [
+                0,
+                3.3578834533691406,
+                0
+            ]
+        },
+        {
+            "extras" : {
+                "MM" : {},
+                "DM" : {}
+            },
+            "name" : "BLOCK Elevator Floor Block",
+            "scale" : [
+                1.2999999523162842,
+                0.15149810910224915,
+                1.5
+            ],
+            "translation" : [
+                0,
+                -0.1520427167415619,
+                0
+            ]
+        },
+        {
+            "extras" : {
+                "MM" : {},
+                "DM" : {}
+            },
+            "name" : "Elevator Placeholder Main",
+            "scale" : [
+                1.2999999523162842,
+                1.7000000476837158,
+                1.5
+            ],
+            "translation" : [
+                0,
+                1.7000000476837158,
+                0
+            ]
+        },
+        {
+            "extras" : {
+                "MM" : {},
+                "DM" : {}
+            },
+            "name" : "Elevator Placeholder Opening",
+            "scale" : [
+                0.550000011920929,
+                1.2000000476837158,
+                0.6000000238418579
+            ],
+            "translation" : [
+                0,
+                1.2000000476837158,
+                0.8999999761581421
+            ]
+        },
+        {
+            "extras" : {
+                "MM" : {},
+                "DM" : {}
+            },
+            "name" : "TRIGGER Elevator Inside",
+            "scale" : [
+                1.0660624504089355,
+                1.394081473350525,
+                1.230072021484375
+            ],
+            "translation" : [
+                0,
+                1.6558265686035156,
+                0
+            ]
+        },
+        {
+            "extras" : {
+                "MM" : {},
+                "DM" : {}
+            },
+            "name" : "BUTTON Inside Elevator",
+            "scale" : [
+                0.2606295049190521,
+                0.5686461925506592,
+                0.2843230962753296
+            ],
+            "translation" : [
+                -0.8933632373809814,
+                1.2000000476837158,
+                1.133558988571167
+            ]
+        },
+        {
+            "extras" : {
+                "MM" : {},
+                "DM" : {}
+            },
+            "name" : "TRIGGER Elevator Outside",
+            "scale" : [
+                1.2992652654647827,
+                1.6556098461151123,
+                0.802456796169281
+            ],
+            "translation" : [
+                0,
+                1.6558265686035156,
+                2.303341865539551
+            ]
+        },
+        {
+            "extras" : {
+                "MM" : {},
+                "DM" : {}
+            },
+            "mesh" : 0,
+            "name" : "COLLIDER Elevator"
+        },
+        {
+            "extras" : {
+                "MM" : {},
+                "DM" : {}
+            },
+            "mesh" : 1,
+            "name" : "COLLIDER Elevator Inside front wall"
+        },
+        {
+            "extras" : {
+                "MM" : {},
+                "DM" : {},
+                "speed" : 1.0,
+                "move_to" : [
+                    -0.800000011920929,
+                    0.0,
+                    0.0
+                ]
+            },
+            "mesh" : 2,
+            "name" : "COLLIDER DOOR_LINEAR Left Elevator Door",
+            "translation" : [
+                -0.7758139967918396,
+                1.7013376951217651,
+                1.5755201578140259
+            ]
+        },
+        {
+            "extras" : {
+                "MM" : {},
+                "DM" : {},
+                "speed" : 1.0,
+                "move_to" : [
+                    0.800000011920929,
+                    0.0,
+                    0.0
+                ]
+            },
+            "mesh" : 3,
+            "name" : "COLLIDER DOOR_LINEAR Left Elevator Door.001",
+            "translation" : [
+                0.7758139967918396,
+                1.7013376951217651,
+                1.5755201578140259
+            ]
+        }
+    ],
+    "meshes" : [
+        {
+            "name" : "Cube.001",
+            "primitives" : [
+                {
+                    "attributes" : {
+                        "POSITION" : 0,
+                        "NORMAL" : 1,
+                        "COLOR_0" : 2
+                    },
+                    "indices" : 3
+                }
+            ]
+        },
+        {
+            "name" : "Cube.005",
+            "primitives" : [
+                {
+                    "attributes" : {
+                        "POSITION" : 4,
+                        "NORMAL" : 5,
+                        "TEXCOORD_0" : 6,
+                        "COLOR_0" : 7
+                    },
+                    "indices" : 8
+                }
+            ]
+        },
+        {
+            "name" : "Cube.002",
+            "primitives" : [
+                {
+                    "attributes" : {
+                        "POSITION" : 9,
+                        "NORMAL" : 10,
+                        "COLOR_0" : 11
+                    },
+                    "indices" : 12
+                }
+            ]
+        },
+        {
+            "name" : "Cube.004",
+            "primitives" : [
+                {
+                    "attributes" : {
+                        "POSITION" : 13,
+                        "NORMAL" : 14,
+                        "COLOR_0" : 15
+                    },
+                    "indices" : 12
+                }
+            ]
+        }
+    ],
+    "accessors" : [
+        {
+            "bufferView" : 0,
+            "componentType" : 5126,
+            "count" : 33999,
+            "max" : [
+                1.5503406524658203,
+                3.6524758338928223,
+                1.497761845588684
+            ],
+            "min" : [
+                -1.5487961769104004,
+                -0.24966466426849365,
+                -1.7640326023101807
+            ],
+            "type" : "VEC3"
+        },
+        {
+            "bufferView" : 1,
+            "componentType" : 5126,
+            "count" : 33999,
+            "type" : "VEC3"
+        },
+        {
+            "bufferView" : 2,
+            "componentType" : 5123,
+            "count" : 33999,
+            "normalized" : true,
+            "type" : "VEC4"
+        },
+        {
+            "bufferView" : 3,
+            "componentType" : 5123,
+            "count" : 168684,
+            "type" : "SCALAR"
+        },
+        {
+            "bufferView" : 4,
+            "componentType" : 5126,
+            "count" : 72,
+            "max" : [
+                1.2987936735153198,
+                3.4024763107299805,
+                1.499890923500061
+            ],
+            "min" : [
+                -1.2987936735153198,
+                -8.976459503173828e-05,
+                1.4398164749145508
+            ],
+            "type" : "VEC3"
+        },
+        {
+            "bufferView" : 5,
+            "componentType" : 5126,
+            "count" : 72,
+            "type" : "VEC3"
+        },
+        {
+            "bufferView" : 6,
+            "componentType" : 5126,
+            "count" : 72,
+            "type" : "VEC2"
+        },
+        {
+            "bufferView" : 7,
+            "componentType" : 5123,
+            "count" : 72,
+            "normalized" : true,
+            "type" : "VEC4"
+        },
+        {
+            "bufferView" : 8,
+            "componentType" : 5123,
+            "count" : 108,
+            "type" : "SCALAR"
+        },
+        {
+            "bufferView" : 9,
+            "componentType" : 5126,
+            "count" : 5794,
+            "max" : [
+                0.7710144519805908,
+                1.9496986865997314,
+                0.28925251960754395
+            ],
+            "min" : [
+                -0.7710182666778564,
+                -1.9497023820877075,
+                -0.0777585506439209
+            ],
+            "type" : "VEC3"
+        },
+        {
+            "bufferView" : 10,
+            "componentType" : 5126,
+            "count" : 5794,
+            "type" : "VEC3"
+        },
+        {
+            "bufferView" : 11,
+            "componentType" : 5123,
+            "count" : 5794,
+            "normalized" : true,
+            "type" : "VEC4"
+        },
+        {
+            "bufferView" : 12,
+            "componentType" : 5123,
+            "count" : 24180,
+            "type" : "SCALAR"
+        },
+        {
+            "bufferView" : 13,
+            "componentType" : 5126,
+            "count" : 5794,
+            "max" : [
+                0.7710144519805908,
+                1.9496986865997314,
+                0.28925251960754395
+            ],
+            "min" : [
+                -0.7710182666778564,
+                -1.9497023820877075,
+                -0.0777585506439209
+            ],
+            "type" : "VEC3"
+        },
+        {
+            "bufferView" : 14,
+            "componentType" : 5126,
+            "count" : 5794,
+            "type" : "VEC3"
+        },
+        {
+            "bufferView" : 15,
+            "componentType" : 5123,
+            "count" : 5794,
+            "normalized" : true,
+            "type" : "VEC4"
+        }
+    ],
+    "bufferViews" : [
+        {
+            "buffer" : 0,
+            "byteLength" : 407988,
+            "byteOffset" : 0
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 407988,
+            "byteOffset" : 407988
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 271992,
+            "byteOffset" : 815976
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 337368,
+            "byteOffset" : 1087968
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 864,
+            "byteOffset" : 1425336
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 864,
+            "byteOffset" : 1426200
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 576,
+            "byteOffset" : 1427064
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 576,
+            "byteOffset" : 1427640
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 216,
+            "byteOffset" : 1428216
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 69528,
+            "byteOffset" : 1428432
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 69528,
+            "byteOffset" : 1497960
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 46352,
+            "byteOffset" : 1567488
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 48360,
+            "byteOffset" : 1613840
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 69528,
+            "byteOffset" : 1662200
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 69528,
+            "byteOffset" : 1731728
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 46352,
+            "byteOffset" : 1801256
+        }
+    ],
+    "buffers" : [
+        {
+            "byteLength" : 1847608,
+            "uri" : "Elevator Export.bin"
+        }
+    ]
+}
