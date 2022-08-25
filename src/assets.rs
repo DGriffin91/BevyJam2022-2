@@ -27,7 +27,7 @@ pub struct ModelAssets {
 
 #[derive(AssetCollection)]
 pub struct SoundAssets {
-    #[asset(path = "sounds/door_open.mp3")]
+    #[asset(path = "sounds/door_open.flac")]
     pub door_open: Handle<AudioSource>,
 }
 
