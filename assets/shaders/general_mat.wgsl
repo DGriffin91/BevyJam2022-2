@@ -36,12 +36,13 @@ fn fragment(in: FragmentInput) -> @location(0) vec4<f32> {
 //            in.is_front,
 //        );
 
-    let uv = in.frag_coord.xy / vec2<f32>(view.width, view.height);
-
-    var col = textureSample(texture, texture_sampler, uv);
+    var col = vec3(1.0,1.0,1.0);
+#ifdef VERTEX_UVS
+    col = textureSample(texture, texture_sampler, in.uv).rgb;
+#endif
 
 #ifdef VERTEX_COLORS
-    col = col * in.color;
+    col = col * in.color.rgb;
 #endif
 
     return vec4(col, 1.0);

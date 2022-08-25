@@ -25,6 +25,7 @@ use bevy_kira_audio::prelude::*;
 use bevy_rapier3d::prelude::*;
 use iyes_loopless::prelude::*;
 use levels::LevelsPlugin;
+use materials::general::GeneralMaterial;
 
 use crate::assets::{GameState, ImageAssets, ModelAssets, SoundAssets};
 use crate::audio::AudioComponentPlugin;
@@ -78,6 +79,7 @@ fn main() {
         .add_plugin(AudioComponentPlugin)
         .add_plugin(HookPlugin)
         .add_plugin(Material2dPlugin::<PostProcessingMaterial>::default())
+        .add_plugin(MaterialPlugin::<GeneralMaterial>::default())
         .insert_resource(ClearColor(Color::BLACK))
         .insert_resource(RapierConfiguration::default())
         .add_plugin(SidecarAssetPlugin)
@@ -333,13 +335,13 @@ fn swap_materials(
     mut cmds: Commands,
     mut scene_loaded: SceneLoaded,
     mut standard_mats: ResMut<Assets<StandardMaterial>>,
-    //mut general_mats: ResMut<Assets<GeneralMaterial>>,
+    mut general_mats: ResMut<Assets<GeneralMaterial>>,
 ) {
     for entity in scene_loaded.iter() {
         if entity.get::<Handle<Mesh>>().is_some() {
             cmds.entity(entity.id()).insert(NoFrustumCulling); // Also remove AABBs
         }
-        //let mut cmds = cmds.entity(entity.id());
+        let mut cmds = cmds.entity(entity.id());
         if let Some(std_mat_handle) = entity.get::<Handle<StandardMaterial>>() {
             if let Some(std_mat) = standard_mats.get_mut(std_mat_handle) {
                 if std_mat.emissive_texture.is_none() {
@@ -347,13 +349,13 @@ fn swap_materials(
                 }
 
                 // TODO Not showing general material
-                // let mut tex = std_mat.emissive_texture.clone();
-                // if tex.is_none() {
-                //     tex = std_mat.base_color_texture.clone();
-                // }
-                // let mat_handle_1 = general_mats.add(GeneralMaterial { color: tex });
-                // cmds.remove::<Handle<StandardMaterial>>();
-                // cmds.insert(mat_handle_1);
+                let mut tex = std_mat.emissive_texture.clone();
+                if tex.is_none() {
+                    tex = std_mat.base_color_texture.clone();
+                }
+                let mat_handle_1 = general_mats.add(GeneralMaterial { color: tex });
+                cmds.remove::<Handle<StandardMaterial>>();
+                cmds.insert(mat_handle_1);
             }
         }
     }

@@ -39,6 +39,8 @@ fn doors(
     buttons: Res<NamedButtonStatuses>,
     mut door_fully_closed_events: EventReader<DoorFullyClosedEvent>,
     mut inside_elevator: Local<bool>,
+    mut outside_elevator: Local<bool>,
+    mut inside_near_door: Local<bool>,
     mut level: ResMut<Levels>,
     keys: Res<Input<KeyCode>>,
 ) {
@@ -52,22 +54,21 @@ fn doors(
     if triggers.is_changed() {
         if let Some(status) = triggers.any("Elevator Inside Main") {
             *inside_elevator = status.player_is_inside;
-            for (_, mut door) in doors.iter_mut().filter_name_contains("Elevator Door") {
-                if status.player_is_inside {
-                    door.state.open();
-                } else {
-                    door.state.close();
-                }
-            }
+        }
+
+        if let Some(status) = triggers.any("Elevator Inside Near Door") {
+            *inside_near_door = status.player_is_inside;
         }
 
         if let Some(status) = triggers.any("Elevator Outside") {
-            for (_, mut door) in doors.iter_mut().filter_name_contains("Elevator Door") {
-                if status.player_is_inside {
-                    door.state.open();
-                } else {
-                    door.state.close();
-                }
+            *outside_elevator = status.player_is_inside;
+        }
+
+        for (_, mut door) in doors.iter_mut().filter_name_contains("Elevator Door") {
+            if *outside_elevator || *inside_near_door {
+                door.state.open();
+            } else {
+                door.state.close();
             }
         }
     }

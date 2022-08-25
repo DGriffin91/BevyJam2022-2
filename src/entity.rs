@@ -40,18 +40,18 @@ impl Plugin for EntityPlugin {
         );
 
         // Phone
-        register_entity!(
-            app,
-            phone,
-            events = [
-                PhoneMenuOpenEvent,
-                PhoneMenuCloseEvent,
-                PhoneDigitEnterEvent,
-                PhoneSubmitEvent
-            ],
-            systems = [phone_interact_events],
-            startup_systems = [setup_phone_ui]
-        );
+        //register_entity!(
+        //    app,
+        //    phone,
+        //    events = [
+        //        PhoneMenuOpenEvent,
+        //        PhoneMenuCloseEvent,
+        //        PhoneDigitEnterEvent,
+        //        PhoneSubmitEvent
+        //    ],
+        //    systems = [phone_interact_events],
+        //    startup_systems = [setup_phone_ui]
+        //);
 
         // Teleport destination
         register_entity!(app, teleport_destination);
