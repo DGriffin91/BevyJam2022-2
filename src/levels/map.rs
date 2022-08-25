@@ -1,4 +1,4 @@
-use bevy::prelude::*;
+use bevy::{prelude::*, render::view::NoFrustumCulling};
 use iyes_loopless::prelude::*;
 
 use crate::{
@@ -56,12 +56,15 @@ fn setup(mut cmds: Commands, model_assets: Res<ModelAssets>) {
 }
 
 fn swap_materials(
-    //mut cmds: Commands,
+    mut cmds: Commands,
     mut scene_loaded: SceneLoaded,
     mut standard_mats: ResMut<Assets<StandardMaterial>>,
     //mut general_mats: ResMut<Assets<GeneralMaterial>>,
 ) {
     for entity in scene_loaded.iter() {
+        if entity.get::<Handle<Mesh>>().is_some() {
+            cmds.entity(entity.id()).insert(NoFrustumCulling);
+        }
         //let mut cmds = cmds.entity(entity.id());
         if let Some(std_mat_handle) = entity.get::<Handle<StandardMaterial>>() {
             if let Some(std_mat) = standard_mats.get_mut(std_mat_handle) {

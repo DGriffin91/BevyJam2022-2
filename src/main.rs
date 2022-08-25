@@ -60,7 +60,7 @@ fn main() {
         })
         .insert_resource(WindowDescriptor {
             title: "BevyJam 2022 - 2".to_string(),
-            present_mode: PresentMode::AutoVsync,
+            present_mode: PresentMode::AutoNoVsync,
             ..default()
         })
         .add_plugins(DefaultPlugins)

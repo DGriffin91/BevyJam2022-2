@@ -6,15 +6,15 @@ license = "MIT OR Apache-2.0"
 
 [dependencies]
 bevy = { version = "0.8", features = [
-  "dynamic",
   "jpeg",
   "ktx2",
-  "mp3",
   "zstd",
+  "flac",
+  "vorbis",
 ] }
 bevy_asset_loader = { version = "0.12", features = ["stageless"] }
-bevy_editor_pls = { git = "https://github.com/jakobhellermann/bevy_editor_pls", rev = "9aa28e3f1b6b804eefeb4b976143ca075b4e8697" }
-bevy_editor_pls_default_windows = { git = "https://github.com/jakobhellermann/bevy_editor_pls", rev = "9aa28e3f1b6b804eefeb4b976143ca075b4e8697" }
+bevy_editor_pls = { git = "https://github.com/DGriffin91/bevy_editor_pls", branch = "remove_picking" }
+bevy_editor_pls_default_windows = { git = "https://github.com/DGriffin91/bevy_editor_pls", branch = "remove_picking" }
 bevy_egui = "0.15"
 bevy_fps_controller = { path = "./bevy_fps_controller" }
 bevy_kira_audio = { version = "0.12", features = ["mp3"] }
@@ -28,6 +28,9 @@ pollster = "0.2"
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
 rand = "0.8"
+
+[target.'cfg(target_os = "linux")'.dependencies]
+bevy = { version = "0.8", features = ["dynamic"] }
 
 # Enable only a small amount of optimization in debug mode
 [profile.dev]
