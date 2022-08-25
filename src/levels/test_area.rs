@@ -63,21 +63,31 @@ fn doors(
     triggers: Res<NamedTriggerStatuses>,
     buttons: Res<NamedButtonStatuses>,
 ) {
-    if let Some(status) = triggers.any("TRIGGER Door trigger 1") {
-        for (_, mut door) in doors.iter_mut().filter_name_contains("DOOR_LINEAR Door 1") {
-            door.is_open = status.exit_enter;
+    if triggers.is_changed() {
+        if let Some(status) = triggers.any("TRIGGER Door trigger 1") {
+            for (_, mut door) in doors.iter_mut().filter_name_contains("DOOR_LINEAR Door 1") {
+                if status.player_is_inside {
+                    door.state.open();
+                } else {
+                    door.state.close();
+                }
+            }
         }
-    }
 
-    if let Some(status) = triggers.any("TRIGGER Door trigger 2") {
-        for (_, mut door) in doors.iter_mut().filter_name_contains("DOOR_LINEAR Door 2") {
-            door.is_open = status.exit_enter;
+        if let Some(status) = triggers.any("TRIGGER Door trigger 2") {
+            for (_, mut door) in doors.iter_mut().filter_name_contains("DOOR_LINEAR Door 2") {
+                if status.player_is_inside {
+                    door.state.open();
+                } else {
+                    door.state.close();
+                }
+            }
         }
-    }
 
-    if buttons.any("BUTTON Door trigger 3").is_some() {
-        for (_, mut door) in doors.iter_mut().filter_name_contains("DOOR_LINEAR Door 3") {
-            door.is_open = !door.is_open;
+        if buttons.any("BUTTON Door trigger 3").is_some() {
+            for (_, mut door) in doors.iter_mut().filter_name_contains("DOOR_LINEAR Door 3") {
+                door.state.close();
+            }
         }
     }
 }

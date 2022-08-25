@@ -2,6 +2,7 @@
 
 use std::f32::consts::PI;
 
+use assets::FontAssets;
 use bevy::{
     asset::AssetServerSettings,
     diagnostic::{FrameTimeDiagnosticsPlugin, LogDiagnosticsPlugin},
@@ -23,7 +24,7 @@ use bevy_fps_controller::controller::*;
 use bevy_kira_audio::prelude::*;
 use bevy_rapier3d::prelude::*;
 use iyes_loopless::prelude::*;
-use levels::{elevator_level::ElevatorLevelPlugin, level2_lobby::Level2LobbyPlugin};
+use levels::LevelsPlugin;
 
 use crate::assets::{GameState, ImageAssets, ModelAssets, SoundAssets};
 use crate::audio::AudioComponentPlugin;
@@ -31,7 +32,6 @@ use crate::audio::AudioComponentPlugin;
 use crate::editor::GameEditorPlugin;
 use crate::entity::EntityPlugin;
 use crate::inventory::InventoryPlugin;
-use crate::levels::level1_garage::Level1GaragePlugin;
 use crate::materials::post_process::PostProcessingMaterial;
 use crate::scene_hook::{HookPlugin, SceneLoaded};
 use crate::sidecar_asset::SidecarAssetPlugin;
@@ -55,6 +55,7 @@ fn main() {
         .add_loading_state(
             LoadingState::new(GameState::AssetLoading)
                 .continue_to_state(GameState::RunLevel)
+                .with_collection::<FontAssets>()
                 .with_collection::<ImageAssets>()
                 .with_collection::<ModelAssets>()
                 .with_collection::<SoundAssets>(),
@@ -85,20 +86,17 @@ fn main() {
 
     #[cfg(debug_assertions)]
     app.add_plugin(GameEditorPlugin);
-    // .add_plugin(RapierDebugRenderPlugin::default());
 
-    app.add_plugin(Level1GaragePlugin)
-        //.add_plugin(Level2LobbyPlugin)
-        .add_plugin(ElevatorLevelPlugin)
+    app.add_plugin(LevelsPlugin)
         .add_plugin(EntityPlugin)
         .add_plugin(InventoryPlugin)
+        .add_system(window_resized)
         .add_enter_system(GameState::RunLevel, hide_mouse)
         .add_enter_system(GameState::RunLevel, setup_player)
         .add_system_set(
             ConditionSet::new()
                 .run_in_state(GameState::RunLevel)
                 .with_system(sun_follow_camera)
-                .with_system(window_resized)
                 .with_system(toggle_mouse)
                 .with_system(swap_materials)
                 .into(),

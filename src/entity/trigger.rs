@@ -46,7 +46,7 @@ impl Default for Trigger {
 #[derive(Clone, Copy, Debug)]
 pub struct NamedTriggerStatus {
     pub entity: Entity,
-    pub exit_enter: bool,
+    pub player_is_inside: bool,
 }
 
 #[derive(Default)]
@@ -108,7 +108,7 @@ pub(super) fn trigger_collision_events(
                                         name,
                                         NamedTriggerStatus {
                                             entity,
-                                            exit_enter: true,
+                                            player_is_inside: true,
                                         },
                                     );
                                 }
@@ -145,7 +145,7 @@ pub(super) fn trigger_collision_events(
                                         name,
                                         NamedTriggerStatus {
                                             entity,
-                                            exit_enter: false,
+                                            player_is_inside: false,
                                         },
                                     );
                                 }

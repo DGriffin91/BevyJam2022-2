@@ -12,9 +12,65 @@ pub enum GameState {
 }
 
 #[derive(AssetCollection)]
+pub struct FontAssets {
+    #[asset(path = "fonts/FiraMono-Medium.ttf")]
+    pub fira_mono_medium: Handle<Font>,
+}
+
+#[derive(AssetCollection)]
 pub struct ImageAssets {
     #[asset(path = "images/key.png")]
     pub key: Handle<Image>,
+    #[asset(path = "images/phone/base.png")]
+    pub phone_base: Handle<Image>,
+    #[asset(path = "images/phone/0.png")]
+    pub phone_key_0: Handle<Image>,
+    #[asset(path = "images/phone/0_pressed.png")]
+    pub phone_key_0_pressed: Handle<Image>,
+    #[asset(path = "images/phone/1.png")]
+    pub phone_key_1: Handle<Image>,
+    #[asset(path = "images/phone/1_pressed.png")]
+    pub phone_key_1_pressed: Handle<Image>,
+    #[asset(path = "images/phone/2.png")]
+    pub phone_key_2: Handle<Image>,
+    #[asset(path = "images/phone/2_pressed.png")]
+    pub phone_key_2_pressed: Handle<Image>,
+    #[asset(path = "images/phone/3.png")]
+    pub phone_key_3: Handle<Image>,
+    #[asset(path = "images/phone/3_pressed.png")]
+    pub phone_key_3_pressed: Handle<Image>,
+    #[asset(path = "images/phone/4.png")]
+    pub phone_key_4: Handle<Image>,
+    #[asset(path = "images/phone/4_pressed.png")]
+    pub phone_key_4_pressed: Handle<Image>,
+    #[asset(path = "images/phone/5.png")]
+    pub phone_key_5: Handle<Image>,
+    #[asset(path = "images/phone/5_pressed.png")]
+    pub phone_key_5_pressed: Handle<Image>,
+    #[asset(path = "images/phone/6.png")]
+    pub phone_key_6: Handle<Image>,
+    #[asset(path = "images/phone/6_pressed.png")]
+    pub phone_key_6_pressed: Handle<Image>,
+    #[asset(path = "images/phone/7.png")]
+    pub phone_key_7: Handle<Image>,
+    #[asset(path = "images/phone/7_pressed.png")]
+    pub phone_key_7_pressed: Handle<Image>,
+    #[asset(path = "images/phone/8.png")]
+    pub phone_key_8: Handle<Image>,
+    #[asset(path = "images/phone/8_pressed.png")]
+    pub phone_key_8_pressed: Handle<Image>,
+    #[asset(path = "images/phone/9.png")]
+    pub phone_key_9: Handle<Image>,
+    #[asset(path = "images/phone/9_pressed.png")]
+    pub phone_key_9_pressed: Handle<Image>,
+    #[asset(path = "images/phone/hash.png")]
+    pub phone_key_hash: Handle<Image>,
+    #[asset(path = "images/phone/hash_pressed.png")]
+    pub phone_key_hash_pressed: Handle<Image>,
+    #[asset(path = "images/phone/asterix.png")]
+    pub phone_key_asterix: Handle<Image>,
+    #[asset(path = "images/phone/asterix_pressed.png")]
+    pub phone_key_asterix_pressed: Handle<Image>,
 }
 
 #[derive(AssetCollection)]

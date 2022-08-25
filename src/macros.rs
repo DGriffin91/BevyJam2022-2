@@ -68,11 +68,15 @@ macro_rules! register_entity {
         $(, events = [ $( $event:ident ),* ] )?
         $(, resources = [ $( $resource:ident ),* ] )?
         $(, systems = [ $( $system:ident ),* ] )?
-    ) => {
+        $(, startup_systems = [ $( $startup_system:ident ),* ] )?
+    ) => {{
+        #[allow(unused)]
+        use iyes_loopless::prelude::*;
         paste::paste! {
             $app.register_type::< self::$id::[< $id:camel >] >();
             $( $( $app.add_event::<self::$id::$event>(); )* )?
             $( $( $app.init_resource::<self::$id::$resource>(); )* )?
+            $( $( $app.add_enter_system($crate::assets::GameState::RunLevel, self::$id::$startup_system); )* )?
             $app.add_system_set(
                 iyes_loopless::prelude::ConditionSet::new()
                     .run_in_state($crate::assets::GameState::RunLevel)
@@ -81,5 +85,5 @@ macro_rules! register_entity {
                     .into()
             )
         }
-    };
+    }};
 }

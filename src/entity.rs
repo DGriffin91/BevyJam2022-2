@@ -2,6 +2,7 @@ pub mod block;
 pub mod button;
 pub mod collider;
 pub mod door_linear;
+pub mod phone;
 pub mod teleport;
 pub mod teleport_destination;
 pub mod trigger;
@@ -30,7 +31,27 @@ impl Plugin for EntityPlugin {
         register_entity!(app, collider);
 
         // Door linear
-        register_entity!(app, door_linear, systems = [door_sounds, update_door]);
+        register_entity!(
+            app,
+            door_linear,
+            events = [DoorFullyClosedEvent, DoorFullyOpenedEvent],
+            resources = [NamedDoorStatuses],
+            systems = [door_sounds, update_door]
+        );
+
+        // Phone
+        register_entity!(
+            app,
+            phone,
+            events = [
+                PhoneMenuOpenEvent,
+                PhoneMenuCloseEvent,
+                PhoneDigitEnterEvent,
+                PhoneSubmitEvent
+            ],
+            systems = [phone_interact_events],
+            startup_systems = [setup_phone_ui]
+        );
 
         // Teleport destination
         register_entity!(app, teleport_destination);
