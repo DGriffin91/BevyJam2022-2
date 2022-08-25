@@ -106,6 +106,17 @@ fn main() {
         .run();
 }
 
+pub fn get_display_scale(window_width: f32, window_height: f32) -> Vec3 {
+    let window_width = window_width as u32;
+    let window_height = window_height as u32;
+
+    let scale = (window_height / 512).max(2);
+
+    let width = (window_width / scale).max(256);
+    let height = (window_height / scale).max(256);
+    vec3(width as f32, height as f32, scale as f32)
+}
+
 fn setup_player(
     mut cmds: Commands,
     mut images: ResMut<Assets<Image>>,
@@ -115,17 +126,14 @@ fn setup_player(
 ) {
     let window = windows.get_primary_mut().unwrap();
 
-    let window_width = window.physical_width() as u32;
-    let window_height = window.physical_height() as u32;
-
-    let scale = (window_height / 512).max(2);
-
-    let width = (window_width / scale).max(256);
-    let height = (window_height / scale).max(256);
+    let scale = get_display_scale(
+        window.physical_width() as f32,
+        window.physical_height() as f32,
+    );
 
     let size = Extent3d {
-        width,
-        height,
+        width: scale.x as u32,
+        height: scale.y as u32,
         ..default()
     };
     // This is the texture that will be rendered to.
@@ -197,7 +205,7 @@ fn setup_player(
         }),
         ..default()
     })
-    .insert(UiCameraConfig { show_ui: false })
+    .insert(UiCameraConfig { show_ui: true })
     .insert(RenderPlayer(0))
     .insert(PlayerCamera);
 
@@ -238,7 +246,7 @@ fn setup_player(
         },
         ..Camera2dBundle::default()
     })
-    // .insert(UiCameraConfig { show_ui: false })
+    .insert(UiCameraConfig { show_ui: false })
     .insert(post_processing_pass_layer);
 }
 
@@ -285,19 +293,13 @@ fn window_resized(
     mut image_events: EventWriter<AssetEvent<Image>>,
 ) {
     if let Some(event) = window_resized_events.iter().last() {
-        let window_width = event.width as u32;
-        let window_height = event.height as u32;
-
-        let scale = (window_height / 512).max(2);
-
-        let width = (window_width / scale).max(256);
-        let height = (window_height / scale).max(256);
+        let scale = get_display_scale(event.width, event.height);
 
         if let Some((_, mat)) = post_processing_materials.iter_mut().next() {
             let image = images.get_mut(&mat.source_image).unwrap();
             image.resize(Extent3d {
-                width,
-                height,
+                width: scale.x as u32,
+                height: scale.y as u32,
                 ..default()
             });
             image_events.send(AssetEvent::Modified {

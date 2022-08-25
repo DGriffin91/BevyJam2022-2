@@ -2,7 +2,10 @@ use bevy::{prelude::*, ui::FocusPolicy};
 use bevy_kira_audio::{prelude::Audio, AudioControl};
 use iyes_loopless::prelude::*;
 
-use crate::assets::{GameState, ImageAssets, SoundAssets};
+use crate::{
+    assets::{GameState, ImageAssets, SoundAssets},
+    get_display_scale,
+};
 
 pub struct InventoryPlugin;
 
@@ -31,11 +34,22 @@ struct InventoryUiContainer;
 #[derive(Component)]
 struct Icon(&'static str);
 
-fn create_inventory_toolbar_ui(mut commands: Commands, image_assets: Res<ImageAssets>) {
+fn create_inventory_toolbar_ui(
+    mut commands: Commands,
+    windows: Res<Windows>,
+    image_assets: Res<ImageAssets>,
+) {
+    let window = windows.get_primary().unwrap();
+
+    let scale = get_display_scale(
+        window.physical_width() as f32,
+        window.physical_height() as f32,
+    );
+
     commands
         .spawn_bundle(NodeBundle {
             style: Style {
-                size: Size::new(Val::Percent(100.0), Val::Auto),
+                size: Size::new(Val::Px(scale.x), Val::Px(scale.y)),
                 justify_content: JustifyContent::Center,
                 ..default()
             },
