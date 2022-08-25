@@ -1,4 +1,4 @@
-use bevy::{prelude::*, ui::FocusPolicy};
+use bevy::{prelude::*, ui::FocusPolicy, window::WindowResized};
 use bevy_kira_audio::{prelude::Audio, AudioControl};
 use iyes_loopless::prelude::*;
 
@@ -18,6 +18,7 @@ impl Plugin for InventoryPlugin {
                 .run_in_state(GameState::RunLevel)
                 .with_system(insert_item_to_inventory)
                 .with_system(update_inventory_toolbar_ui)
+                .with_system(resize_inventory_toolbar_ui)
                 .into(),
         );
     }
@@ -99,6 +100,20 @@ fn create_inventory_toolbar_ui(
 fn insert_item_to_inventory(keys: Res<Input<KeyCode>>, mut inventory: ResMut<Inventory>) {
     if keys.just_pressed(KeyCode::E) {
         inventory.key = !inventory.key;
+    }
+}
+
+fn resize_inventory_toolbar_ui(
+    time: Res<Time>,
+    mut ui: Query<&mut Style, With<InventoryUiContainer>>,
+    mut window_resized_events: EventReader<WindowResized>,
+    windows: Res<Windows>,
+) {
+    if let Some(event) = window_resized_events.iter().last() {
+        for mut style in ui.iter_mut() {
+            let scale = get_display_scale(event.width, event.height);
+            style.size = Size::new(Val::Px(scale.x), Val::Px(scale.y));
+        }
     }
 }
 

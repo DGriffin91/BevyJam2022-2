@@ -74,7 +74,7 @@ fn main() {
         })
         .add_plugins(DefaultPlugins)
         .add_plugin(LogDiagnosticsPlugin::default())
-        .add_plugin(FrameTimeDiagnosticsPlugin::default())
+        //.add_plugin(FrameTimeDiagnosticsPlugin::default())
         .add_plugin(AudioPlugin)
         .add_plugin(AudioComponentPlugin)
         .add_plugin(HookPlugin)
