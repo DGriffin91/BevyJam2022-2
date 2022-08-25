@@ -159,6 +159,7 @@ fn setup_player(
             max_air_speed: 12.0,
             walk_speed: 6.0,
             air_acceleration: 800.0, // bhop :D
+            key_jump: None,
             ..default()
         })
         .insert_bundle(SpatialBundle {

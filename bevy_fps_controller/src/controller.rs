@@ -81,13 +81,13 @@ pub struct FpsController {
     #[reflect(ignore)]
     pub key_down: KeyCode,
     #[reflect(ignore)]
-    pub key_sprint: KeyCode,
+    pub key_sprint: Option<KeyCode>,
     #[reflect(ignore)]
-    pub key_jump: KeyCode,
+    pub key_jump: Option<KeyCode>,
     #[reflect(ignore)]
-    pub key_fly: KeyCode,
+    pub key_fly: Option<KeyCode>,
     #[reflect(ignore)]
-    pub key_crouch: KeyCode,
+    pub key_crouch: Option<KeyCode>,
 }
 
 impl Default for FpsController {
@@ -121,10 +121,10 @@ impl Default for FpsController {
             key_right: KeyCode::D,
             key_up: KeyCode::Q,
             key_down: KeyCode::E,
-            key_sprint: KeyCode::LShift,
-            key_jump: KeyCode::Space,
-            key_fly: KeyCode::F,
-            key_crouch: KeyCode::LControl,
+            key_sprint: Some(KeyCode::LShift),
+            key_jump: Some(KeyCode::Space),
+            key_fly: Some(KeyCode::F),
+            key_crouch: Some(KeyCode::LControl),
             sensitivity: 0.001,
         }
     }
@@ -167,10 +167,22 @@ pub fn fps_controller_input(
             get_axis(&key_input, controller.key_up, controller.key_down),
             get_axis(&key_input, controller.key_forward, controller.key_back),
         );
-        input.sprint = key_input.pressed(controller.key_sprint);
-        input.jump = key_input.pressed(controller.key_jump);
-        input.fly = key_input.just_pressed(controller.key_fly);
-        input.crouch = key_input.pressed(controller.key_crouch);
+        input.sprint = controller
+            .key_sprint
+            .map(|key| key_input.pressed(key))
+            .unwrap_or(false);
+        input.jump = controller
+            .key_jump
+            .map(|key| key_input.pressed(key))
+            .unwrap_or(false);
+        input.fly = controller
+            .key_fly
+            .map(|key| key_input.just_pressed(key))
+            .unwrap_or(false);
+        input.crouch = controller
+            .key_crouch
+            .map(|key| key_input.pressed(key))
+            .unwrap_or(false);
     }
 }
 
