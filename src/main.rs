@@ -24,22 +24,22 @@ use bevy_kira_audio::prelude::*;
 use bevy_rapier3d::prelude::*;
 use iyes_loopless::prelude::*;
 use levels::{elevator_level::ElevatorLevelPlugin, level2_lobby::Level2LobbyPlugin};
-use materials::general::GeneralMaterial;
-use scene_hook::SceneLoaded;
 
 use crate::assets::{GameState, ImageAssets, ModelAssets, SoundAssets};
-// use crate::editor::GameEditorPlugin;
 use crate::audio::AudioComponentPlugin;
+#[cfg(debug_assertions)]
+use crate::editor::GameEditorPlugin;
 use crate::entity::EntityPlugin;
 use crate::inventory::InventoryPlugin;
 use crate::levels::level1_garage::Level1GaragePlugin;
 use crate::materials::post_process::PostProcessingMaterial;
-use crate::scene_hook::HookPlugin;
+use crate::scene_hook::{HookPlugin, SceneLoaded};
 use crate::sidecar_asset::SidecarAssetPlugin;
 
 mod assets;
 mod audio;
-// mod editor;
+#[cfg(debug_assertions)]
+mod editor;
 mod entity;
 mod inventory;
 mod levels;
@@ -49,8 +49,9 @@ mod scene_hook;
 mod sidecar_asset;
 
 fn main() {
-    App::new()
-        .add_loopless_state(GameState::AssetLoading)
+    let mut app = App::new();
+
+    app.add_loopless_state(GameState::AssetLoading)
         .add_loading_state(
             LoadingState::new(GameState::AssetLoading)
                 .continue_to_state(GameState::RunLevel)
@@ -76,14 +77,17 @@ fn main() {
         .add_plugin(AudioComponentPlugin)
         .add_plugin(HookPlugin)
         .add_plugin(Material2dPlugin::<PostProcessingMaterial>::default())
-        .add_plugin(MaterialPlugin::<GeneralMaterial>::default())
         .insert_resource(ClearColor(Color::BLACK))
         .insert_resource(RapierConfiguration::default())
         .add_plugin(SidecarAssetPlugin)
         .add_plugin(RapierPhysicsPlugin::<NoUserData>::default())
-        .add_plugin(FpsControllerPlugin)
-        // .add_plugin(GameEditorPlugin)
-        .add_plugin(Level1GaragePlugin)
+        .add_plugin(FpsControllerPlugin);
+
+    #[cfg(debug_assertions)]
+    app.add_plugin(GameEditorPlugin);
+    // .add_plugin(RapierDebugRenderPlugin::default());
+
+    app.add_plugin(Level1GaragePlugin)
         //.add_plugin(Level2LobbyPlugin)
         .add_plugin(ElevatorLevelPlugin)
         .add_plugin(EntityPlugin)
