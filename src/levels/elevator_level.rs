@@ -41,10 +41,18 @@ fn doors(
     buttons: Res<NamedButtonStatuses>,
     mut inside_elevator: Local<bool>,
 ) {
-    if let Some(status) = triggers.any("Elevator Inside") {
+    if let Some(status) = triggers.any("Elevator Inside Main") {
         *inside_elevator = status.exit_enter;
         for (_, mut door) in doors.iter_mut().filter_name_contains("Elevator Door") {
             door.is_open = status.exit_enter;
+        }
+    }
+
+    if let Some(status) = triggers.any("Elevator Inside Near Door") {
+        for (_, mut door) in doors.iter_mut().filter_name_contains("Elevator Door") {
+            if status.exit_enter {
+                door.is_open = true;
+            }
         }
     }
 
@@ -54,7 +62,7 @@ fn doors(
         }
     }
 
-    if *inside_elevator && buttons.any("BUTTON Inside Elevator").is_some() {
+    if *inside_elevator && buttons.any("BUTTON Elevator Inside").is_some() {
         for (_, mut door) in doors.iter_mut().filter_name_contains("Elevator Door") {
             door.is_open = !door.is_open;
         }
