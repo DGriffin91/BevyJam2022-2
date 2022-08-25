@@ -1,12 +1,7 @@
 use bevy::prelude::*;
 use iyes_loopless::prelude::*;
 
-use crate::{
-    assets::{GameState, ModelAssets},
-    scene_hook::{HookedSceneBundle, SceneHook},
-};
-
-use super::Levels;
+use crate::assets::GameState;
 
 pub struct Level1GaragePlugin;
 impl Plugin for Level1GaragePlugin {

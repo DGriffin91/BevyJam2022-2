@@ -5,7 +5,7 @@ use std::f32::consts::PI;
 use assets::FontAssets;
 use bevy::{
     asset::AssetServerSettings,
-    diagnostic::{FrameTimeDiagnosticsPlugin, LogDiagnosticsPlugin},
+    diagnostic::LogDiagnosticsPlugin,
     math::{vec2, vec3},
     prelude::*,
     render::{

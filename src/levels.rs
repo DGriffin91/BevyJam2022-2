@@ -1,10 +1,7 @@
 use bevy::prelude::*;
 use iyes_loopless::prelude::*;
 
-use crate::{
-    assets::{GameState, ModelAssets},
-    scene_hook::{HookedSceneBundle, SceneHook},
-};
+use crate::assets::{GameState, ModelAssets};
 
 use self::elevator::{ElevatorPlugin, ElevatorScene};
 

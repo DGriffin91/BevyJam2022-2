@@ -2,7 +2,7 @@ pub mod block;
 pub mod button;
 pub mod collider;
 pub mod door_linear;
-pub mod phone;
+//pub mod phone;
 pub mod teleport;
 pub mod teleport_destination;
 pub mod trigger;

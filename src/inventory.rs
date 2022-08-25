@@ -104,10 +104,8 @@ fn insert_item_to_inventory(keys: Res<Input<KeyCode>>, mut inventory: ResMut<Inv
 }
 
 fn resize_inventory_toolbar_ui(
-    time: Res<Time>,
     mut ui: Query<&mut Style, With<InventoryUiContainer>>,
     mut window_resized_events: EventReader<WindowResized>,
-    windows: Res<Windows>,
 ) {
     if let Some(event) = window_resized_events.iter().last() {
         for mut style in ui.iter_mut() {

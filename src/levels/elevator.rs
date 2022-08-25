@@ -1,7 +1,8 @@
+#![allow(clippy::type_complexity)]
 use bevy::prelude::*;
 use iyes_loopless::prelude::*;
 
-use crate::entity::{door_linear::DoorFullyClosedEvent, NamedIterator};
+use crate::entity::NamedIterator;
 use crate::{
     assets::{GameState, ModelAssets},
     entity::{button::NamedButtonStatuses, door_linear::DoorLinear, trigger::NamedTriggerStatuses},
@@ -37,7 +38,7 @@ fn doors(
     mut doors: Query<(&Name, &mut DoorLinear)>,
     triggers: Res<NamedTriggerStatuses>,
     buttons: Res<NamedButtonStatuses>,
-    mut door_fully_closed_events: EventReader<DoorFullyClosedEvent>,
+    //mut door_fully_closed_events: EventReader<DoorFullyClosedEvent>,
     mut inside_elevator: Local<bool>,
     mut outside_elevator: Local<bool>,
     mut inside_near_door: Local<bool>,
