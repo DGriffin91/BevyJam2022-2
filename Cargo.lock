@@ -3866,14 +3866,13 @@ checksum = "9193164d4de03a926d909d3bc7c30543cecb35400c02114792c2cae20d5e2dbb"
 [[package]]
 name = "wgpu"
 version = "0.13.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "277e967bf8b7820a76852645a6bce8bbd31c32fda2042e82d8e3ea75fda8892d"
+source = "git+https://github.com/mockersf/wgpu/?branch=unconditional-clear-workaround#a703a78644bc277f8b93870297bb3734e25f2be9"
 dependencies = [
  "arrayvec",
  "js-sys",
  "log",
  "naga",
- "parking_lot 0.12.1",
+ "parking_lot 0.11.2",
  "raw-window-handle",
  "smallvec",
  "wasm-bindgen",
@@ -3887,8 +3886,7 @@ dependencies = [
 [[package]]
 name = "wgpu-core"
 version = "0.13.2"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "89b92788dec9d0c1bed849a1b83f01b2ee12819bf04a79c90f68e4173f7b5ba2"
+source = "git+https://github.com/mockersf/wgpu/?branch=unconditional-clear-workaround#a703a78644bc277f8b93870297bb3734e25f2be9"
 dependencies = [
  "arrayvec",
  "bit-vec",
@@ -3899,7 +3897,7 @@ dependencies = [
  "fxhash",
  "log",
  "naga",
- "parking_lot 0.12.1",
+ "parking_lot 0.11.2",
  "profiling",
  "raw-window-handle",
  "smallvec",
@@ -3912,8 +3910,7 @@ dependencies = [
 [[package]]
 name = "wgpu-hal"
 version = "0.13.2"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "20cbdfc3d0637dba3d5536b93adef3d26023a0b96f0e1ee5ee9560a401d9f646"
+source = "git+https://github.com/mockersf/wgpu/?branch=unconditional-clear-workaround#a703a78644bc277f8b93870297bb3734e25f2be9"
 dependencies = [
  "android_system_properties",
  "arrayvec",
@@ -3936,7 +3933,7 @@ dependencies = [
  "metal",
  "naga",
  "objc",
- "parking_lot 0.12.1",
+ "parking_lot 0.11.2",
  "profiling",
  "range-alloc",
  "raw-window-handle",
@@ -3951,8 +3948,7 @@ dependencies = [
 [[package]]
 name = "wgpu-types"
 version = "0.13.2"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "1f762cbc08e1a51389859cf9c199c7aef544789cf3510889aab12c607f701604"
+source = "git+https://github.com/mockersf/wgpu/?branch=unconditional-clear-workaround#a703a78644bc277f8b93870297bb3734e25f2be9"
 dependencies = [
  "bitflags",
 ]
