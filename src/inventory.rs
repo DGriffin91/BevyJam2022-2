@@ -1,7 +1,8 @@
 use bevy::{prelude::*, ui::FocusPolicy};
+use bevy_kira_audio::{prelude::Audio, AudioControl};
 use iyes_loopless::prelude::*;
 
-use crate::assets::{GameState, ImageAssets};
+use crate::assets::{GameState, ImageAssets, SoundAssets};
 
 pub struct InventoryPlugin;
 
@@ -34,7 +35,8 @@ fn create_inventory_toolbar_ui(mut commands: Commands, image_assets: Res<ImageAs
     commands
         .spawn_bundle(NodeBundle {
             style: Style {
-                padding: UiRect::new(Val::Px(20.0), Val::Px(20.0), Val::Px(20.0), Val::Px(20.0)),
+                size: Size::new(Val::Percent(100.0), Val::Auto),
+                justify_content: JustifyContent::Center,
                 ..default()
             },
             color: Color::NONE.into(),
@@ -43,22 +45,39 @@ fn create_inventory_toolbar_ui(mut commands: Commands, image_assets: Res<ImageAs
         })
         .with_children(|parent| {
             parent
-                .spawn_bundle(ImageBundle {
+                .spawn_bundle(NodeBundle {
                     style: Style {
-                        size: Size::new(Val::Px(42.0), Val::Px(42.0)),
-                        margin: UiRect::new(
-                            Val::Px(10.0),
-                            Val::Px(10.0),
-                            Val::Px(10.0),
-                            Val::Px(10.0),
+                        padding: UiRect::new(
+                            Val::Px(20.0),
+                            Val::Px(20.0),
+                            Val::Px(20.0),
+                            Val::Px(20.0),
                         ),
                         ..default()
                     },
-                    image: image_assets.key.clone().into(),
-                    visibility: Visibility { is_visible: false },
+                    color: Color::NONE.into(),
+                    focus_policy: FocusPolicy::Pass,
                     ..default()
                 })
-                .insert(Icon("key"));
+                .with_children(|parent| {
+                    parent
+                        .spawn_bundle(ImageBundle {
+                            style: Style {
+                                size: Size::new(Val::Px(42.0), Val::Px(42.0)),
+                                margin: UiRect::new(
+                                    Val::Px(10.0),
+                                    Val::Px(10.0),
+                                    Val::Px(10.0),
+                                    Val::Px(10.0),
+                                ),
+                                ..default()
+                            },
+                            image: image_assets.key.clone().into(),
+                            visibility: Visibility { is_visible: false },
+                            ..default()
+                        })
+                        .insert(Icon("key"));
+                });
         })
         .insert(InventoryUiContainer);
 }
@@ -72,19 +91,29 @@ fn insert_item_to_inventory(keys: Res<Input<KeyCode>>, mut inventory: ResMut<Inv
 fn update_inventory_toolbar_ui(
     inventory: Res<Inventory>,
     mut icons: Query<(&Icon, &mut Visibility)>,
+    audio: Res<Audio>,
+    sound_assets: Res<SoundAssets>,
 ) {
-    macro_rules! set_icon_visible {
-        ($name:literal, $value:expr) => {
-            icons
-                .iter_mut()
-                .find(|icon| icon.0 .0 == $name)
-                .unwrap()
-                .1
-                .is_visible = $value
-        };
-    }
-
     if inventory.is_changed() {
+        let mut item_picked_up = false;
+
+        macro_rules! set_icon_visible {
+            ($name:literal, $value:expr) => {{
+                let mut visibility = icons.iter_mut().find(|icon| icon.0 .0 == $name).unwrap().1;
+                let is_visible = visibility.is_visible;
+                visibility.is_visible = $value;
+                let changed = is_visible != $value;
+                if is_visible != $value && $value {
+                    item_picked_up = true
+                }
+                changed
+            }};
+        }
+
         set_icon_visible!("key", inventory.key);
+
+        if item_picked_up {
+            audio.play(sound_assets.keys_pickup.clone());
+        }
     }
 }

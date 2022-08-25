@@ -91,6 +91,7 @@ fn main() {
                 .run_in_state(GameState::RunLevel)
                 .with_system(sun_follow_camera)
                 .with_system(window_resized)
+                .with_system(toggle_mouse)
                 .into(),
         )
         .run();
@@ -187,6 +188,7 @@ fn setup_player(
         }),
         ..default()
     })
+    .insert(UiCameraConfig { show_ui: false })
     .insert(RenderPlayer(0))
     .insert(PlayerCamera);
 
@@ -227,7 +229,7 @@ fn setup_player(
         },
         ..Camera2dBundle::default()
     })
-    .insert(UiCameraConfig { show_ui: false })
+    // .insert(UiCameraConfig { show_ui: false })
     .insert(post_processing_pass_layer);
 }
 
@@ -236,6 +238,30 @@ fn hide_mouse(mut windows: ResMut<Windows>) {
     primary_win.set_cursor_visibility(false);
     primary_win.set_cursor_lock_mode(true);
     primary_win.set_cursor_position(vec2(0.0, 0.0));
+}
+
+fn toggle_mouse(
+    mut windows: ResMut<Windows>,
+    keys: Res<Input<KeyCode>>,
+    mut fps_controller: Query<&mut FpsController>,
+) {
+    if keys.just_pressed(KeyCode::Escape) {
+        let primary_win = windows.primary_mut();
+        let mut fps_controller = fps_controller.single_mut();
+        let is_locked = primary_win.cursor_locked();
+        if is_locked {
+            // Unlock
+            fps_controller.enable_input = false;
+            primary_win.set_cursor_visibility(true);
+            primary_win.set_cursor_lock_mode(false);
+        } else {
+            // Lock
+            fps_controller.enable_input = true;
+            primary_win.set_cursor_visibility(false);
+            primary_win.set_cursor_lock_mode(true);
+            primary_win.set_cursor_position(vec2(0.0, 0.0));
+        }
+    }
 }
 
 #[derive(Component)]

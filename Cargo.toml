@@ -16,17 +16,14 @@ bevy = { version = "0.8", features = [
 bevy_asset_loader = { version = "0.12", features = ["stageless"] }
 bevy_editor_pls = { git = "https://github.com/DGriffin91/bevy_editor_pls", branch = "remove_picking" }
 bevy_editor_pls_default_windows = { git = "https://github.com/DGriffin91/bevy_editor_pls", branch = "remove_picking" }
-bevy_egui = "0.15"
 bevy_fps_controller = { path = "./bevy_fps_controller" }
-bevy_kira_audio = { version = "0.12", features = ["mp3"] }
+bevy_kira_audio = { version = "0.12", features = ["flac"] }
 bevy_rapier3d = "0.16"
-futures-intrusive = "0.4"
 interpolation = "0.2"
 iyes_loopless = "0.7"
 paste = "1.0"
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
-rand = "0.8"
 
 # Enable only a small amount of optimization in debug mode
 [profile.dev]

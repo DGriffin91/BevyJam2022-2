@@ -29,6 +29,8 @@ pub struct ModelAssets {
 pub struct SoundAssets {
     #[asset(path = "sounds/door_open.flac")]
     pub door_open: Handle<AudioSource>,
+    #[asset(path = "sounds/keys_pickup.flac")]
+    pub keys_pickup: Handle<AudioSource>,
 }
 
 pub fn get_verts_indices(mesh: &Mesh) -> (Vec<Vec3>, Vec<[u32; 3]>) {
