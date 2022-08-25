@@ -2,12 +2,10 @@
 
 use std::f32::consts::PI;
 
-use assets::SoundAssets;
-use audio::AudioComponentPlugin;
 use bevy::{
     asset::AssetServerSettings,
-    diagnostic::FrameTimeDiagnosticsPlugin,
-    math::vec3,
+    diagnostic::{FrameTimeDiagnosticsPlugin, LogDiagnosticsPlugin},
+    math::{vec2, vec3},
     prelude::*,
     render::{
         camera::{Projection, RenderTarget},
@@ -18,26 +16,30 @@ use bevy::{
         view::RenderLayers,
     },
     sprite::{Material2dPlugin, MaterialMesh2dBundle, Mesh2dHandle},
-    window::{PresentMode, WindowResized},
+    window::{PresentMode, WindowMode, WindowResized},
 };
 use bevy_asset_loader::prelude::*;
 use bevy_fps_controller::controller::*;
 use bevy_kira_audio::prelude::*;
 use bevy_rapier3d::prelude::*;
 use iyes_loopless::prelude::*;
-use levels::map::MapLevelPlugin;
-use materials::{general::GeneralMaterial, post_process::PostProcessingMaterial};
+use materials::general::GeneralMaterial;
 
-use crate::assets::{GameState, ModelAssets};
-use crate::editor::GameEditorPlugin;
+use crate::assets::{GameState, ImageAssets, ModelAssets, SoundAssets};
+// use crate::editor::GameEditorPlugin;
+use crate::audio::AudioComponentPlugin;
 use crate::entity::EntityPlugin;
+use crate::inventory::InventoryPlugin;
+use crate::levels::map::MapLevelPlugin;
+use crate::materials::post_process::PostProcessingMaterial;
 use crate::scene_hook::HookPlugin;
 use crate::sidecar_asset::SidecarAssetPlugin;
 
 mod assets;
 mod audio;
-mod editor;
+// mod editor;
 mod entity;
+mod inventory;
 mod levels;
 mod macros;
 mod materials;
@@ -50,6 +52,7 @@ fn main() {
         .add_loading_state(
             LoadingState::new(GameState::AssetLoading)
                 .continue_to_state(GameState::RunLevel)
+                .with_collection::<ImageAssets>()
                 .with_collection::<ModelAssets>()
                 .with_collection::<SoundAssets>(),
         )
@@ -61,9 +64,11 @@ fn main() {
         .insert_resource(WindowDescriptor {
             title: "BevyJam 2022 - 2".to_string(),
             present_mode: PresentMode::AutoVsync,
+            mode: WindowMode::Windowed,
             ..default()
         })
         .add_plugins(DefaultPlugins)
+        .add_plugin(LogDiagnosticsPlugin::default())
         .add_plugin(FrameTimeDiagnosticsPlugin::default())
         .add_plugin(AudioPlugin)
         .add_plugin(AudioComponentPlugin)
@@ -75,9 +80,11 @@ fn main() {
         .add_plugin(SidecarAssetPlugin)
         .add_plugin(RapierPhysicsPlugin::<NoUserData>::default())
         .add_plugin(FpsControllerPlugin)
-        .add_plugin(GameEditorPlugin)
+        // .add_plugin(GameEditorPlugin)
         .add_plugin(MapLevelPlugin)
         .add_plugin(EntityPlugin)
+        .add_plugin(InventoryPlugin)
+        .add_enter_system(GameState::RunLevel, hide_mouse)
         .add_enter_system(GameState::RunLevel, setup_player)
         .add_system_set(
             ConditionSet::new()
@@ -154,11 +161,12 @@ fn setup_player(
             ..default()
         })
         .insert(FpsController {
-            run_speed: 12.0,
-            forward_speed: 12.0,
-            max_air_speed: 12.0,
-            walk_speed: 6.0,
+            run_speed: 8.0,
+            forward_speed: 8.0,
+            max_air_speed: 8.0,
+            walk_speed: 4.0,
             air_acceleration: 800.0, // bhop :D
+            jump_speed: 6.0,
             key_jump: None,
             ..default()
         })
@@ -167,6 +175,7 @@ fn setup_player(
             transform: Transform::from_translation(vec3(14.6, 1.0, 2.0)),
             ..default()
         });
+
     cmds.spawn_bundle(Camera3dBundle {
         camera: Camera {
             target: RenderTarget::Image(image_handle.clone()),
@@ -218,7 +227,15 @@ fn setup_player(
         },
         ..Camera2dBundle::default()
     })
+    .insert(UiCameraConfig { show_ui: false })
     .insert(post_processing_pass_layer);
+}
+
+fn hide_mouse(mut windows: ResMut<Windows>) {
+    let primary_win = windows.primary_mut();
+    primary_win.set_cursor_visibility(false);
+    primary_win.set_cursor_lock_mode(true);
+    primary_win.set_cursor_position(vec2(0.0, 0.0));
 }
 
 #[derive(Component)]
@@ -240,8 +257,6 @@ fn window_resized(
 
         let width = (window_width / scale).max(256);
         let height = (window_height / scale).max(256);
-
-        dbg!(scale, width, height);
 
         if let Some((_, mat)) = post_processing_materials.iter_mut().next() {
             let image = images.get_mut(&mat.source_image).unwrap();

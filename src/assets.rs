@@ -12,6 +12,12 @@ pub enum GameState {
 }
 
 #[derive(AssetCollection)]
+pub struct ImageAssets {
+    #[asset(path = "images/key.png")]
+    pub key: Handle<Image>,
+}
+
+#[derive(AssetCollection)]
 pub struct ModelAssets {
     #[asset(path = "models/map.gltf#Scene0")]
     pub map: Handle<Scene>,
