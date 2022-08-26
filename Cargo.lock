@@ -605,24 +605,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "bevy_jam_2022_2"
-version = "0.1.0"
-dependencies = [
- "bevy",
- "bevy_asset_loader",
- "bevy_editor_pls",
- "bevy_editor_pls_default_windows",
- "bevy_fps_controller",
- "bevy_kira_audio",
- "bevy_rapier3d",
- "interpolation",
- "iyes_loopless",
- "paste",
- "serde",
- "serde_json",
-]
-
-[[package]]
 name = "bevy_kira_audio"
 version = "0.12.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -3388,6 +3370,24 @@ name = "strsim"
 version = "0.10.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "73473c0e59e6d5812c5dfe2a064a6444949f089e20eec9a2e5506596494e4623"
+
+[[package]]
+name = "subfuse"
+version = "0.1.0"
+dependencies = [
+ "bevy",
+ "bevy_asset_loader",
+ "bevy_editor_pls",
+ "bevy_editor_pls_default_windows",
+ "bevy_fps_controller",
+ "bevy_kira_audio",
+ "bevy_rapier3d",
+ "interpolation",
+ "iyes_loopless",
+ "paste",
+ "serde",
+ "serde_json",
+]
 
 [[package]]
 name = "svg_fmt"
