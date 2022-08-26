@@ -45,5 +45,8 @@ fn fragment(in: FragmentInput) -> @location(0) vec4<f32> {
     col = col * in.color.rgb;
 #endif
 
-    return vec4(col, 1.0);
+    var mist = distance(in.world_position.xyz, view.world_position.xyz);
+    mist = pow(mist * 0.001, 6.5);
+
+    return vec4(col+mist, 1.0);
 }

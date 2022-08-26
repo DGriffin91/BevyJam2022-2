@@ -1,0 +1,875 @@
+{
+    "asset" : {
+        "generator" : "Khronos glTF Blender I/O v3.2.43",
+        "version" : "2.0"
+    },
+    "scene" : 0,
+    "scenes" : [
+        {
+            "extras" : {
+                "MM" : {
+                    "revision" : "9cc8f25fa43725a2b85459340e2086a68b537f53"
+                },
+                "DM" : {
+                    "revision" : "b62fce83f7d54c3b35499c7ad13ed5af80fde762",
+                    "export_atlas_texture_channel_packCOL" : [
+                        {
+                            "avoid_update" : 0,
+                            "name" : "ao_curv_height",
+                            "red" : 2,
+                            "green" : 3,
+                            "blue" : 4
+                        },
+                        {
+                            "avoid_update" : 0,
+                            "name" : "masks",
+                            "red" : 1,
+                            "green" : 9,
+                            "blue" : 10
+                        }
+                    ]
+                },
+                "bc" : {
+                    "snap" : {
+                        "hit" : 0
+                    }
+                },
+                "C_Slots_settings" : {
+                    "Terrain_pointer" : {}
+                },
+                "automirror" : {
+                    "orientation" : 2,
+                    "axis" : 2
+                }
+            },
+            "name" : "Scene",
+            "nodes" : [
+                0,
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8,
+                9,
+                10,
+                11,
+                12,
+                13,
+                14,
+                15,
+                16,
+                17,
+                18,
+                19,
+                20,
+                21,
+                22,
+                23,
+                24,
+                25,
+                26
+            ]
+        }
+    ],
+    "nodes" : [
+        {
+            "extras" : {
+                "MM" : {},
+                "DM" : {}
+            },
+            "name" : "Elevator Placeholder Main",
+            "scale" : [
+                1.2999999523162842,
+                1.7000000476837158,
+                1.5
+            ],
+            "translation" : [
+                0,
+                1.7000000476837158,
+                0
+            ]
+        },
+        {
+            "extras" : {
+                "MM" : {},
+                "DM" : {}
+            },
+            "name" : "Elevator Placeholder Opening",
+            "scale" : [
+                0.550000011920929,
+                1.2000000476837158,
+                0.6000000238418579
+            ],
+            "translation" : [
+                0,
+                1.2000000476837158,
+                0.8999999761581421
+            ]
+        },
+        {
+            "extras" : {
+                "MM" : {},
+                "DM" : {}
+            },
+            "mesh" : 0,
+            "name" : "COLLIDER Floor",
+            "translation" : [
+                0.05058872699737549,
+                -1.855257511138916,
+                29.831344604492188
+            ]
+        },
+        {
+            "extras" : {
+                "MM" : {},
+                "DM" : {}
+            },
+            "mesh" : 1,
+            "name" : "Plane",
+            "rotation" : [
+                -0.07712273299694061,
+                0.042198169976472855,
+                -0.6545571088790894,
+                0.7508837580680847
+            ],
+            "translation" : [
+                -396.53973388671875,
+                18.725643157958984,
+                174.5296630859375
+            ]
+        },
+        {
+            "extras" : {
+                "MM" : {},
+                "DM" : {}
+            },
+            "mesh" : 2,
+            "name" : "Plane.026",
+            "rotation" : [
+                0.14660923182964325,
+                -0.4080934524536133,
+                -0.8254253268241882,
+                0.36143946647644043
+            ],
+            "translation" : [
+                -591.7945556640625,
+                263.6438903808594,
+                -157.5951385498047
+            ]
+        },
+        {
+            "extras" : {
+                "MM" : {},
+                "DM" : {}
+            },
+            "name" : "BLOCK.003",
+            "rotation" : [
+                0,
+                0.7071068286895752,
+                0,
+                0.7071068286895752
+            ],
+            "scale" : [
+                1.236153244972229,
+                5.555863857269287,
+                15.905345916748047
+            ],
+            "translation" : [
+                -0.5821338891983032,
+                -15.337455749511719,
+                230.5862579345703
+            ]
+        },
+        {
+            "extras" : {
+                "MM" : {},
+                "DM" : {}
+            },
+            "name" : "BLOCK.001",
+            "scale" : [
+                1.236153244972229,
+                5.555863857269287,
+                15.905345916748047
+            ],
+            "translation" : [
+                14.44287109375,
+                -15.337455749511719,
+                213.95663452148438
+            ]
+        },
+        {
+            "extras" : {
+                "MM" : {},
+                "DM" : {}
+            },
+            "name" : "BLOCK.002",
+            "scale" : [
+                1.236153244972229,
+                5.555863857269287,
+                15.905345916748047
+            ],
+            "translation" : [
+                14.44287109375,
+                -15.337455749511719,
+                183.91830444335938
+            ]
+        },
+        {
+            "extras" : {
+                "MM" : {},
+                "DM" : {}
+            },
+            "name" : "BLOCK.004",
+            "scale" : [
+                1.236153244972229,
+                5.555863857269287,
+                15.905345916748047
+            ],
+            "translation" : [
+                14.44287109375,
+                -15.337455749511719,
+                153.03973388671875
+            ]
+        },
+        {
+            "extras" : {
+                "MM" : {},
+                "DM" : {}
+            },
+            "name" : "BLOCK.005",
+            "scale" : [
+                1.236153244972229,
+                5.555863857269287,
+                15.905345916748047
+            ],
+            "translation" : [
+                14.44287109375,
+                -12.217180252075195,
+                121.74104309082031
+            ]
+        },
+        {
+            "extras" : {
+                "MM" : {},
+                "DM" : {}
+            },
+            "name" : "BLOCK.006",
+            "scale" : [
+                1.236153244972229,
+                5.555863857269287,
+                15.905345916748047
+            ],
+            "translation" : [
+                14.44287109375,
+                -4.723328590393066,
+                90.86247253417969
+            ]
+        },
+        {
+            "extras" : {
+                "MM" : {},
+                "DM" : {}
+            },
+            "name" : "BLOCK.007",
+            "scale" : [
+                1.236153244972229,
+                5.555863857269287,
+                15.905345916748047
+            ],
+            "translation" : [
+                14.44287109375,
+                0.9347553253173828,
+                60.1939582824707
+            ]
+        },
+        {
+            "extras" : {
+                "MM" : {},
+                "DM" : {}
+            },
+            "name" : "BLOCK.008",
+            "scale" : [
+                1.236153244972229,
+                5.555863857269287,
+                15.905345916748047
+            ],
+            "translation" : [
+                14.44287109375,
+                0.9347553253173828,
+                29.10532569885254
+            ]
+        },
+        {
+            "extras" : {
+                "MM" : {},
+                "DM" : {}
+            },
+            "name" : "BLOCK.009",
+            "scale" : [
+                1.236153244972229,
+                5.555863857269287,
+                15.905345916748047
+            ],
+            "translation" : [
+                14.44287109375,
+                0.9347553253173828,
+                2.2178611755371094
+            ]
+        },
+        {
+            "extras" : {
+                "MM" : {},
+                "DM" : {}
+            },
+            "name" : "BLOCK.010",
+            "rotation" : [
+                0,
+                -0.7071068286895752,
+                0,
+                0.7071068286895752
+            ],
+            "scale" : [
+                1.236153244972229,
+                5.555863857269287,
+                15.905345916748047
+            ],
+            "translation" : [
+                -0.4712705612182617,
+                0.9347553253173828,
+                -10.175580024719238
+            ]
+        },
+        {
+            "extras" : {
+                "MM" : {},
+                "DM" : {}
+            },
+            "name" : "BLOCK.011",
+            "scale" : [
+                1.236153244972229,
+                5.555863857269287,
+                15.905345916748047
+            ],
+            "translation" : [
+                -14.595602035522461,
+                -15.337455749511719,
+                214.68260192871094
+            ]
+        },
+        {
+            "extras" : {
+                "MM" : {},
+                "DM" : {}
+            },
+            "name" : "BLOCK.012",
+            "scale" : [
+                1.236153244972229,
+                5.555863857269287,
+                15.905345916748047
+            ],
+            "translation" : [
+                -14.595602035522461,
+                -15.337455749511719,
+                184.64427185058594
+            ]
+        },
+        {
+            "extras" : {
+                "MM" : {},
+                "DM" : {}
+            },
+            "name" : "BLOCK.013",
+            "scale" : [
+                1.236153244972229,
+                5.555863857269287,
+                15.905345916748047
+            ],
+            "translation" : [
+                -14.595602035522461,
+                -15.337455749511719,
+                153.7657012939453
+            ]
+        },
+        {
+            "extras" : {
+                "MM" : {},
+                "DM" : {}
+            },
+            "name" : "BLOCK.014",
+            "scale" : [
+                1.236153244972229,
+                5.555863857269287,
+                15.905345916748047
+            ],
+            "translation" : [
+                -14.595602035522461,
+                -12.042708396911621,
+                122.46700286865234
+            ]
+        },
+        {
+            "extras" : {
+                "MM" : {},
+                "DM" : {}
+            },
+            "name" : "BLOCK.015",
+            "scale" : [
+                1.236153244972229,
+                5.555863857269287,
+                15.905345916748047
+            ],
+            "translation" : [
+                -14.595602035522461,
+                -4.723328590393066,
+                91.58843231201172
+            ]
+        },
+        {
+            "extras" : {
+                "MM" : {},
+                "DM" : {}
+            },
+            "name" : "BLOCK.016",
+            "scale" : [
+                1.236153244972229,
+                5.555863857269287,
+                15.905345916748047
+            ],
+            "translation" : [
+                -14.595602035522461,
+                0.9347553253173828,
+                60.919921875
+            ]
+        },
+        {
+            "extras" : {
+                "MM" : {},
+                "DM" : {}
+            },
+            "name" : "BLOCK.017",
+            "scale" : [
+                1.236153244972229,
+                5.555863857269287,
+                15.905345916748047
+            ],
+            "translation" : [
+                -14.595602035522461,
+                0.9347553253173828,
+                29.831287384033203
+            ]
+        },
+        {
+            "extras" : {
+                "MM" : {},
+                "DM" : {}
+            },
+            "name" : "BLOCK.018",
+            "scale" : [
+                1.236153244972229,
+                5.555863857269287,
+                15.905345916748047
+            ],
+            "translation" : [
+                -14.595602035522461,
+                0.9347553253173828,
+                2.9438228607177734
+            ]
+        },
+        {
+            "extras" : {
+                "MM" : {},
+                "DM" : {}
+            },
+            "name" : "BLOCK.019",
+            "scale" : [
+                1.236153244972229,
+                5.555863857269287,
+                15.905345916748047
+            ],
+            "translation" : [
+                14.48306655883789,
+                -9.46180248260498,
+                103.06620788574219
+            ]
+        },
+        {
+            "extras" : {
+                "MM" : {},
+                "DM" : {}
+            },
+            "name" : "BLOCK.020",
+            "scale" : [
+                1.236153244972229,
+                5.555863857269287,
+                15.905345916748047
+            ],
+            "translation" : [
+                -14.751708984375,
+                -8.757965087890625,
+                106.93254089355469
+            ]
+        },
+        {
+            "extras" : {
+                "MM" : {},
+                "DM" : {}
+            },
+            "name" : "BLOCK.021",
+            "scale" : [
+                1.236153244972229,
+                5.555863857269287,
+                15.905345916748047
+            ],
+            "translation" : [
+                14.744505882263184,
+                -1.488302230834961,
+                80.21083068847656
+            ]
+        },
+        {
+            "extras" : {
+                "MM" : {},
+                "DM" : {}
+            },
+            "name" : "BLOCK.022",
+            "scale" : [
+                1.236153244972229,
+                5.555863857269287,
+                15.905345916748047
+            ],
+            "translation" : [
+                -14.805373191833496,
+                -3.327394962310791,
+                67.22587585449219
+            ]
+        }
+    ],
+    "materials" : [
+        {
+            "doubleSided" : true,
+            "emissiveFactor" : [
+                1,
+                1,
+                1
+            ],
+            "emissiveTexture" : {
+                "index" : 0
+            },
+            "extras" : {
+                "DM" : {}
+            },
+            "name" : "COLLIDER Floor",
+            "pbrMetallicRoughness" : {
+                "baseColorFactor" : [
+                    0,
+                    0,
+                    0,
+                    1
+                ]
+            }
+        },
+        {
+            "doubleSided" : true,
+            "emissiveFactor" : [
+                1,
+                1,
+                1
+            ],
+            "emissiveTexture" : {
+                "index" : 1
+            },
+            "extras" : {
+                "DM" : {}
+            },
+            "name" : "Plane",
+            "pbrMetallicRoughness" : {
+                "baseColorFactor" : [
+                    0,
+                    0,
+                    0,
+                    1
+                ]
+            }
+        },
+        {
+            "doubleSided" : true,
+            "emissiveFactor" : [
+                1,
+                1,
+                1
+            ],
+            "extras" : {
+                "DM" : {}
+            },
+            "name" : "Plane.026",
+            "pbrMetallicRoughness" : {
+                "baseColorFactor" : [
+                    0,
+                    0,
+                    0,
+                    1
+                ]
+            }
+        }
+    ],
+    "meshes" : [
+        {
+            "name" : "Cube.018",
+            "primitives" : [
+                {
+                    "attributes" : {
+                        "POSITION" : 0,
+                        "NORMAL" : 1,
+                        "TEXCOORD_0" : 2
+                    },
+                    "indices" : 3,
+                    "material" : 0
+                }
+            ]
+        },
+        {
+            "name" : "Plane",
+            "primitives" : [
+                {
+                    "attributes" : {
+                        "POSITION" : 4,
+                        "NORMAL" : 5,
+                        "TEXCOORD_0" : 6
+                    },
+                    "indices" : 7,
+                    "material" : 1
+                }
+            ]
+        },
+        {
+            "name" : "Plane.078",
+            "primitives" : [
+                {
+                    "attributes" : {
+                        "POSITION" : 8,
+                        "NORMAL" : 9,
+                        "TEXCOORD_0" : 10,
+                        "COLOR_0" : 11
+                    },
+                    "indices" : 12,
+                    "material" : 2
+                }
+            ]
+        }
+    ],
+    "textures" : [
+        {
+            "sampler" : 0,
+            "source" : 0
+        },
+        {
+            "sampler" : 0,
+            "source" : 1
+        }
+    ],
+    "images" : [
+        {
+            "mimeType" : "image/png",
+            "name" : "ARCH TEX JOIN UNWRAP Chair Cave Floor 2048_COMBINED_bake",
+            "uri" : "ARCH%20TEX%20JOIN%20UNWRAP%20Chair%20Cave%20Floor%202048_COMBINED_bake.png"
+        },
+        {
+            "mimeType" : "image/png",
+            "name" : "ARCH TEX JOIN UNWRAP Chair Cave Planes 2048_COMBINED_bake",
+            "uri" : "ARCH%20TEX%20JOIN%20UNWRAP%20Chair%20Cave%20Planes%202048_COMBINED_bake.png"
+        }
+    ],
+    "accessors" : [
+        {
+            "bufferView" : 0,
+            "componentType" : 5126,
+            "count" : 202,
+            "max" : [
+                13.317435264587402,
+                1.8403135538101196,
+                199.74867248535156
+            ],
+            "min" : [
+                -13.317435264587402,
+                -19.0644474029541,
+                -39.525550842285156
+            ],
+            "type" : "VEC3"
+        },
+        {
+            "bufferView" : 1,
+            "componentType" : 5126,
+            "count" : 202,
+            "type" : "VEC3"
+        },
+        {
+            "bufferView" : 2,
+            "componentType" : 5126,
+            "count" : 202,
+            "type" : "VEC2"
+        },
+        {
+            "bufferView" : 3,
+            "componentType" : 5123,
+            "count" : 324,
+            "type" : "SCALAR"
+        },
+        {
+            "bufferView" : 4,
+            "componentType" : 5126,
+            "count" : 180,
+            "max" : [
+                716.6115112304688,
+                1081.46142578125,
+                752.1200561523438
+            ],
+            "min" : [
+                -424.1193542480469,
+                -262.232177734375,
+                -673.2660522460938
+            ],
+            "type" : "VEC3"
+        },
+        {
+            "bufferView" : 5,
+            "componentType" : 5126,
+            "count" : 180,
+            "type" : "VEC3"
+        },
+        {
+            "bufferView" : 6,
+            "componentType" : 5126,
+            "count" : 180,
+            "type" : "VEC2"
+        },
+        {
+            "bufferView" : 7,
+            "componentType" : 5123,
+            "count" : 270,
+            "type" : "SCALAR"
+        },
+        {
+            "bufferView" : 8,
+            "componentType" : 5126,
+            "count" : 4,
+            "max" : [
+                501.1537170410156,
+                117.64141082763672,
+                489.66961669921875
+            ],
+            "min" : [
+                -501.1537780761719,
+                -117.64146423339844,
+                -489.669921875
+            ],
+            "type" : "VEC3"
+        },
+        {
+            "bufferView" : 9,
+            "componentType" : 5126,
+            "count" : 4,
+            "type" : "VEC3"
+        },
+        {
+            "bufferView" : 10,
+            "componentType" : 5126,
+            "count" : 4,
+            "type" : "VEC2"
+        },
+        {
+            "bufferView" : 11,
+            "componentType" : 5123,
+            "count" : 4,
+            "normalized" : true,
+            "type" : "VEC4"
+        },
+        {
+            "bufferView" : 12,
+            "componentType" : 5123,
+            "count" : 6,
+            "type" : "SCALAR"
+        }
+    ],
+    "bufferViews" : [
+        {
+            "buffer" : 0,
+            "byteLength" : 2424,
+            "byteOffset" : 0
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 2424,
+            "byteOffset" : 2424
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 1616,
+            "byteOffset" : 4848
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 648,
+            "byteOffset" : 6464
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 2160,
+            "byteOffset" : 7112
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 2160,
+            "byteOffset" : 9272
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 1440,
+            "byteOffset" : 11432
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 540,
+            "byteOffset" : 12872
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 48,
+            "byteOffset" : 13412
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 48,
+            "byteOffset" : 13460
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 32,
+            "byteOffset" : 13508
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 32,
+            "byteOffset" : 13540
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 12,
+            "byteOffset" : 13572
+        }
+    ],
+    "samplers" : [
+        {
+            "magFilter" : 9729,
+            "minFilter" : 9987
+        }
+    ],
+    "buffers" : [
+        {
+            "byteLength" : 13584,
+            "uri" : "Level 3 Chair Export.bin"
+        }
+    ]
+}

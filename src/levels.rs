@@ -31,6 +31,9 @@ impl Plugin for LevelsPlugin {
 pub enum Levels {
     Level1Garage,
     Level2Lobby,
+    Level3Chair,
+    Level4ChairsPile,
+    Level5GarageLobby,
 }
 
 impl Levels {
@@ -38,6 +41,9 @@ impl Levels {
         match self {
             Levels::Level1Garage => scenes.level1_garage.clone(),
             Levels::Level2Lobby => scenes.level2_lobby.clone(),
+            Levels::Level3Chair => scenes.level3_chair.clone(),
+            Levels::Level4ChairsPile => scenes.level4_chairs_pile.clone(),
+            Levels::Level5GarageLobby => scenes.level5_garage_lobby.clone(),
         }
     }
 }

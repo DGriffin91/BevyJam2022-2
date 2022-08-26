@@ -90,6 +90,15 @@ fn doors(
                 *level = Levels::Level2Lobby;
             }
             Levels::Level2Lobby => {
+                *level = Levels::Level3Chair;
+            }
+            Levels::Level3Chair => {
+                *level = Levels::Level4ChairsPile;
+            }
+            Levels::Level4ChairsPile => {
+                *level = Levels::Level5GarageLobby;
+            }
+            Levels::Level5GarageLobby => {
                 *level = Levels::Level1Garage;
             }
         }

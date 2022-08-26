@@ -98,6 +98,7 @@ fn main() {
         .add_plugin(MaterialPlugin::<GeneralMaterial>::default())
         .insert_resource(ClearColor(Color::BLACK))
         .insert_resource(RapierConfiguration::default())
+        .add_plugin(RapierDebugRenderPlugin::default())
         .add_plugin(SidecarAssetPlugin)
         .add_plugin(RapierPhysicsPlugin::<NoUserData>::default())
         .add_plugin(FpsControllerPlugin);
@@ -139,8 +140,17 @@ fn setup_player(
     mut meshes: ResMut<Assets<Mesh>>,
     mut post_processing_materials: ResMut<Assets<PostProcessingMaterial>>,
     mut windows: ResMut<Windows>,
+    mut rapier_debug: ResMut<DebugRenderContext>,
 ) {
+    rapier_debug.enabled = false; //Can't disable by default
+
     let window = windows.get_primary_mut().unwrap();
+
+    //Trigger rescale?
+    window.set_resolution(
+        window.physical_width() as f32,
+        window.physical_height() as f32,
+    );
 
     let scale = get_display_scale(
         window.physical_width() as f32,

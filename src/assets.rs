@@ -79,6 +79,12 @@ pub struct ModelAssets {
     pub level1_garage: Handle<Scene>,
     #[asset(path = "models/Level 2 Lobby Export.gltf#Scene0")]
     pub level2_lobby: Handle<Scene>,
+    #[asset(path = "models/Level 3 Chair Export.gltf#Scene0")]
+    pub level3_chair: Handle<Scene>,
+    #[asset(path = "models/Level 4 Chairs Pile Export.gltf#Scene0")]
+    pub level4_chairs_pile: Handle<Scene>,
+    #[asset(path = "models/Level 5 Parking Garage Lobby Export.gltf#Scene0")]
+    pub level5_garage_lobby: Handle<Scene>,
     #[asset(path = "models/Elevator Export.gltf#Scene0")]
     pub elevator_level: Handle<Scene>,
     #[asset(path = "models/test_area.gltf#Scene0")]
