@@ -7,9 +7,16 @@
 #import bevy_pbr::shadows
 #import bevy_pbr::pbr_functions
 
+struct Material {
+    base_color: vec4<f32>,
+    use_texture: f32,
+};
+
 @group(1) @binding(0)
-var texture: texture_2d<f32>;
+var<uniform> material: Material;
 @group(1) @binding(1)
+var texture: texture_2d<f32>;
+@group(1) @binding(2)
 var texture_sampler: sampler;
 
 
@@ -36,13 +43,13 @@ fn fragment(in: FragmentInput) -> @location(0) vec4<f32> {
 //            in.is_front,
 //        );
 
-    var col = vec3(1.0,1.0,1.0);
+    var col = material.base_color.rgb;
 #ifdef VERTEX_UVS
-    col = textureSample(texture, texture_sampler, in.uv).rgb;
+    col = mix(col, textureSample(texture, texture_sampler, in.uv).rgb, material.use_texture);
 #endif
 
 #ifdef VERTEX_COLORS
-    col = col * in.color.rgb;
+    col = in.color.rgb;
 #endif
 
     var mist = distance(in.world_position.xyz, view.world_position.xyz);

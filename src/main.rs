@@ -103,6 +103,11 @@ fn main() {
         .add_plugin(RapierPhysicsPlugin::<NoUserData>::default())
         .add_plugin(FpsControllerPlugin);
 
+    #[cfg(target_arch = "wasm32")]
+    {
+        app.add_plugin(bevy_web_resizer::Plugin);
+    }
+
     #[cfg(debug_assertions)]
     app.add_plugin(GameEditorPlugin);
 
@@ -389,7 +394,12 @@ fn swap_materials(
                 if tex.is_none() {
                     tex = std_mat.base_color_texture.clone();
                 }
-                let mat_handle_1 = general_mats.add(GeneralMaterial { color: tex });
+                let use_texture = tex.is_some() as u32 as f32;
+                let mat_handle_1 = general_mats.add(GeneralMaterial {
+                    color: tex,
+                    use_texture,
+                    base_color: std_mat.base_color,
+                });
                 cmds.remove::<Handle<StandardMaterial>>();
                 cmds.insert(mat_handle_1);
             }
