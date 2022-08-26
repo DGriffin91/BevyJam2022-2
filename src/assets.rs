@@ -97,6 +97,16 @@ pub struct SoundAssets {
     pub door_open: Handle<AudioSource>,
     #[asset(path = "sounds/keys_pickup.flac")]
     pub keys_pickup: Handle<AudioSource>,
+    #[asset(path = "sounds/phone_hangup.flac")]
+    pub phone_hangup: Handle<AudioSource>,
+    #[asset(path = "sounds/phone_key_press.flac")]
+    pub phone_key_press: Handle<AudioSource>,
+    #[asset(path = "sounds/phone_number_not_available.flac")]
+    pub phone_number_not_available: Handle<AudioSource>,
+    #[asset(path = "sounds/phone_pickup.flac")]
+    pub phone_pickup: Handle<AudioSource>,
+    #[asset(path = "sounds/phone_background.flac")]
+    pub phone_background: Handle<AudioSource>,
 }
 
 pub fn get_verts_indices(mesh: &Mesh) -> (Vec<Vec3>, Vec<[u32; 3]>) {

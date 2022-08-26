@@ -2,7 +2,7 @@ pub mod block;
 pub mod button;
 pub mod collider;
 pub mod door_linear;
-//pub mod phone;
+pub mod phone;
 pub mod teleport;
 pub mod teleport_destination;
 pub mod trigger;
@@ -40,18 +40,26 @@ impl Plugin for EntityPlugin {
         );
 
         // Phone
-        //register_entity!(
-        //    app,
-        //    phone,
-        //    events = [
-        //        PhoneMenuOpenEvent,
-        //        PhoneMenuCloseEvent,
-        //        PhoneDigitEnterEvent,
-        //        PhoneSubmitEvent
-        //    ],
-        //    systems = [phone_interact_events],
-        //    startup_systems = [setup_phone_ui]
-        //);
+        register_entity!(
+            app,
+            phone,
+            events = [
+                PhoneMenuOpenEvent,
+                PhoneMenuCloseEvent,
+                PhoneDigitEnterEvent,
+                PhoneSubmitEvent
+            ],
+            resources = [PhoneUiEnabled, PhoneUiVisible],
+            systems = [
+                test_toggle_phone,
+                number_not_availble,
+                press_phone_keys,
+                phone_interact_events,
+                resize_phone_ui,
+                sync_phone_visibility
+            ],
+            startup_systems = [setup_phone_ui]
+        );
 
         // Teleport destination
         register_entity!(app, teleport_destination);

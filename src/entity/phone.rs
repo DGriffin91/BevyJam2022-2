@@ -1,9 +1,13 @@
-use bevy::{math::vec2, prelude::*};
+use std::time::Duration;
+
+use bevy::{math::vec2, prelude::*, window::WindowResized};
+use bevy_fps_controller::controller::FpsController;
+use bevy_kira_audio::{prelude::Audio, AudioControl, AudioInstance, AudioTween};
 use bevy_rapier3d::prelude::*;
 use serde::{Deserialize, Serialize};
 
 use crate::{
-    assets::{FontAssets, ImageAssets},
+    assets::{FontAssets, ImageAssets, SoundAssets},
     get_display_scale, spawn_from_scene, PlayerCamera,
 };
 
@@ -24,9 +28,9 @@ pub struct PhoneDigitEnterEvent {
 }
 
 pub struct PhoneSubmitEvent {
-    pub name: Option<String>,
-    pub entity: Entity,
-    pub number: u32,
+    // pub name: Option<String>,
+    // pub entity: Entity,
+    pub number: String,
 }
 
 /// A phone which can have a number inputted.
@@ -48,7 +52,20 @@ impl Default for Phone {
 
 spawn_from_scene!(phone, Phone);
 
-enum PhoneKey {
+#[derive(Clone, Copy, Debug, Default, Deref, DerefMut, PartialEq, Eq)]
+pub struct PhoneUiVisible(pub bool);
+
+#[derive(Clone, Copy, Debug, Deref, DerefMut, PartialEq, Eq)]
+pub struct PhoneUiEnabled(pub bool);
+
+impl Default for PhoneUiEnabled {
+    fn default() -> Self {
+        Self(true)
+    }
+}
+
+#[derive(Clone, Copy, Component, PartialEq, Eq)]
+pub(super) enum PhoneKey {
     Key0,
     Key1,
     Key2,
@@ -64,6 +81,23 @@ enum PhoneKey {
 }
 
 impl PhoneKey {
+    fn char(&self) -> char {
+        match self {
+            PhoneKey::Key0 => '0',
+            PhoneKey::Key1 => '1',
+            PhoneKey::Key2 => '2',
+            PhoneKey::Key3 => '3',
+            PhoneKey::Key4 => '4',
+            PhoneKey::Key5 => '5',
+            PhoneKey::Key6 => '6',
+            PhoneKey::Key7 => '7',
+            PhoneKey::Key8 => '8',
+            PhoneKey::Key9 => '9',
+            PhoneKey::KeyHash => '#',
+            PhoneKey::KeyAsterix => '*',
+        }
+    }
+
     fn image(&self, image_assets: &ImageAssets) -> Handle<Image> {
         match self {
             PhoneKey::Key0 => image_assets.phone_key_0.clone(),
@@ -97,7 +131,280 @@ impl PhoneKey {
             PhoneKey::KeyAsterix => image_assets.phone_key_asterix_pressed.clone(),
         }
     }
+
+    fn matches_key(&self, keycode: KeyCode) -> bool {
+        match keycode {
+            KeyCode::Key0 | KeyCode::Numpad0 if self == &PhoneKey::Key0 => true,
+            KeyCode::Key1 | KeyCode::Numpad1 if self == &PhoneKey::Key1 => true,
+            KeyCode::Key2 | KeyCode::Numpad2 if self == &PhoneKey::Key2 => true,
+            KeyCode::Key3 | KeyCode::Numpad3 if self == &PhoneKey::Key3 => true,
+            KeyCode::Key4 | KeyCode::Numpad4 if self == &PhoneKey::Key4 => true,
+            KeyCode::Key5 | KeyCode::Numpad5 if self == &PhoneKey::Key5 => true,
+            KeyCode::Key6 | KeyCode::Numpad6 if self == &PhoneKey::Key6 => true,
+            KeyCode::Key7 | KeyCode::Numpad7 if self == &PhoneKey::Key7 => true,
+            KeyCode::Key8 | KeyCode::Numpad8 if self == &PhoneKey::Key8 => true,
+            KeyCode::Key9 | KeyCode::Numpad9 if self == &PhoneKey::Key9 => true,
+            _ => false,
+        }
+    }
 }
+
+pub(super) fn test_toggle_phone(
+    keys: Res<Input<KeyCode>>,
+    mut phone_ui_visible: ResMut<PhoneUiVisible>,
+) {
+    if keys.just_pressed(KeyCode::F) {
+        **phone_ui_visible = !**phone_ui_visible;
+    }
+}
+
+pub(super) fn resize_phone_ui(
+    mut ui_container: Query<&mut Style, (With<PhoneUiContainer>, Without<PhoneUiImage>)>,
+    mut ui_image: Query<&mut Style, (With<PhoneUiImage>, Without<PhoneUiContainer>)>,
+    mut ui_text: Query<&mut Text, With<PhoneUiText>>,
+    mut window_resized_events: EventReader<WindowResized>,
+) {
+    if let Some(event) = window_resized_events.iter().last() {
+        let scale = get_display_scale(event.width, event.height);
+        // let scale = Vec3::new(event.width, event.height, 1.0);
+
+        for mut style in ui_container.iter_mut() {
+            style.size = Size::new(Val::Px(scale.x), Val::Px(scale.y));
+        }
+
+        for mut style in ui_image.iter_mut() {
+            style.size.width = Val::Px(scale.y * 0.625);
+        }
+
+        for mut text in ui_text.iter_mut() {
+            for section in text.sections.iter_mut() {
+                section.style.font_size = scale.x * 0.035;
+            }
+        }
+    }
+}
+
+#[derive(Deref, DerefMut)]
+pub(super) struct BackgroundTimer(Timer);
+
+impl Default for BackgroundTimer {
+    fn default() -> Self {
+        let mut timer = Timer::new(Duration::from_millis(800), false);
+        timer.pause();
+        Self(timer)
+    }
+}
+
+pub(super) fn sync_phone_visibility(
+    phone_ui_visible: Res<PhoneUiVisible>,
+    mut ui_container: Query<&mut Visibility, With<PhoneUiContainer>>,
+    mut windows: ResMut<Windows>,
+    mut fps_controller: Query<&mut FpsController>,
+    audio: Res<Audio>,
+    mut audio_instances: ResMut<Assets<AudioInstance>>,
+    sound_assets: Res<SoundAssets>,
+    time: Res<Time>,
+    mut background_timer: Local<BackgroundTimer>,
+    mut background_audio_instance: Local<Option<Handle<AudioInstance>>>,
+) {
+    background_timer.tick(time.delta());
+
+    if background_timer.just_finished() {
+        *background_audio_instance = Some(
+            audio
+                .play(sound_assets.phone_background.clone())
+                .looped()
+                .with_volume(0.3)
+                .handle(),
+        );
+    }
+
+    if phone_ui_visible.is_changed() {
+        if let Ok(mut visibility) = ui_container.get_single_mut() {
+            let primary_win = windows.primary_mut();
+            let mut fps_controller = fps_controller.single_mut();
+
+            if **phone_ui_visible {
+                // Unlock
+                fps_controller.enable_input = false;
+                visibility.is_visible = **phone_ui_visible;
+                primary_win.set_cursor_visibility(true);
+                primary_win.set_cursor_lock_mode(false);
+                background_timer.reset();
+                background_timer.unpause();
+                audio.play(sound_assets.phone_pickup.clone());
+            } else {
+                // Lock
+                fps_controller.enable_input = true;
+                visibility.is_visible = **phone_ui_visible;
+                primary_win.set_cursor_visibility(false);
+                primary_win.set_cursor_lock_mode(true);
+                primary_win.set_cursor_position(vec2(0.0, 0.0));
+                background_timer.reset();
+                background_timer.pause();
+                audio.play(sound_assets.phone_hangup.clone());
+                if let Some(instance) = &*background_audio_instance {
+                    if let Some(instance) = audio_instances.get_mut(instance) {
+                        instance.stop(AudioTween::linear(Duration::from_millis(200)));
+                    }
+                }
+            }
+        }
+    }
+}
+
+#[derive(Deref, DerefMut)]
+pub(super) struct NumberNotAvailableTimer(Timer);
+
+impl Default for NumberNotAvailableTimer {
+    fn default() -> Self {
+        let mut timer = Timer::new(Duration::from_secs(3), false);
+        timer.pause();
+        Self(timer)
+    }
+}
+
+pub(super) fn number_not_availble(
+    mut phone_ui_enabled: ResMut<PhoneUiEnabled>,
+    mut phone_text: Query<&mut Text, With<PhoneUiText>>,
+    mut phone_submit_events: EventReader<PhoneSubmitEvent>,
+    audio: Res<Audio>,
+    sound_assets: Res<SoundAssets>,
+    time: Res<Time>,
+    mut timer: Local<NumberNotAvailableTimer>,
+) {
+    timer.tick(time.delta());
+
+    if timer.just_finished() {
+        **phone_ui_enabled = true;
+        for mut text in &mut phone_text {
+            for section in &mut text.sections {
+                section.value.clear();
+            }
+        }
+    }
+
+    for ev in phone_submit_events.iter() {
+        if ev.number != "123456" {
+            timer.reset();
+            timer.unpause();
+            audio.play(sound_assets.phone_number_not_available.clone());
+        }
+    }
+}
+
+pub(super) fn press_phone_keys(
+    phone_ui_visible: Res<PhoneUiVisible>,
+    mut phone_ui_enabled: ResMut<PhoneUiEnabled>,
+    mut phone_keys: Query<(
+        Option<&Interaction>,
+        Option<ChangeTrackers<Interaction>>,
+        &mut UiImage,
+        &PhoneKey,
+    )>,
+    mut phone_text: Query<&mut Text, With<PhoneUiText>>,
+    mut phone_submit_events: EventWriter<PhoneSubmitEvent>,
+    keys: Res<Input<KeyCode>>,
+    image_assets: Res<ImageAssets>,
+    audio: Res<Audio>,
+    sound_assets: Res<SoundAssets>,
+    mut current_pressed_key: Local<Option<PhoneKey>>,
+) {
+    if **phone_ui_visible && **phone_ui_enabled {
+        for (_interaction, _interaction_changes, mut img, phone_key) in &mut phone_keys {
+            // Mouse interaction
+            // if interaction_changes
+            //     .map(|changes| changes.is_changed())
+            //     .unwrap_or(false)
+            // {
+            //     if let Some(interaction) = interaction {
+            //         match *interaction {
+            //             Interaction::Clicked => {
+            //                 for mut text in &mut phone_text {
+            //                     if let Some(section) = text.sections.iter_mut().next() {
+            //                         section.value.push(phone_key.char());
+            //                     }
+            //                 }
+            //             }
+            //             Interaction::Hovered => {
+            //                 img.0 = phone_key.image_pressed(&image_assets);
+            //             }
+            //             Interaction::None => {
+            //                 img.0 = phone_key.image(&image_assets);
+            //             }
+            //         }
+            //     }
+            // }
+
+            // Keys interaction
+            if current_pressed_key.is_none() {
+                for key in keys.get_just_pressed() {
+                    if phone_key.matches_key(*key) {
+                        img.0 = phone_key.image_pressed(&image_assets);
+                        for mut text in &mut phone_text {
+                            if let Some(section) = text.sections.iter_mut().next() {
+                                section.value.push(phone_key.char());
+
+                                if section.value.len() >= 6 {
+                                    phone_submit_events.send(PhoneSubmitEvent {
+                                        number: section.value.clone(),
+                                    });
+                                    **phone_ui_enabled = false;
+                                    img.0 = phone_key.image(&image_assets);
+                                }
+                            }
+                        }
+                        let playback_rate = match phone_key {
+                            PhoneKey::Key0 => 0.875,
+                            PhoneKey::Key1 => 0.9,
+                            PhoneKey::Key2 => 0.925,
+                            PhoneKey::Key3 => 0.95,
+                            PhoneKey::Key4 => 0.975,
+                            PhoneKey::Key5 => 1.0,
+                            PhoneKey::Key6 => 1.025,
+                            PhoneKey::Key7 => 1.05,
+                            PhoneKey::Key8 => 1.075,
+                            PhoneKey::Key9 => 1.1,
+                            PhoneKey::KeyHash => 1.0,
+                            PhoneKey::KeyAsterix => 1.0,
+                        };
+                        audio
+                            .play(sound_assets.phone_key_press.clone())
+                            .with_playback_rate(playback_rate)
+                            .with_volume(0.7);
+                        *current_pressed_key = Some(*phone_key);
+                        break;
+                    }
+                }
+            }
+            for key in keys.get_just_released() {
+                if phone_key.matches_key(*key) {
+                    img.0 = phone_key.image(&image_assets);
+                    *current_pressed_key = None;
+                    break;
+                }
+            }
+        }
+
+        if keys.just_pressed(KeyCode::Back) {
+            for mut text in &mut phone_text {
+                if let Some(section) = text.sections.iter_mut().next() {
+                    section.value.pop();
+                }
+            }
+            audio.play(sound_assets.phone_key_press.clone());
+        }
+    }
+}
+
+#[derive(Component)]
+pub(super) struct PhoneUiContainer;
+
+#[derive(Component)]
+pub(super) struct PhoneUiImage;
+
+#[derive(Component)]
+pub(super) struct PhoneUiText;
 
 pub(super) fn setup_phone_ui(
     mut cmds: Commands,
@@ -111,6 +418,7 @@ pub(super) fn setup_phone_ui(
         window.physical_width() as f32,
         window.physical_height() as f32,
     );
+    // let scale = Vec3::new(window.width(), window.height(), 1.0);
 
     cmds.spawn_bundle(NodeBundle {
         style: Style {
@@ -121,33 +429,28 @@ pub(super) fn setup_phone_ui(
             ..default()
         },
         color: Color::rgba(0.0, 0.0, 0.0, 0.8).into(),
+        visibility: Visibility { is_visible: false },
         ..default()
     })
+    .insert(PhoneUiContainer)
     .with_children(|parent| {
         parent
             // Container
             .spawn_bundle(ImageBundle {
                 style: Style {
-                    size: Size::new(Val::Px(scale.y * 0.625), Val::Px(scale.y)),
+                    size: Size::new(Val::Px(scale.y * 0.625), Val::Percent(100.0)),
                     justify_content: JustifyContent::FlexStart,
                     flex_direction: FlexDirection::ColumnReverse,
-                    // padding: UiRect::new(
-                    //     Val::Px(6.0 * scale.z),
-                    //     Val::Px(6.0 * scale.z),
-                    //     Val::Px(6.0 * scale.z),
-                    //     Val::Px(6.0 * scale.z),
-                    // ),
                     ..default()
                 },
                 image: image_assets.phone_base.clone().into(),
                 ..default()
             })
+            .insert(PhoneUiImage)
             .with_children(|parent| {
                 parent
                     .spawn_bundle(NodeBundle {
                         style: Style {
-                            // size: Size::new(Val::Percent(100.0), Val::Auto),
-                            // justify_content: JustifyContent::Center,
                             flex_direction: FlexDirection::ColumnReverse,
                             align_items: AlignItems::FlexStart,
                             margin: UiRect::new(
@@ -189,17 +492,19 @@ pub(super) fn setup_phone_ui(
                             })
                             .with_children(|parent| {
                                 // Entered number
-                                parent.spawn_bundle(TextBundle {
-                                    text: Text::from_section(
-                                        "0422375820",
-                                        TextStyle {
-                                            font: font_assets.fira_mono_medium.clone(),
-                                            font_size: 9.0 * scale.z,
-                                            color: Color::WHITE,
-                                        },
-                                    ),
-                                    ..default()
-                                });
+                                parent
+                                    .spawn_bundle(TextBundle {
+                                        text: Text::from_section(
+                                            "",
+                                            TextStyle {
+                                                font: font_assets.fira_mono_medium.clone(),
+                                                font_size: scale.x * 0.035,
+                                                color: Color::WHITE,
+                                            },
+                                        ),
+                                        ..default()
+                                    })
+                                    .insert(PhoneUiText);
                             });
 
                         let mut spawn_keys = |a: PhoneKey, b: PhoneKey, c: PhoneKey| {
@@ -229,52 +534,67 @@ pub(super) fn setup_phone_ui(
                                         })
                                         .with_children(|parent| {
                                             // 1
-                                            parent.spawn_bundle(ImageBundle {
-                                                image: a.image(&image_assets).into(),
-                                                style: Style {
-                                                    size: Size::new(Val::Percent(33.0), Val::Auto),
-                                                    margin: UiRect::new(
-                                                        Val::Px(1.0 * scale.z),
-                                                        Val::Px(1.0 * scale.z),
-                                                        Val::Px(1.0 * scale.z),
-                                                        Val::Px(1.0 * scale.z),
-                                                    ),
+                                            parent
+                                                .spawn_bundle(ButtonBundle {
+                                                    image: a.image(&image_assets).into(),
+                                                    style: Style {
+                                                        size: Size::new(
+                                                            Val::Percent(33.0),
+                                                            Val::Auto,
+                                                        ),
+                                                        margin: UiRect::new(
+                                                            Val::Px(1.0 * scale.z),
+                                                            Val::Px(1.0 * scale.z),
+                                                            Val::Px(1.0 * scale.z),
+                                                            Val::Px(1.0 * scale.z),
+                                                        ),
+                                                        ..default()
+                                                    },
                                                     ..default()
-                                                },
-                                                ..default()
-                                            });
+                                                })
+                                                .insert(a);
 
                                             // 2
-                                            parent.spawn_bundle(ImageBundle {
-                                                image: b.image(&image_assets).into(),
-                                                style: Style {
-                                                    size: Size::new(Val::Percent(33.0), Val::Auto),
-                                                    margin: UiRect::new(
-                                                        Val::Px(1.0 * scale.z),
-                                                        Val::Px(1.0 * scale.z),
-                                                        Val::Px(1.0 * scale.z),
-                                                        Val::Px(1.0 * scale.z),
-                                                    ),
+                                            parent
+                                                .spawn_bundle(ButtonBundle {
+                                                    image: b.image(&image_assets).into(),
+                                                    style: Style {
+                                                        size: Size::new(
+                                                            Val::Percent(33.0),
+                                                            Val::Auto,
+                                                        ),
+                                                        margin: UiRect::new(
+                                                            Val::Px(1.0 * scale.z),
+                                                            Val::Px(1.0 * scale.z),
+                                                            Val::Px(1.0 * scale.z),
+                                                            Val::Px(1.0 * scale.z),
+                                                        ),
+                                                        ..default()
+                                                    },
                                                     ..default()
-                                                },
-                                                ..default()
-                                            });
+                                                })
+                                                .insert(b);
 
                                             // 3
-                                            parent.spawn_bundle(ImageBundle {
-                                                image: c.image(&image_assets).into(),
-                                                style: Style {
-                                                    size: Size::new(Val::Percent(33.0), Val::Auto),
-                                                    margin: UiRect::new(
-                                                        Val::Px(1.0 * scale.z),
-                                                        Val::Px(1.0 * scale.z),
-                                                        Val::Px(1.0 * scale.z),
-                                                        Val::Px(1.0 * scale.z),
-                                                    ),
+                                            parent
+                                                .spawn_bundle(ButtonBundle {
+                                                    image: c.image(&image_assets).into(),
+                                                    style: Style {
+                                                        size: Size::new(
+                                                            Val::Percent(33.0),
+                                                            Val::Auto,
+                                                        ),
+                                                        margin: UiRect::new(
+                                                            Val::Px(1.0 * scale.z),
+                                                            Val::Px(1.0 * scale.z),
+                                                            Val::Px(1.0 * scale.z),
+                                                            Val::Px(1.0 * scale.z),
+                                                        ),
+                                                        ..default()
+                                                    },
                                                     ..default()
-                                                },
-                                                ..default()
-                                            });
+                                                })
+                                                .insert(c);
                                         });
                                 });
                         };
