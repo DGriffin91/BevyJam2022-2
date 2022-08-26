@@ -10,7 +10,7 @@ use bevy::{
     math::{vec2, vec3},
     prelude::*,
     render::{
-        camera::{Projection, RenderTarget},
+        camera::{Projection, RenderTarget, Viewport},
         render_resource::{
             Extent3d, TextureDescriptor, TextureDimension, TextureFormat, TextureUsages,
         },
@@ -225,6 +225,16 @@ fn setup_player(
     .insert(RenderPlayer(0))
     .insert(PlayerCamera);
 
+    // cmds.spawn_bundle(Camera2dBundle {
+    //     camera: Camera {
+    //         target: RenderTarget::Image(image_handle.clone()),
+    //         priority: 0,
+    //         ..default()
+    //     },
+    //     ..default()
+    // })
+    // .insert(UiCameraConfig { show_ui: true });
+
     //----- POST PROCESS -----
 
     // This specifies the layer used for the post processing camera, which will be attached to the post processing camera and 2d quad.
@@ -288,7 +298,7 @@ fn toggle_mouse(
             primary_win.set_cursor_visibility(true);
             primary_win.set_cursor_lock_mode(false);
         } else {
-            // Lock
+            //         // Lock
             fps_controller.enable_input = true;
             primary_win.set_cursor_visibility(false);
             primary_win.set_cursor_lock_mode(true);
