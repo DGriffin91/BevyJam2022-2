@@ -10,7 +10,7 @@ use bevy::{
     math::{vec2, vec3},
     prelude::*,
     render::{
-        camera::{Projection, RenderTarget, Viewport},
+        camera::{Projection, RenderTarget},
         render_resource::{
             Extent3d, TextureDescriptor, TextureDimension, TextureFormat, TextureUsages,
         },

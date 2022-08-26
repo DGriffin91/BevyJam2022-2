@@ -178,7 +178,7 @@ pub(super) fn resize_phone_ui(
 
         for mut text in ui_text.iter_mut() {
             for section in text.sections.iter_mut() {
-                section.style.font_size = scale.x * 0.025;
+                section.style.font_size = scale.x * 0.035;
             }
         }
     }
@@ -498,7 +498,7 @@ pub(super) fn setup_phone_ui(
                                             "",
                                             TextStyle {
                                                 font: font_assets.fira_mono_medium.clone(),
-                                                font_size: scale.x * 0.025,
+                                                font_size: scale.x * 0.035,
                                                 color: Color::WHITE,
                                             },
                                         ),
