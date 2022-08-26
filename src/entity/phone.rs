@@ -371,7 +371,7 @@ pub(super) fn press_phone_keys(
                         audio
                             .play(sound_assets.phone_key_press.clone())
                             .with_playback_rate(playback_rate)
-                            .with_volume(0.7);
+                            .with_volume(0.1);
                         *current_pressed_key = Some(*phone_key);
                         break;
                     }
