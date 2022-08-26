@@ -1,4 +1,5 @@
 #![allow(clippy::type_complexity)]
+#![allow(clippy::too_many_arguments)]
 
 use std::f32::consts::PI;
 
@@ -17,7 +18,7 @@ use bevy::{
         view::{NoFrustumCulling, RenderLayers},
     },
     sprite::{Material2dPlugin, MaterialMesh2dBundle, Mesh2dHandle},
-    window::{PresentMode, WindowMode, WindowResized},
+    window::{PresentMode, WindowMode, WindowResizeConstraints, WindowResized},
 };
 use bevy_asset_loader::prelude::*;
 use bevy_fps_controller::controller::*;
@@ -67,10 +68,25 @@ fn main() {
             ..default()
         })
         .insert_resource(WindowDescriptor {
-            title: "BevyJam 2022 - 2".to_string(),
+            title: "Subfuse".to_string(),
+            width: 1280.0,
+            height: 720.0,
+            position: WindowPosition::Automatic,
+            resize_constraints: WindowResizeConstraints {
+                min_width: 256.0,
+                min_height: 256.0,
+                ..Default::default()
+            },
+            scale_factor_override: Some(1.0), //Needed for some mobile devices, but disables scaling
             present_mode: PresentMode::AutoVsync,
+            resizable: true,
+            decorations: true,
+            cursor_locked: false,
+            cursor_visible: true,
             mode: WindowMode::Windowed,
-            ..default()
+            transparent: false,
+            canvas: Some("#bevy".to_string()),
+            fit_canvas_to_parent: true,
         })
         .add_plugins(DefaultPlugins)
         .add_plugin(LogDiagnosticsPlugin::default())
