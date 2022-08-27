@@ -14,12 +14,7 @@ pub struct ElevatorPlugin;
 impl Plugin for ElevatorPlugin {
     fn build(&self, app: &mut App) {
         app.add_enter_system(GameState::RunLevel, setup);
-        app.add_system_set(
-            ConditionSet::new()
-                .run_in_state(GameState::RunLevel)
-                .with_system(doors)
-                .into(),
-        );
+        app.add_system(doors);
     }
 }
 
@@ -32,6 +27,7 @@ fn setup(mut cmds: Commands, model_assets: Res<ModelAssets>) {
         ..default()
     })
     .insert(ElevatorScene);
+    cmds.insert_resource(NextState(Level::Level1Garage));
 }
 
 fn doors(

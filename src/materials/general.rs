@@ -7,8 +7,12 @@ use bevy::{
 #[derive(AsBindGroup, Debug, Clone, TypeUuid, Reflect)]
 #[uuid = "917f24fe-6844-4822-8926-e0ed374294ca"]
 pub struct GeneralMaterial {
-    #[texture(0)]
-    #[sampler(1)]
+    #[uniform(0)]
+    pub base_color: Color,
+    #[uniform(0)]
+    pub use_texture: f32,
+    #[texture(1)]
+    #[sampler(2)]
     pub color: Option<Handle<Image>>,
 }
 
