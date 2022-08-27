@@ -6,7 +6,7 @@ use crate::{
     scene_hook::{HookedSceneBundle, SceneHook},
 };
 
-use super::Levels;
+use super::Level;
 
 pub struct Level2LobbyPlugin;
 impl Plugin for Level2LobbyPlugin {
@@ -23,7 +23,7 @@ fn setup(mut cmds: Commands, model_assets: Res<ModelAssets>) {
             ..default()
         },
         hook: SceneHook::new(move |_entity, _world, cmds| {
-            cmds.insert(Levels::Level2Lobby);
+            cmds.insert(Level::Level2Lobby);
         }),
     });
 }

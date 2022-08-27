@@ -27,8 +27,8 @@ impl Plugin for LevelsPlugin {
     }
 }
 
-#[derive(Component, Debug)]
-pub enum Levels {
+#[derive(Clone, Copy, Component, Debug)]
+pub enum Level {
     Level1Garage,
     Level2Lobby,
     Level3Chair,
@@ -36,14 +36,24 @@ pub enum Levels {
     Level5GarageLobby,
 }
 
-impl Levels {
-    fn current_scene(&self, scenes: &ModelAssets) -> Handle<Scene> {
+impl Level {
+    fn scene(&self, scenes: &ModelAssets) -> Handle<Scene> {
         match self {
-            Levels::Level1Garage => scenes.level1_garage.clone(),
-            Levels::Level2Lobby => scenes.level2_lobby.clone(),
-            Levels::Level3Chair => scenes.level3_chair.clone(),
-            Levels::Level4ChairsPile => scenes.level4_chairs_pile.clone(),
-            Levels::Level5GarageLobby => scenes.level5_garage_lobby.clone(),
+            Level::Level1Garage => scenes.level1_garage.clone(),
+            Level::Level2Lobby => scenes.level2_lobby.clone(),
+            Level::Level3Chair => scenes.level3_chair.clone(),
+            Level::Level4ChairsPile => scenes.level4_chairs_pile.clone(),
+            Level::Level5GarageLobby => scenes.level5_garage_lobby.clone(),
+        }
+    }
+
+    fn next(&self) -> Level {
+        match self {
+            Level::Level1Garage => Level::Level2Lobby,
+            Level::Level2Lobby => Level::Level3Chair,
+            Level::Level3Chair => Level::Level4ChairsPile,
+            Level::Level4ChairsPile => Level::Level5GarageLobby,
+            Level::Level5GarageLobby => Level::Level1Garage,
         }
     }
 }

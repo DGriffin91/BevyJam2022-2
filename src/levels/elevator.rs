@@ -8,7 +8,7 @@ use crate::{
     entity::{button::NamedButtonStatuses, door_linear::DoorLinear, trigger::NamedTriggerStatuses},
 };
 
-use super::Levels;
+use super::Level;
 
 pub struct ElevatorPlugin;
 impl Plugin for ElevatorPlugin {
@@ -42,16 +42,8 @@ fn doors(
     mut inside_elevator: Local<bool>,
     mut outside_elevator: Local<bool>,
     mut inside_near_door: Local<bool>,
-    mut level: ResMut<Levels>,
-    keys: Res<Input<KeyCode>>,
+    mut level: ResMut<Level>,
 ) {
-    // TODO: Remove this, R is just for testing
-    if keys.just_pressed(KeyCode::R) {
-        for (_, mut door) in doors.iter_mut().filter_name_contains("Elevator Door") {
-            door.state.toggle();
-        }
-    }
-
     if triggers.is_changed() {
         if let Some(status) = triggers.any("Elevator Inside Main") {
             *inside_elevator = status.player_is_inside;
@@ -85,23 +77,6 @@ fn doors(
             .state
             .is_closed()
     {
-        match *level {
-            Levels::Level1Garage => {
-                *level = Levels::Level2Lobby;
-            }
-            Levels::Level2Lobby => {
-                *level = Levels::Level3Chair;
-            }
-            Levels::Level3Chair => {
-                *level = Levels::Level4ChairsPile;
-            }
-            Levels::Level4ChairsPile => {
-                *level = Levels::Level5GarageLobby;
-            }
-            Levels::Level5GarageLobby => {
-                *level = Levels::Level1Garage;
-            }
-        }
-        debug!(?level, "Change level");
+        *level = level.next();
     }
 }
