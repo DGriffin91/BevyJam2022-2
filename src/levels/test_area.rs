@@ -2,7 +2,7 @@ use bevy::prelude::*;
 use iyes_loopless::prelude::*;
 
 use crate::{
-    assets::{GameState, ModelAssets},
+    assets::ModelAssets,
     entity::{
         button::NamedButtonStatuses, door_linear::DoorLinear, trigger::NamedTriggerStatuses,
         NamedIterator,
@@ -10,13 +10,15 @@ use crate::{
     Sun,
 };
 
+use super::Levels;
+
 pub struct TestAreaLevelPlugin;
 impl Plugin for TestAreaLevelPlugin {
     fn build(&self, app: &mut App) {
-        app.add_enter_system(GameState::RunLevel, setup);
+        app.add_enter_system(Levels::TestAreaLevel, setup);
         app.add_system_set(
             ConditionSet::new()
-                .run_in_state(GameState::RunLevel)
+                .run_in_state(Levels::TestAreaLevel)
                 .with_system(doors)
                 .into(),
         );

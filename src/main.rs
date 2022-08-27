@@ -15,7 +15,7 @@ use bevy::{
             Extent3d, TextureDescriptor, TextureDimension, TextureFormat, TextureUsages,
         },
         texture::{BevyDefault, ImageSampler, ImageSettings},
-        view::{NoFrustumCulling, RenderLayers},
+        view::RenderLayers,
     },
     sprite::{Material2dPlugin, MaterialMesh2dBundle, Mesh2dHandle},
     window::{PresentMode, WindowMode, WindowResizeConstraints, WindowResized},
@@ -25,8 +25,8 @@ use bevy_fps_controller::controller::*;
 use bevy_kira_audio::prelude::*;
 use bevy_rapier3d::prelude::*;
 use iyes_loopless::prelude::*;
-use levels::LevelsPlugin;
-use materials::general::GeneralMaterial;
+use levels::{Levels, LevelsPlugin};
+use materials::{general::GeneralMaterial, rings::RingsMaterial, swap_materials};
 
 use crate::assets::{GameState, ImageAssets, ModelAssets, SoundAssets};
 use crate::audio::AudioComponentPlugin;
@@ -35,7 +35,7 @@ use crate::editor::GameEditorPlugin;
 use crate::entity::EntityPlugin;
 use crate::inventory::InventoryPlugin;
 use crate::materials::post_process::PostProcessingMaterial;
-use crate::scene_hook::{HookPlugin, SceneLoaded};
+use crate::scene_hook::HookPlugin;
 use crate::sidecar_asset::SidecarAssetPlugin;
 
 mod assets;
@@ -54,6 +54,7 @@ fn main() {
     let mut app = App::new();
 
     app.add_loopless_state(GameState::AssetLoading)
+        .add_loopless_state(Levels::None)
         .add_loading_state(
             LoadingState::new(GameState::AssetLoading)
                 .continue_to_state(GameState::RunLevel)
@@ -96,6 +97,7 @@ fn main() {
         .add_plugin(HookPlugin)
         .add_plugin(Material2dPlugin::<PostProcessingMaterial>::default())
         .add_plugin(MaterialPlugin::<GeneralMaterial>::default())
+        .add_plugin(MaterialPlugin::<RingsMaterial>::default())
         .insert_resource(ClearColor(Color::BLACK))
         .insert_resource(RapierConfiguration::default())
         .add_plugin(RapierDebugRenderPlugin::default())
@@ -368,41 +370,6 @@ fn sun_follow_camera(
     for mut sun in &mut sun {
         for camera in &camera {
             sun.translation = camera.translation;
-        }
-    }
-}
-
-fn swap_materials(
-    mut cmds: Commands,
-    mut scene_loaded: SceneLoaded,
-    mut standard_mats: ResMut<Assets<StandardMaterial>>,
-    mut general_mats: ResMut<Assets<GeneralMaterial>>,
-) {
-    for entity in scene_loaded.iter() {
-        if entity.get::<Handle<Mesh>>().is_some() {
-            cmds.entity(entity.id()).insert(NoFrustumCulling); // Also remove AABBs
-        }
-        let mut cmds = cmds.entity(entity.id());
-        if let Some(std_mat_handle) = entity.get::<Handle<StandardMaterial>>() {
-            if let Some(std_mat) = standard_mats.get_mut(std_mat_handle) {
-                if std_mat.emissive_texture.is_none() {
-                    std_mat.unlit = true; // Workaround
-                }
-
-                // TODO Not showing general material
-                let mut tex = std_mat.emissive_texture.clone();
-                if tex.is_none() {
-                    tex = std_mat.base_color_texture.clone();
-                }
-                let use_texture = tex.is_some() as u32 as f32;
-                let mat_handle_1 = general_mats.add(GeneralMaterial {
-                    color: tex,
-                    use_texture,
-                    base_color: std_mat.base_color,
-                });
-                cmds.remove::<Handle<StandardMaterial>>();
-                cmds.insert(mat_handle_1);
-            }
         }
     }
 }

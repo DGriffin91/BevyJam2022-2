@@ -2,7 +2,7 @@ use bevy::prelude::*;
 use iyes_loopless::prelude::*;
 
 use crate::{
-    assets::{GameState, ModelAssets},
+    assets::ModelAssets,
     scene_hook::{HookedSceneBundle, SceneHook},
 };
 
@@ -11,8 +11,8 @@ use super::Levels;
 pub struct Level2LobbyPlugin;
 impl Plugin for Level2LobbyPlugin {
     fn build(&self, app: &mut App) {
-        app.add_enter_system(GameState::RunLevel, setup);
-        app.add_system_set(ConditionSet::new().run_in_state(GameState::RunLevel).into());
+        app.add_enter_system(Levels::Level2Lobby, setup);
+        app.add_system_set(ConditionSet::new().run_in_state(Levels::Level2Lobby).into());
     }
 }
 

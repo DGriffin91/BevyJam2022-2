@@ -1,13 +1,23 @@
 use bevy::prelude::*;
 use iyes_loopless::prelude::*;
 
-use crate::assets::{GameState, ModelAssets};
+use crate::assets::GameState;
 
-use self::elevator::{ElevatorPlugin, ElevatorScene};
+use self::{
+    elevator::{ElevatorPlugin, ElevatorScene},
+    level1_garage::Level1GaragePlugin,
+    level2_lobby::Level2LobbyPlugin,
+    level3_chair::Level3ChairPlugin,
+    level4_chairs_pile::Level4ChairsPilePlugin,
+    level5_garage_lobby::Level5GarageLobbyPlugin,
+};
 
 mod elevator;
 mod level1_garage;
 mod level2_lobby;
+mod level3_chair;
+mod level4_chairs_pile;
+mod level5_garage_lobby;
 mod test_area;
 
 pub struct LevelsPlugin;
@@ -16,8 +26,11 @@ impl Plugin for LevelsPlugin {
     fn build(&self, app: &mut App) {
         app.insert_resource(Levels::Level1Garage)
             .add_plugin(ElevatorPlugin)
-            // .add_plugin(Level1GaragePlugin)
-            // .add_plugin(Level2LobbyPlugin)
+            .add_plugin(Level1GaragePlugin)
+            .add_plugin(Level2LobbyPlugin)
+            .add_plugin(Level3ChairPlugin)
+            .add_plugin(Level4ChairsPilePlugin)
+            .add_plugin(Level5GarageLobbyPlugin)
             .add_system_set(
                 ConditionSet::new()
                     .run_in_state(GameState::RunLevel)
@@ -27,25 +40,15 @@ impl Plugin for LevelsPlugin {
     }
 }
 
-#[derive(Component, Debug)]
+#[derive(Component, Clone, Eq, PartialEq, Debug, Hash)]
 pub enum Levels {
+    None,
     Level1Garage,
     Level2Lobby,
     Level3Chair,
     Level4ChairsPile,
     Level5GarageLobby,
-}
-
-impl Levels {
-    fn current_scene(&self, scenes: &ModelAssets) -> Handle<Scene> {
-        match self {
-            Levels::Level1Garage => scenes.level1_garage.clone(),
-            Levels::Level2Lobby => scenes.level2_lobby.clone(),
-            Levels::Level3Chair => scenes.level3_chair.clone(),
-            Levels::Level4ChairsPile => scenes.level4_chairs_pile.clone(),
-            Levels::Level5GarageLobby => scenes.level5_garage_lobby.clone(),
-        }
-    }
+    TestAreaLevel,
 }
 
 #[derive(Component)]
@@ -55,7 +58,6 @@ fn change_level(
     mut cmds: Commands,
     level: Res<Levels>,
     scenes: Query<Entity, (With<Handle<Scene>>, Without<ElevatorScene>)>,
-    model_assets: Res<ModelAssets>,
 ) {
     if level.is_changed() {
         println!("Change level");
@@ -65,10 +67,6 @@ fn change_level(
             cmds.entity(ent).despawn_recursive();
         }
 
-        // Load new active level
-        cmds.spawn_bundle(SceneBundle {
-            scene: level.current_scene(&model_assets),
-            ..default()
-        });
+        cmds.insert_resource(NextState(level.clone()));
     }
 }

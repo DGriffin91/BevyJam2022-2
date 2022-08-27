@@ -14,12 +14,7 @@ pub struct ElevatorPlugin;
 impl Plugin for ElevatorPlugin {
     fn build(&self, app: &mut App) {
         app.add_enter_system(GameState::RunLevel, setup);
-        app.add_system_set(
-            ConditionSet::new()
-                .run_in_state(GameState::RunLevel)
-                .with_system(doors)
-                .into(),
-        );
+        app.add_system(doors);
     }
 }
 
@@ -32,6 +27,7 @@ fn setup(mut cmds: Commands, model_assets: Res<ModelAssets>) {
         ..default()
     })
     .insert(ElevatorScene);
+    cmds.insert_resource(NextState(Levels::Level1Garage));
 }
 
 fn doors(
@@ -100,6 +96,12 @@ fn doors(
             }
             Levels::Level5GarageLobby => {
                 *level = Levels::Level1Garage;
+            }
+            Levels::TestAreaLevel => {
+                *level = Levels::TestAreaLevel;
+            }
+            Levels::None => {
+                *level = Levels::None;
             }
         }
         debug!(?level, "Change level");

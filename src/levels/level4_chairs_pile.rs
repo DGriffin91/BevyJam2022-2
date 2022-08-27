@@ -2,17 +2,21 @@ use bevy::prelude::*;
 use iyes_loopless::prelude::*;
 
 use crate::{
-    assets::{GameState, ModelAssets},
+    assets::ModelAssets,
     scene_hook::{HookedSceneBundle, SceneHook},
 };
 
 use super::Levels;
 
-pub struct Level3ChairsPilePlugin;
-impl Plugin for Level3ChairsPilePlugin {
+pub struct Level4ChairsPilePlugin;
+impl Plugin for Level4ChairsPilePlugin {
     fn build(&self, app: &mut App) {
-        app.add_enter_system(GameState::RunLevel, setup);
-        app.add_system_set(ConditionSet::new().run_in_state(GameState::RunLevel).into());
+        app.add_enter_system(Levels::Level4ChairsPile, setup);
+        app.add_system_set(
+            ConditionSet::new()
+                .run_in_state(Levels::Level4ChairsPile)
+                .into(),
+        );
     }
 }
 
