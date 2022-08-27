@@ -16,7 +16,6 @@ pub struct GeneralMaterial {
     #[texture(1)]
     #[sampler(2)]
     pub color: Option<Handle<Image>>,
-    pub hovered: bool,
 }
 
 impl Material for GeneralMaterial {
