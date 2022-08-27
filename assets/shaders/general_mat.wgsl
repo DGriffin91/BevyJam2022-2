@@ -9,6 +9,7 @@
 
 struct Material {
     base_color: vec4<f32>,
+    highlight: vec4<f32>,
     use_texture: f32,
 };
 
@@ -55,5 +56,5 @@ fn fragment(in: FragmentInput) -> @location(0) vec4<f32> {
     var mist = distance(in.world_position.xyz, view.world_position.xyz);
     mist = pow(mist * 0.001, 6.5);
 
-    return vec4(col+mist, 1.0);
+    return vec4(col+mist+material.highlight.rgb, 1.0);
 }

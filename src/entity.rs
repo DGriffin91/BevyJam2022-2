@@ -22,7 +22,7 @@ impl Plugin for EntityPlugin {
         register_entity!(
             app,
             button,
-            events = [ButtonPressEvent],
+            events = [ButtonEvent],
             resources = [NamedButtonStatuses],
             systems = [button_interact_events]
         );

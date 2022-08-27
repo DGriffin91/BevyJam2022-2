@@ -3,6 +3,7 @@ use bevy::prelude::*;
 use iyes_loopless::prelude::*;
 
 use crate::entity::NamedIterator;
+use crate::materials::general::GeneralMaterial;
 use crate::{
     assets::{GameState, ModelAssets},
     entity::{button::NamedButtonStatuses, door_linear::DoorLinear, trigger::NamedTriggerStatuses},
@@ -14,7 +15,13 @@ pub struct ElevatorPlugin;
 impl Plugin for ElevatorPlugin {
     fn build(&self, app: &mut App) {
         app.add_enter_system(GameState::RunLevel, setup);
-        app.add_system(doors);
+        app.add_system_set(
+            ConditionSet::new()
+                .run_in_state(GameState::RunLevel)
+                .with_system(doors)
+                //.with_system(buttons)
+                .into(),
+        );
     }
 }
 
@@ -31,6 +38,8 @@ fn setup(mut cmds: Commands, model_assets: Res<ModelAssets>) {
 }
 
 fn doors(
+    mut materials: Query<(&Name, &Handle<GeneralMaterial>)>,
+    mut general_mats: ResMut<Assets<GeneralMaterial>>,
     mut doors: Query<(&Name, &mut DoorLinear)>,
     triggers: Res<NamedTriggerStatuses>,
     buttons: Res<NamedButtonStatuses>,
@@ -70,40 +79,52 @@ fn doors(
         }
     }
 
-    if *inside_elevator
-        && buttons.any("BUTTON Elevator Inside").is_some()
-        && doors
-            .iter()
-            .filter_name_contains("Elevator Door")
-            .next()
-            .unwrap()
-            .1
-            .state
-            .is_closed()
-    {
-        match *level {
-            Levels::Level1Garage => {
-                *level = Levels::Level2Lobby;
+    if *inside_elevator {
+        if let Some(event) = buttons.any("BUTTON Elevator Inside") {
+            for (_, mat_h) in materials.iter_mut().filter_name_contains("Cylinder.001") {
+                if let Some(mut mat) = general_mats.get_mut(mat_h) {
+                    if event.hovered {
+                        mat.highlight = Color::rgba(0.7, 0.7, 0.7, 1.0);
+                    } else {
+                        mat.highlight = Color::BLACK;
+                    }
+                }
             }
-            Levels::Level2Lobby => {
-                *level = Levels::Level3Chair;
-            }
-            Levels::Level3Chair => {
-                *level = Levels::Level4ChairsPile;
-            }
-            Levels::Level4ChairsPile => {
-                *level = Levels::Level5GarageLobby;
-            }
-            Levels::Level5GarageLobby => {
-                *level = Levels::Level1Garage;
-            }
-            Levels::TestAreaLevel => {
-                *level = Levels::TestAreaLevel;
-            }
-            Levels::None => {
-                *level = Levels::None;
+            if event.pressed
+                && doors
+                    .iter()
+                    .filter_name_contains("Elevator Door")
+                    .next()
+                    .unwrap()
+                    .1
+                    .state
+                    .is_closed()
+            {
+                match *level {
+                    Levels::Level1Garage => {
+                        *level = Levels::Level2Lobby;
+                    }
+                    Levels::Level2Lobby => {
+                        *level = Levels::Level3Chair;
+                    }
+                    Levels::Level3Chair => {
+                        *level = Levels::Level4ChairsPile;
+                    }
+                    Levels::Level4ChairsPile => {
+                        *level = Levels::Level5GarageLobby;
+                    }
+                    Levels::Level5GarageLobby => {
+                        *level = Levels::Level1Garage;
+                    }
+                    Levels::TestAreaLevel => {
+                        *level = Levels::TestAreaLevel;
+                    }
+                    Levels::None => {
+                        *level = Levels::None;
+                    }
+                }
+                debug!(?level, "Change level");
             }
         }
-        debug!(?level, "Change level");
     }
 }

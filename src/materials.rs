@@ -46,6 +46,8 @@ pub fn swap_materials(
                     color: tex,
                     use_texture,
                     base_color: std_mat.base_color,
+                    highlight: Color::BLACK,
+                    ..default()
                 });
                 e_cmds.remove::<Handle<StandardMaterial>>();
                 e_cmds.insert(mat_handle_1);

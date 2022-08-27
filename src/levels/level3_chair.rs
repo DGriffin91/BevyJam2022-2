@@ -43,7 +43,7 @@ struct Ring;
 
 fn rotate_rings(time: Res<Time>, mut rings: Query<(&mut Transform, &Name), With<Ring>>) {
     for (mut transform, name) in &mut rings {
-        let speed = if name.contains("Ring1") { 1.5 } else { 1.3 };
+        let speed = if name.contains("Ring1") { 1.5 } else { -1.3 };
         transform.rotate_x(1.5 * speed * time.delta_seconds());
         transform.rotate_z(1.3 * speed * time.delta_seconds());
     }
