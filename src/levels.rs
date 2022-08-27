@@ -24,7 +24,7 @@ pub struct LevelsPlugin;
 
 impl Plugin for LevelsPlugin {
     fn build(&self, app: &mut App) {
-        app.insert_resource(Levels::Level1Garage)
+        app.insert_resource(Level::Level1Garage)
             .add_plugin(ElevatorPlugin)
             .add_plugin(Level1GaragePlugin)
             .add_plugin(Level2LobbyPlugin)
@@ -41,7 +41,7 @@ impl Plugin for LevelsPlugin {
 }
 
 #[derive(Component, Clone, Eq, PartialEq, Debug, Hash)]
-pub enum Levels {
+pub enum Level {
     None,
     Level1Garage,
     Level2Lobby,
@@ -51,12 +51,26 @@ pub enum Levels {
     TestAreaLevel,
 }
 
+impl Level {
+    fn next(&self) -> Level {
+        match self {
+            Level::None => Level::None,
+            Level::Level1Garage => Level::Level2Lobby,
+            Level::Level2Lobby => Level::Level3Chair,
+            Level::Level3Chair => Level::Level4ChairsPile,
+            Level::Level4ChairsPile => Level::Level5GarageLobby,
+            Level::Level5GarageLobby => Level::Level1Garage,
+            Level::TestAreaLevel => Level::TestAreaLevel,
+        }
+    }
+}
+
 #[derive(Component)]
 struct LevelEntity;
 
 fn change_level(
     mut cmds: Commands,
-    level: Res<Levels>,
+    level: Res<Level>,
     scenes: Query<Entity, (With<Handle<Scene>>, Without<ElevatorScene>)>,
 ) {
     if level.is_changed() {

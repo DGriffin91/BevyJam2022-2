@@ -10,15 +10,15 @@ use crate::{
     Sun,
 };
 
-use super::Levels;
+use super::Level;
 
 pub struct TestAreaLevelPlugin;
 impl Plugin for TestAreaLevelPlugin {
     fn build(&self, app: &mut App) {
-        app.add_enter_system(Levels::TestAreaLevel, setup);
+        app.add_enter_system(Level::TestAreaLevel, setup);
         app.add_system_set(
             ConditionSet::new()
-                .run_in_state(Levels::TestAreaLevel)
+                .run_in_state(Level::TestAreaLevel)
                 .with_system(doors)
                 .into(),
         );

@@ -3,7 +3,6 @@
 
 use std::f32::consts::PI;
 
-use assets::FontAssets;
 use bevy::{
     asset::AssetServerSettings,
     diagnostic::LogDiagnosticsPlugin,
@@ -25,16 +24,18 @@ use bevy_fps_controller::controller::*;
 use bevy_kira_audio::prelude::*;
 use bevy_rapier3d::prelude::*;
 use iyes_loopless::prelude::*;
-use levels::{Levels, LevelsPlugin};
-use materials::{general::GeneralMaterial, rings::RingsMaterial, swap_materials};
 
-use crate::assets::{GameState, ImageAssets, ModelAssets, SoundAssets};
+use crate::assets::{FontAssets, GameState, ImageAssets, ModelAssets, SoundAssets};
 use crate::audio::AudioComponentPlugin;
 #[cfg(debug_assertions)]
 use crate::editor::GameEditorPlugin;
 use crate::entity::EntityPlugin;
 use crate::inventory::InventoryPlugin;
-use crate::materials::post_process::PostProcessingMaterial;
+use crate::levels::{Level, LevelsPlugin};
+use crate::materials::{
+    general::GeneralMaterial, post_process::PostProcessingMaterial, rings::RingsMaterial,
+    swap_materials,
+};
 use crate::scene_hook::HookPlugin;
 use crate::sidecar_asset::SidecarAssetPlugin;
 
@@ -54,7 +55,7 @@ fn main() {
     let mut app = App::new();
 
     app.add_loopless_state(GameState::AssetLoading)
-        .add_loopless_state(Levels::None)
+        .add_loopless_state(Level::None)
         .add_loading_state(
             LoadingState::new(GameState::AssetLoading)
                 .continue_to_state(GameState::RunLevel)

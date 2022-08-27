@@ -6,15 +6,15 @@ use crate::{
     scene_hook::{HookedSceneBundle, SceneHook},
 };
 
-use super::Levels;
+use super::Level;
 
 pub struct Level3ChairPlugin;
 impl Plugin for Level3ChairPlugin {
     fn build(&self, app: &mut App) {
-        app.add_enter_system(Levels::Level3Chair, setup);
+        app.add_enter_system(Level::Level3Chair, setup);
         app.add_system_set(
             ConditionSet::new()
-                .run_in_state(Levels::Level3Chair)
+                .run_in_state(Level::Level3Chair)
                 .with_system(rotate_rings)
                 .into(),
         );
@@ -28,7 +28,7 @@ fn setup(mut cmds: Commands, model_assets: Res<ModelAssets>) {
             ..default()
         },
         hook: SceneHook::new(move |entity, _world, cmds| {
-            cmds.insert(Levels::Level3Chair);
+            cmds.insert(Level::Level3Chair);
             if let Some(name) = entity.get::<Name>() {
                 if name.contains("ROTATE Ring") {
                     cmds.insert(Ring);

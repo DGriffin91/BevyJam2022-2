@@ -6,13 +6,13 @@ use crate::{
     scene_hook::{HookedSceneBundle, SceneHook},
 };
 
-use super::Levels;
+use super::Level;
 
 pub struct Level2LobbyPlugin;
 impl Plugin for Level2LobbyPlugin {
     fn build(&self, app: &mut App) {
-        app.add_enter_system(Levels::Level2Lobby, setup);
-        app.add_system_set(ConditionSet::new().run_in_state(Levels::Level2Lobby).into());
+        app.add_enter_system(Level::Level2Lobby, setup);
+        app.add_system_set(ConditionSet::new().run_in_state(Level::Level2Lobby).into());
     }
 }
 
@@ -23,7 +23,7 @@ fn setup(mut cmds: Commands, model_assets: Res<ModelAssets>) {
             ..default()
         },
         hook: SceneHook::new(move |_entity, _world, cmds| {
-            cmds.insert(Levels::Level2Lobby);
+            cmds.insert(Level::Level2Lobby);
         }),
     });
 }

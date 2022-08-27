@@ -6,17 +6,13 @@ use crate::{
     scene_hook::{HookedSceneBundle, SceneHook},
 };
 
-use super::Levels;
+use super::Level;
 
 pub struct Level1GaragePlugin;
 impl Plugin for Level1GaragePlugin {
     fn build(&self, app: &mut App) {
-        app.add_enter_system(Levels::Level1Garage, setup);
-        app.add_system_set(
-            ConditionSet::new()
-                .run_in_state(Levels::Level1Garage)
-                .into(),
-        );
+        app.add_enter_system(Level::Level1Garage, setup);
+        app.add_system_set(ConditionSet::new().run_in_state(Level::Level1Garage).into());
     }
 }
 
@@ -27,7 +23,7 @@ fn setup(mut cmds: Commands, model_assets: Res<ModelAssets>) {
             ..default()
         },
         hook: SceneHook::new(move |_entity, _world, cmds| {
-            cmds.insert(Levels::Level1Garage);
+            cmds.insert(Level::Level1Garage);
         }),
     });
 }
