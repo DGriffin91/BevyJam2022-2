@@ -7,6 +7,13 @@
 #import bevy_pbr::shadows
 #import bevy_pbr::pbr_functions
 
+struct Material {
+    base_color: vec4<f32>,
+};
+
+@group(1) @binding(0)
+var<uniform> material: Material;
+
 let light_pos = vec3<f32>(150.0, 10.0, -400.0);
 
 fn sdBoxSmooth(p: vec3<f32>, b: vec3<f32>, k: f32) -> f32 {
@@ -61,7 +68,7 @@ fn fragment(in: FragmentInput) -> @location(0) vec4<f32> {
     var V = normalize(view.world_position.xyz - in.world_position.xyz);
     let NdotV = max(dot(N, V), 0.0001);
     var fresnel = clamp(1.0 - NdotV, 0.0, 1.0);
-    var fresnelb = pow(fresnel, 15.0) * 3.0;
+    var fresnelb = pow(fresnel, 15.0) * 4.0;
 
     let light1Pos = light_pos * 1.015 + vec3(0.0, 0.0, -4.0);
 
@@ -72,7 +79,9 @@ fn fragment(in: FragmentInput) -> @location(0) vec4<f32> {
     var shadow = softshadow(in.world_position.xyz, light_dir, 2.0, light_distance, 20000.0);
     let light = saturate(pow(1.0 - saturate(shadow), 20.0));
 
-    var col = fresnelb * vec3(1.0,0.1,0.1) + NdotV * light + fresnel*vec3(0.9,0.1,0.2) * 0.1;
+    let base_col = material.base_color.rgb;
+
+    var col = fresnelb * base_col + NdotV * light + base_col * 0.06;
 
     var mist = distance(in.world_position.xyz, view.world_position.xyz);
     mist = pow(mist * 0.0015, 4.0);

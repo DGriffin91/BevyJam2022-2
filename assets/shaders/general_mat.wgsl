@@ -44,14 +44,20 @@ fn fragment(in: FragmentInput) -> @location(0) vec4<f32> {
 //            in.is_front,
 //        );
 
+#ifdef VERTEX_COLORS
+    var col = in.color.rgb;
+#else
     var col = material.base_color.rgb;
-#ifdef VERTEX_UVS
-    col = mix(col, textureSample(texture, texture_sampler, in.uv).rgb, material.use_texture);
 #endif
 
-#ifdef VERTEX_COLORS
-    col = in.color.rgb;
+#ifdef VERTEX_UVS
+    #ifdef VERTEX_COLORS
+        col = mix(col, col*textureSample(texture, texture_sampler, in.uv).rgb, material.use_texture);
+    #else
+        col = mix(col, textureSample(texture, texture_sampler, in.uv).rgb, material.use_texture);
+    #endif
 #endif
+
 
     var mist = distance(in.world_position.xyz, view.world_position.xyz);
     mist = pow(mist * 0.001, 6.5);

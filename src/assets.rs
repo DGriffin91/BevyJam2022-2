@@ -23,6 +23,8 @@ pub struct FontAssets {
 pub struct ImageAssets {
     #[asset(path = "images/key.png")]
     pub key: Handle<Image>,
+    #[asset(path = "images/money.png")]
+    pub money: Handle<Image>,
     #[asset(path = "images/phone/base.png")]
     pub phone_base: Handle<Image>,
     #[asset(path = "images/phone/0.png")]
@@ -79,8 +81,12 @@ pub struct ImageAssets {
 pub struct ModelAssets {
     #[asset(path = "models/Level 1 Parking Garage Export.gltf#Scene0")]
     pub level1_garage: Handle<Scene>,
-    #[asset(path = "models/Level 2 Lobby Export.gltf#Scene0")]
+    #[asset(path = "models/Level 2 Lobby.gltf#Scene0")]
     pub level2_lobby: Handle<Scene>,
+    #[asset(path = "models/Level 2 Lobby Props.gltf#Scene0")]
+    pub level2_lobby_props: Handle<Scene>,
+    #[asset(path = "models/Lobby Sky.glb#Scene0")]
+    pub level2_lobby_sky: Handle<Scene>,
     #[asset(path = "models/Level 3 Chair Export.gltf#Scene0")]
     pub level3_chair: Handle<Scene>,
     #[asset(path = "models/Level 4 Chairs Pile Export.gltf#Scene0")]
@@ -147,6 +153,14 @@ pub fn copy_names(
             if let Ok(parent_name) = names_parent.get(**parent) {
                 *child_name = parent_name.clone();
             }
+        }
+    }
+}
+
+pub fn abs_transform(mut scene_loaded: SceneLoaded, mut transforms: Query<&mut Transform>) {
+    for entity in scene_loaded.iter() {
+        if let Ok(mut trans) = transforms.get_mut(entity.id()) {
+            trans.scale = trans.scale.abs();
         }
     }
 }

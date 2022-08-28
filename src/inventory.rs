@@ -26,7 +26,8 @@ impl Plugin for InventoryPlugin {
 
 #[derive(Default, PartialEq, Eq)]
 pub struct Inventory {
-    key: bool,
+    pub key: bool,
+    pub money: bool,
 }
 
 #[derive(Component)]
@@ -92,6 +93,23 @@ fn create_inventory_toolbar_ui(
                             ..default()
                         })
                         .insert(Icon("key"));
+                    parent
+                        .spawn_bundle(ImageBundle {
+                            style: Style {
+                                size: Size::new(Val::Px(42.0), Val::Px(42.0)),
+                                margin: UiRect::new(
+                                    Val::Px(10.0),
+                                    Val::Px(10.0),
+                                    Val::Px(10.0),
+                                    Val::Px(10.0),
+                                ),
+                                ..default()
+                            },
+                            image: image_assets.money.clone().into(),
+                            visibility: Visibility { is_visible: false },
+                            ..default()
+                        })
+                        .insert(Icon("money"));
                 });
         })
         .insert(InventoryUiContainer);
@@ -138,6 +156,7 @@ fn update_inventory_toolbar_ui(
         }
 
         set_icon_visible!("key", inventory.key);
+        set_icon_visible!("money", inventory.money);
 
         if item_picked_up {
             audio.play(sound_assets.keys_pickup.clone());

@@ -25,7 +25,9 @@ pub fn swap_materials(
             if let Ok(name) = names.get(**parent) {
                 if name.contains("ROTATE Ring") {
                     e_cmds.remove::<Handle<StandardMaterial>>();
-                    e_cmds.insert(ring_mats.add(RingsMaterial {}));
+                    e_cmds.insert(ring_mats.add(RingsMaterial {
+                        base_color: Color::rgba(1.0, 0.1, 0.2, 1.0),
+                    }));
                     continue;
                 }
             }
