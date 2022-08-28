@@ -70,6 +70,6 @@ fn change_level(
             cmds.entity(ent).despawn_recursive();
         }
 
-        cmds.insert_resource(NextState(level.clone()));
+        cmds.insert_resource(NextState(*level));
     }
 }

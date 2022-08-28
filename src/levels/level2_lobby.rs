@@ -30,8 +30,18 @@ fn setup(mut cmds: Commands, model_assets: Res<ModelAssets>) {
             scene: model_assets.level2_lobby.clone(),
             ..default()
         },
-        hook: SceneHook::new(move |_entity, _world, cmds| {
+        hook: SceneHook::new(move |entity, world, cmds| {
             cmds.insert(Level::Level2Lobby);
+            if let Some(name) = entity.get::<Name>() {
+                if name.contains("PICKUP MESH money") {
+                    if let Some(inventory) = world.get_resource::<Inventory>() {
+                        if inventory.money {
+                            //Despawn money if we already have it
+                            cmds.despawn();
+                        }
+                    }
+                }
+            }
         }),
     });
     cmds.spawn_bundle(HookedSceneBundle {

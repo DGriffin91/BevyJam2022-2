@@ -68,11 +68,9 @@ fn vending_machine(
     ] {
         let mut hovered = false;
         if let Some(event) = buttons.any(btn_name) {
-            if event.pressed {
-                if inventory.money {
-                    // TODO show message "insufficient funds"
-                    selected_level.0 = level;
-                }
+            if event.pressed && inventory.money {
+                // TODO show message "insufficient funds"
+                selected_level.0 = level;
             }
             hovered = true;
         }
