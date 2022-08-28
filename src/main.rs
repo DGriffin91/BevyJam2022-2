@@ -26,6 +26,7 @@ use bevy_kira_audio::prelude::*;
 use bevy_rapier3d::prelude::*;
 use iyes_loopless::prelude::*;
 use levels::level3_chair::RingsSetup;
+use menu::MenuPlugin;
 use notification::NotificationPlugin;
 
 use crate::assets::{FontAssets, GameState, ImageAssets, ModelAssets, SoundAssets};
@@ -51,6 +52,7 @@ mod inventory;
 mod levels;
 mod macros;
 mod materials;
+mod menu;
 mod notification;
 mod scene_hook;
 mod sidecar_asset;
@@ -110,6 +112,7 @@ fn main() {
         .add_plugin(RapierPhysicsPlugin::<NoUserData>::default())
         .add_plugin(FpsControllerPlugin)
         .add_plugin(NotificationPlugin)
+        .add_plugin(MenuPlugin)
         .insert_resource(RingsSetup::default());
 
     #[cfg(target_arch = "wasm32")]
@@ -281,6 +284,7 @@ fn setup_player(
     // This material has the texture that has been rendered.
     let material_handle = post_processing_materials.add(PostProcessingMaterial {
         source_image: image_handle,
+        monitor_fx: 1.0,
     });
 
     // Post processing 2d quad, with material using the render texture done by the main camera, with a custom shader.

@@ -8,7 +8,9 @@ use bevy::{
 #[derive(AsBindGroup, TypeUuid, Clone)]
 #[uuid = "c4b19f91-149e-4008-b8ce-ce50f5ecb0d3"]
 pub struct PostProcessingMaterial {
-    #[texture(0)]
+    #[uniform(0)]
+    pub monitor_fx: f32,
+    #[texture(1)]
     pub source_image: Handle<Image>,
 }
 

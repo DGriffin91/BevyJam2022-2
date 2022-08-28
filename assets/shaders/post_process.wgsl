@@ -1,6 +1,8 @@
 #import bevy_pbr::mesh_view_bindings
 
 @group(1) @binding(0)
+var<uniform> monitor_fx: f32;
+@group(1) @binding(1)
 var texture: texture_2d<f32>;
 
 fn sample_tex(uv: vec2<f32>) -> vec3<f32> {
@@ -92,16 +94,19 @@ fn fragment(
 
     col = pow(col, vec3(2.2));
 
+    var monitor_col = col;
     // sample inside boundaries, otherwise set to black
     if (uvw.y > 1.0 || uvw.x < 0.0 || uvw.x > 1.0 || uvw.y < 0.0) {
-        col = vec3(0.0,0.0,0.0);
+        monitor_col = vec3(0.0,0.0,0.0);
     } else if view.width > res.x * 3.5 || view.height > res.y * 3.5 {
         // scanlines
         let applyx = abs(sin((uv.x * res.x * 2.0 * 3.14159265) * 0.5))+scanx;
         let applyy = abs(sin((uv.y * res.y * 2.0 * 3.14159265) * 0.5))+scany;
         // sample the texture
-    	col = vec3(col * applyy * applyx);
+    	monitor_col = vec3(monitor_col * applyy * applyx);
     }
+
+    col = mix(col, monitor_col, monitor_fx);
 
     return vec4(col, 1.0);
 }

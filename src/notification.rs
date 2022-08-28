@@ -61,7 +61,7 @@ fn create_notification_ui(mut cmds: Commands, windows: Res<Windows>, font_assets
                     "",
                     TextStyle {
                         font: font_assets.fira_mono_medium.clone(),
-                        font_size: 22.0,
+                        font_size: 24.0,
                         color: Color::WHITE,
                     },
                 ) // Set the alignment of the Text
