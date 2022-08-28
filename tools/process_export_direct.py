@@ -30,6 +30,8 @@ def apply_modifiers_scale_deselect(ob):
     if ob.data.users > 1:
         ob.data = ob.data.copy() #make_single_user
     for m in ob.modifiers:
+        if not m.show_in_editmode or not m.show_render:
+            continue
         print(m.name)
         bpy.ops.object.modifier_apply(modifier=m.name, single_user=True)
     bpy.ops.object.transform_apply(location=False, rotation=False, scale=True)
@@ -89,18 +91,12 @@ def smart_project_deselect(active, others, vlayer, angle_limit=66, island_margin
     deselect()
 
 def create_tex_bake_node(ob, name, img):
-    if len(ob.data.materials) < 1:
-        mat = bpy.data.materials.new(name="Material")
-        # Assign it to object
-        if ob.data.materials:
-            # assign to 1st material slot
-            ob.data.materials[0] = mat
-        else:
-            # no slots
-            ob.data.materials.append(mat)
+    create_material_if_needed(ob)
 
     # The object may have multiple materials, put the texture to render to on all of them
     for i, mat in enumerate(ob.data.materials):
+        if mat is None:
+            continue
         mat = ob.data.materials[i] = mat.copy()
             
         mat.use_nodes = True
