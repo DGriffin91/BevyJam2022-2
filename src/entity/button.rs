@@ -47,10 +47,10 @@ spawn_from_scene!(button, Button, |cmds, _entity, _button| {
 pub(super) fn button_interact_events(
     player_camera: Query<&Transform, With<PlayerCamera>>,
     buttons: Query<(Option<&Name>, &Button)>,
-    keys: Res<Input<KeyCode>>,
     mut button_press_events: EventWriter<ButtonEvent>,
     physics_context: Res<RapierContext>,
     mut named_button_statuses: ResMut<NamedButtonStatuses>,
+    mouse_button: Res<Input<MouseButton>>,
 ) {
     let mut new_named_button_statuses = HashMap::new();
 
@@ -71,7 +71,7 @@ pub(super) fn button_interact_events(
                     debug!(name = ?name, "Button pressed");
                     let event = ButtonEvent {
                         name: name.clone(),
-                        pressed: keys.just_pressed(KeyCode::E),
+                        pressed: mouse_button.just_pressed(MouseButton::Left),
                         hovered: true,
                         entity,
                     };

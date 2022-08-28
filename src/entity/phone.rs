@@ -611,11 +611,11 @@ pub(super) fn setup_phone_ui(
 pub(super) fn phone_interact_events(
     player_camera: Query<&Transform, With<PlayerCamera>>,
     phones: Query<(Option<&Name>, &Phone)>,
-    keys: Res<Input<KeyCode>>,
     mut phone_menu_open_events: EventWriter<PhoneMenuOpenEvent>,
     physics_context: Res<RapierContext>,
+    mouse_button: Res<Input<MouseButton>>,
 ) {
-    if keys.just_pressed(KeyCode::E) {
+    if mouse_button.just_pressed(MouseButton::Left) {
         for transform in player_camera.iter() {
             let max_dist = 2.0;
 
