@@ -5,6 +5,8 @@ use bevy::{
 use bevy_asset_loader::prelude::*;
 use bevy_kira_audio::AudioSource;
 
+use crate::scene_hook::SceneLoaded;
+
 #[derive(Clone, Eq, PartialEq, Debug, Hash)]
 pub enum GameState {
     AssetLoading,
@@ -131,4 +133,20 @@ pub fn get_verts_indices(mesh: &Mesh) -> (Vec<Vec3>, Vec<[u32; 3]>) {
             .collect(),
     };
     (vertices, indices)
+}
+
+// If an entity has no mesh, but has a child with a mesh and no children copy it's name to the child
+// To deal with objects in blender having the mesh as a child entity
+pub fn copy_names(
+    mut scene_loaded: SceneLoaded,
+    mut names_child: Query<(&mut Name, &Parent), (Without<Children>, With<Handle<Mesh>>)>,
+    names_parent: Query<&Name, (With<Children>, Without<Handle<Mesh>>)>,
+) {
+    for entity in scene_loaded.iter() {
+        if let Ok((mut child_name, parent)) = names_child.get_mut(entity.id()) {
+            if let Ok(parent_name) = names_parent.get(**parent) {
+                *child_name = parent_name.clone();
+            }
+        }
+    }
 }

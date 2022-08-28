@@ -3,6 +3,7 @@
 
 use std::f32::consts::PI;
 
+use assets::copy_names;
 use bevy::{
     asset::AssetServerSettings,
     diagnostic::LogDiagnosticsPlugin,
@@ -123,6 +124,14 @@ fn main() {
         .add_system_set(
             ConditionSet::new()
                 .run_in_state(GameState::RunLevel)
+                .label("copy_names")
+                .with_system(copy_names)
+                .into(),
+        )
+        .add_system_set(
+            ConditionSet::new()
+                .run_in_state(GameState::RunLevel)
+                .after("copy_names")
                 .with_system(sun_follow_camera)
                 .with_system(toggle_mouse)
                 .with_system(swap_materials)

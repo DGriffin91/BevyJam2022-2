@@ -73,7 +73,10 @@ fn doors(
 
     if *inside_elevator {
         if let Some(event) = buttons.any("BUTTON Elevator Inside") {
-            for (_, mat_h) in materials.iter_mut().filter_name_contains("Cylinder.001") {
+            for (_, mat_h) in materials
+                .iter_mut()
+                .filter_name_contains("Elevator Buttons")
+            {
                 if let Some(mut mat) = general_mats.get_mut(mat_h) {
                     if event.hovered {
                         mat.highlight = Color::rgba(0.7, 0.7, 0.7, 1.0);
