@@ -48,6 +48,7 @@ pub enum DoorState {
     Closing(f32),
 }
 
+#[allow(unused)]
 impl DoorState {
     pub fn toggle(&mut self) {
         if self.is_open() || self.is_opening() {
