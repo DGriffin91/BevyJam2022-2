@@ -12,19 +12,20 @@ use self::{
     level5_garage_lobby::Level5GarageLobbyPlugin,
 };
 
-mod elevator;
-mod level1_garage;
-mod level2_lobby;
-mod level3_chair;
-mod level4_chairs_pile;
-mod level5_garage_lobby;
-mod test_area;
+pub mod elevator;
+pub mod level1_garage;
+pub mod level2_lobby;
+pub mod level3_chair;
+pub mod level4_chairs_pile;
+pub mod level5_garage_lobby;
+pub mod test_area;
 
 pub struct LevelsPlugin;
 
 impl Plugin for LevelsPlugin {
     fn build(&self, app: &mut App) {
         app.insert_resource(Level::Level1Garage)
+            .insert_resource(SelectedLevel(Level::Level2Lobby))
             .add_plugin(ElevatorPlugin)
             .add_plugin(Level1GaragePlugin)
             .add_plugin(Level2LobbyPlugin)
@@ -40,7 +41,7 @@ impl Plugin for LevelsPlugin {
     }
 }
 
-#[derive(Component, Clone, Eq, PartialEq, Debug, Hash)]
+#[derive(Component, Clone, Copy, Eq, PartialEq, Debug, Hash)]
 pub enum Level {
     None,
     Level1Garage,
@@ -51,22 +52,10 @@ pub enum Level {
     TestAreaLevel,
 }
 
-impl Level {
-    fn next(&self) -> Level {
-        match self {
-            Level::None => Level::None,
-            Level::Level1Garage => Level::Level2Lobby,
-            Level::Level2Lobby => Level::Level3Chair,
-            Level::Level3Chair => Level::Level4ChairsPile,
-            Level::Level4ChairsPile => Level::Level5GarageLobby,
-            Level::Level5GarageLobby => Level::Level1Garage,
-            Level::TestAreaLevel => Level::TestAreaLevel,
-        }
-    }
-}
-
 #[derive(Component)]
 struct LevelEntity;
+
+struct SelectedLevel(Level);
 
 fn change_level(
     mut cmds: Commands,

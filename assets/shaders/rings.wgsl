@@ -81,7 +81,7 @@ fn fragment(in: FragmentInput) -> @location(0) vec4<f32> {
 
     let base_col = material.base_color.rgb;
 
-    var col = fresnelb * base_col + NdotV * light + base_col * 0.06;
+    var col = fresnelb * base_col + NdotV * light + base_col * 0.01;
 
     var mist = distance(in.world_position.xyz, view.world_position.xyz);
     mist = pow(mist * 0.0015, 4.0);

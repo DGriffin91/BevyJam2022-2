@@ -68,10 +68,12 @@ fn money(
             .filter_name_contains("PICKUP MESH money")
         {
             if let Some(mut mat) = general_mats.get_mut(mat_h) {
+                let mut highlight_color = Color::rgba(0.0, 0.0, 0.0, 1.0);
                 if event.hovered {
-                    mat.highlight = Color::rgba(0.7, 0.7, 0.7, 1.0);
-                } else {
-                    mat.highlight = Color::BLACK;
+                    highlight_color = Color::rgba(0.7, 0.7, 0.7, 1.0);
+                }
+                if mat.highlight != highlight_color {
+                    mat.highlight = highlight_color;
                 }
             }
         }

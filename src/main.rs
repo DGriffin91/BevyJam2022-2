@@ -25,6 +25,7 @@ use bevy_fps_controller::controller::*;
 use bevy_kira_audio::prelude::*;
 use bevy_rapier3d::prelude::*;
 use iyes_loopless::prelude::*;
+use levels::level3_chair::RingsSetup;
 
 use crate::assets::{FontAssets, GameState, ImageAssets, ModelAssets, SoundAssets};
 use crate::audio::AudioComponentPlugin;
@@ -105,7 +106,8 @@ fn main() {
         .add_plugin(RapierDebugRenderPlugin::default())
         .add_plugin(SidecarAssetPlugin)
         .add_plugin(RapierPhysicsPlugin::<NoUserData>::default())
-        .add_plugin(FpsControllerPlugin);
+        .add_plugin(FpsControllerPlugin)
+        .insert_resource(RingsSetup::default());
 
     #[cfg(target_arch = "wasm32")]
     {
@@ -234,7 +236,7 @@ fn setup_player(
         })
         .insert_bundle(SpatialBundle {
             visibility: Visibility { is_visible: false },
-            transform: Transform::from_translation(vec3(0.0, 1.0, 0.0)),
+            transform: Transform::from_translation(vec3(0.0, 2.0, 0.0)),
             ..default()
         });
 
@@ -316,7 +318,7 @@ fn toggle_mouse(
     keys: Res<Input<KeyCode>>,
     mut fps_controller: Query<&mut FpsController>,
 ) {
-    if keys.just_pressed(KeyCode::Escape) {
+    if keys.just_pressed(KeyCode::Escape) || keys.just_pressed(KeyCode::Tab) {
         let primary_win = windows.primary_mut();
         let mut fps_controller = fps_controller.single_mut();
         let is_locked = primary_win.cursor_locked();
@@ -326,7 +328,7 @@ fn toggle_mouse(
             primary_win.set_cursor_visibility(true);
             primary_win.set_cursor_lock_mode(false);
         } else {
-            //         // Lock
+            // Lock
             fps_controller.enable_input = true;
             primary_win.set_cursor_visibility(false);
             primary_win.set_cursor_lock_mode(true);

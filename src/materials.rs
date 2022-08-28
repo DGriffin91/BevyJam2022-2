@@ -26,7 +26,7 @@ pub fn swap_materials(
                 if name.contains("ROTATE Ring") {
                     e_cmds.remove::<Handle<StandardMaterial>>();
                     e_cmds.insert(ring_mats.add(RingsMaterial {
-                        base_color: Color::rgba(1.0, 0.1, 0.2, 1.0),
+                        base_color: Color::rgba(1.0, 0.4, 0.03, 1.0),
                     }));
                     continue;
                 }
