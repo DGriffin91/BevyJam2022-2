@@ -7,7 +7,7 @@ use crate::{
     scene_hook::{HookedSceneBundle, SceneHook},
 };
 
-use super::Level;
+use super::{Level, UnlockedLevels};
 
 pub struct Level3ChairPlugin;
 impl Plugin for Level3ChairPlugin {
@@ -16,7 +16,7 @@ impl Plugin for Level3ChairPlugin {
         app.add_system_set(
             ConditionSet::new()
                 .run_in_state(Level::Level3Chair)
-                .with_system(rotate_rings)
+                .with_system(update_rings)
                 .into(),
         );
     }
@@ -43,16 +43,20 @@ pub struct RingsSetup {
 
 impl RingsSetup {
     #[allow(unused)]
-    fn is_correct(&self) -> bool {
+    fn is_correct_a(&self) -> bool {
         self.direction && !self.speed && self.color
+    }
+    fn is_correct_b(&self) -> bool {
+        !self.direction && !self.speed && self.color
     }
 }
 
-fn rotate_rings(
+fn update_rings(
     time: Res<Time>,
     rings_setup: Res<RingsSetup>,
     mut rings: Query<(&mut Transform, &Name, &Handle<RingsMaterial>)>,
     mut rings_mats: ResMut<Assets<RingsMaterial>>,
+    mut unlocked_levels: ResMut<UnlockedLevels>,
 ) {
     for (mut transform, name, material) in &mut rings {
         let speed = if name.contains("Ring1") {
@@ -78,5 +82,11 @@ fn rotate_rings(
         //    Quat::from_xyzw(0.6, speed * time.seconds_since_startup() as f32, 1.1, 0.0);
         transform.rotate_x(speed * time.delta_seconds());
         transform.rotate_z(0.8 * speed * time.delta_seconds());
+    }
+    if rings_setup.is_correct_a() && !unlocked_levels.0.contains(&Level::Level4ChairsPile) {
+        unlocked_levels.0.insert(Level::Level4ChairsPile);
+    }
+    if rings_setup.is_correct_b() && unlocked_levels.0.contains(&Level::Level4ChairsPile) {
+        unlocked_levels.0.insert(Level::Level5GarageLobby);
     }
 }

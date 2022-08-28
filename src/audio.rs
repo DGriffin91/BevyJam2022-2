@@ -66,7 +66,7 @@ fn pan(
             ch.set_panning(pan as f64);
 
             let dist = aud_trans.translation.distance(cam_trans.translation) * 0.1;
-            let level = (1.0 / dist).min(1.0); // not accurate falloff
+            let level = (1.0 / dist).min(1.0) * 0.1; // not accurate falloff
             ch.set_volume(level as f64);
         }
     }

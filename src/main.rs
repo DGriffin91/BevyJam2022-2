@@ -317,23 +317,40 @@ fn toggle_mouse(
     mut windows: ResMut<Windows>,
     keys: Res<Input<KeyCode>>,
     mut fps_controller: Query<&mut FpsController>,
+    btn: Res<Input<MouseButton>>,
 ) {
-    if keys.just_pressed(KeyCode::Escape) || keys.just_pressed(KeyCode::Tab) {
-        let primary_win = windows.primary_mut();
-        let mut fps_controller = fps_controller.single_mut();
-        let is_locked = primary_win.cursor_locked();
+    let window = windows.primary_mut();
+    let mut fps_controller = fps_controller.single_mut();
+    if keys.just_pressed(KeyCode::Tab) {
+        let is_locked = window.cursor_locked();
         if is_locked {
             // Unlock
             fps_controller.enable_input = false;
-            primary_win.set_cursor_visibility(true);
-            primary_win.set_cursor_lock_mode(false);
+            window.set_cursor_visibility(true);
+            window.set_cursor_lock_mode(false);
         } else {
             // Lock
             fps_controller.enable_input = true;
-            primary_win.set_cursor_visibility(false);
-            primary_win.set_cursor_lock_mode(true);
-            primary_win.set_cursor_position(vec2(0.0, 0.0));
+            window.set_cursor_visibility(false);
+            window.set_cursor_lock_mode(true);
+            window.set_cursor_position(vec2(window.width() / 2.0, window.height() / 2.0));
         }
+    }
+    if keys.just_pressed(KeyCode::Escape)
+        || (!window.cursor_locked() && fps_controller.enable_input)
+    {
+        // Unlock
+        fps_controller.enable_input = false;
+        window.set_cursor_visibility(true);
+        window.set_cursor_lock_mode(false);
+    }
+
+    if btn.just_pressed(MouseButton::Left) {
+        // Lock
+        fps_controller.enable_input = true;
+        window.set_cursor_visibility(false);
+        window.set_cursor_lock_mode(true);
+        window.set_cursor_position(vec2(window.width() / 2.0, window.height() / 2.0));
     }
 }
 

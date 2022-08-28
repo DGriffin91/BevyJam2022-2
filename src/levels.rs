@@ -1,4 +1,4 @@
-use bevy::prelude::*;
+use bevy::{prelude::*, utils::HashSet};
 use iyes_loopless::prelude::*;
 
 use crate::assets::GameState;
@@ -26,6 +26,7 @@ impl Plugin for LevelsPlugin {
     fn build(&self, app: &mut App) {
         app.insert_resource(Level::Level1Garage)
             .insert_resource(SelectedLevel(Level::Level2Lobby))
+            .insert_resource(UnlockedLevels::default())
             .add_plugin(ElevatorPlugin)
             .add_plugin(Level1GaragePlugin)
             .add_plugin(Level2LobbyPlugin)
@@ -56,6 +57,17 @@ pub enum Level {
 struct LevelEntity;
 
 struct SelectedLevel(Level);
+
+pub struct UnlockedLevels(pub HashSet<Level>);
+
+impl Default for UnlockedLevels {
+    fn default() -> Self {
+        let mut unlocked_levels = HashSet::new();
+        unlocked_levels.insert(Level::Level2Lobby);
+        unlocked_levels.insert(Level::Level3Chair);
+        UnlockedLevels(unlocked_levels)
+    }
+}
 
 fn change_level(
     mut cmds: Commands,

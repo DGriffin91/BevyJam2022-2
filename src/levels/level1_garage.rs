@@ -3,13 +3,15 @@ use iyes_loopless::prelude::*;
 
 use crate::{
     assets::ModelAssets,
-    entity::{button::NamedButtonStatuses, NamedIterator},
+    entity::{button::NamedButtonStatuses, door_linear::DoorLinear, NamedIterator},
     inventory::Inventory,
     materials::general::GeneralMaterial,
     scene_hook::{HookedSceneBundle, SceneHook},
 };
 
-use super::{level3_chair::RingsSetup, Level, SelectedLevel};
+use super::{
+    level2_lobby::GarageOpened, level3_chair::RingsSetup, Level, SelectedLevel, UnlockedLevels,
+};
 
 pub struct Level1GaragePlugin;
 impl Plugin for Level1GaragePlugin {
@@ -20,6 +22,7 @@ impl Plugin for Level1GaragePlugin {
                 .run_in_state(Level::Level1Garage)
                 .with_system(vending_machine)
                 .with_system(ring_switches)
+                .with_system(open_garage_door)
                 .into(),
         );
     }
@@ -43,6 +46,7 @@ fn vending_machine(
     buttons: Res<NamedButtonStatuses>,
     mut selected_level: ResMut<SelectedLevel>,
     inventory: Res<Inventory>,
+    unlocked_levels: Res<UnlockedLevels>,
 ) {
     for (btn_name, btn_obj_name, level) in [
         (
@@ -66,20 +70,24 @@ fn vending_machine(
             Level::Level5GarageLobby,
         ),
     ] {
-        let mut hovered = false;
-        if let Some(event) = buttons.any(btn_name) {
-            if event.pressed && inventory.money {
-                // TODO show message "insufficient funds"
-                selected_level.0 = level;
-            }
-            hovered = true;
-        }
         let mut highlight_color = Color::BLACK;
-        if hovered {
-            highlight_color = Color::rgba(0.5, 0.5, 0.5, 1.0)
-        } else if selected_level.0 == level {
-            highlight_color = Color::rgba(0.0, 0.3, 0.0, 1.0)
-        };
+        if unlocked_levels.0.contains(&level) {
+            let mut hovered = false;
+            if let Some(event) = buttons.any(btn_name) {
+                if event.pressed && inventory.money {
+                    // TODO show message "insufficient funds"
+                    selected_level.0 = level;
+                }
+                hovered = true;
+            }
+            if hovered {
+                highlight_color = Color::rgba(0.5, 0.5, 0.5, 1.0);
+            } else if selected_level.0 == level {
+                highlight_color = Color::rgba(0.0, 0.3, 0.0, 1.0);
+            }
+        } else {
+            highlight_color = Color::rgba(0.9, 0.0, 0.0, 1.0);
+        }
         for (_, mat_h) in materials.iter_mut().filter_name_contains(btn_obj_name) {
             if let Some(mut mat) = general_mats.get_mut(mat_h) {
                 if mat.highlight != highlight_color {
@@ -98,48 +106,47 @@ fn ring_switches(
 ) {
     for (btn_name, btn_obj_name) in [
         ("BUTTON ring knob 1", "KNOB ring direction knob 1"),
-        ("BUTTON ring knob 2", "KNOB ring speed knob 2"),
-        ("BUTTON ring knob 3", "KNOB ring color knob 3"),
+        ("BUTTON ring knob 2", "KNOB ring direction knob 2"),
+        ("BUTTON ring knob 3", "KNOB ring direction knob 3"),
     ] {
         let mut highlight_color = Color::rgba(0.0, 0.0, 0.0, 1.0);
         let mut pressed = false;
         if let Some(event) = buttons.any(btn_name) {
             if event.hovered {
-                highlight_color = Color::rgba(0.4, 0.34, 0.4, 1.0);
+                highlight_color = Color::rgba(0.35, 0.35, 0.35, 1.0);
             }
             if event.pressed {
                 pressed = true;
             }
         }
         if pressed {
-            if btn_obj_name.contains("direction") {
+            if btn_obj_name.contains("knob 1") {
                 rings_setup.direction = !rings_setup.direction;
-            } else if btn_obj_name.contains("speed") {
+            } else if btn_obj_name.contains("knob 2") {
                 rings_setup.speed = !rings_setup.speed;
-            } else if btn_obj_name.contains("color") {
+            } else if btn_obj_name.contains("knob 3") {
                 rings_setup.color = !rings_setup.color;
             }
         }
         for (_, mut trans, mat_h) in mat_trans.iter_mut().filter_name_contains(btn_obj_name) {
-            if pressed {
-                if btn_obj_name.contains("direction") {
-                    if rings_setup.direction {
-                        trans.rotation = Quat::from_euler(EulerRot::XYZ, 90.0, 0.0, 0.0)
-                    } else {
-                        trans.rotation = Quat::from_euler(EulerRot::XYZ, 0.0, 0.0, 0.0)
-                    }
-                } else if btn_obj_name.contains("speed") {
-                    if rings_setup.speed {
-                        trans.rotation = Quat::from_euler(EulerRot::XYZ, 90.0, 0.0, 0.0)
-                    } else {
-                        trans.rotation = Quat::from_euler(EulerRot::XYZ, 0.0, 0.0, 0.0)
-                    }
-                } else if btn_obj_name.contains("color") {
-                    if rings_setup.color {
-                        trans.rotation = Quat::from_euler(EulerRot::XYZ, 90.0, 0.0, 0.0)
-                    } else {
-                        trans.rotation = Quat::from_euler(EulerRot::XYZ, 0.0, 0.0, 0.0)
-                    }
+            // TODO don't set every frame, but handle the level being reloaded
+            if btn_obj_name.contains("knob 1") {
+                if rings_setup.direction {
+                    trans.rotation = Quat::from_euler(EulerRot::XYZ, 90.0, 0.0, 0.0)
+                } else {
+                    trans.rotation = Quat::from_euler(EulerRot::XYZ, 0.0, 0.0, 0.0)
+                }
+            } else if btn_obj_name.contains("knob 2") {
+                if rings_setup.speed {
+                    trans.rotation = Quat::from_euler(EulerRot::XYZ, 90.0, 0.0, 0.0)
+                } else {
+                    trans.rotation = Quat::from_euler(EulerRot::XYZ, 0.0, 0.0, 0.0)
+                }
+            } else if btn_obj_name.contains("knob 3") {
+                if rings_setup.color {
+                    trans.rotation = Quat::from_euler(EulerRot::XYZ, 90.0, 0.0, 0.0)
+                } else {
+                    trans.rotation = Quat::from_euler(EulerRot::XYZ, 0.0, 0.0, 0.0)
                 }
             }
 
@@ -148,6 +155,25 @@ fn ring_switches(
                     mat.highlight = highlight_color;
                 }
             }
+        }
+    }
+}
+
+fn open_garage_door(
+    mut cmds: Commands,
+    mut named: Query<(&Name, Entity)>,
+    garage_opened: Option<Res<GarageOpened>>,
+    mut doors: Query<(&Name, &mut DoorLinear)>,
+) {
+    if let Some(_) = garage_opened {
+        for (_, entity) in named.iter_mut().filter_name_contains("BLOCK Garage Exit") {
+            cmds.entity(entity).despawn();
+        }
+        for (_, mut door) in doors
+            .iter_mut()
+            .filter_name_contains("DOOR_LINEAR Garage Gate")
+        {
+            door.state.open();
         }
     }
 }

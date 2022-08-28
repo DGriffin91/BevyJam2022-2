@@ -16,7 +16,6 @@ impl Plugin for InventoryPlugin {
         app.add_system_set(
             ConditionSet::new()
                 .run_in_state(GameState::RunLevel)
-                .with_system(insert_item_to_inventory)
                 .with_system(update_inventory_toolbar_ui)
                 .with_system(resize_inventory_toolbar_ui)
                 .into(),
@@ -115,12 +114,6 @@ fn create_inventory_toolbar_ui(
         .insert(InventoryUiContainer);
 }
 
-fn insert_item_to_inventory(keys: Res<Input<KeyCode>>, mut inventory: ResMut<Inventory>) {
-    if keys.just_pressed(KeyCode::E) {
-        inventory.key = !inventory.key;
-    }
-}
-
 fn resize_inventory_toolbar_ui(
     mut ui: Query<&mut Style, With<InventoryUiContainer>>,
     mut window_resized_events: EventReader<WindowResized>,
@@ -158,8 +151,11 @@ fn update_inventory_toolbar_ui(
         set_icon_visible!("key", inventory.key);
         set_icon_visible!("money", inventory.money);
 
+        // TODO only make key sound for keys
         if item_picked_up {
-            audio.play(sound_assets.keys_pickup.clone());
+            audio
+                .play(sound_assets.keys_pickup.clone())
+                .with_volume(0.2);
         }
     }
 }

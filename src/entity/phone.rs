@@ -1,7 +1,7 @@
 use std::time::Duration;
 
-use bevy::{math::vec2, prelude::*, window::WindowResized};
-use bevy_fps_controller::controller::FpsController;
+use bevy::{prelude::*, window::WindowResized};
+
 use bevy_kira_audio::{prelude::Audio, AudioControl, AudioInstance, AudioTween};
 use bevy_rapier3d::prelude::*;
 use serde::{Deserialize, Serialize};
@@ -195,56 +195,59 @@ impl Default for BackgroundTimer {
     }
 }
 
+pub struct BackgroundTone(pub Handle<AudioInstance>);
+
 pub(super) fn sync_phone_visibility(
+    mut cmds: Commands,
     phone_ui_visible: Res<PhoneUiVisible>,
     mut ui_container: Query<&mut Visibility, With<PhoneUiContainer>>,
-    mut windows: ResMut<Windows>,
-    mut fps_controller: Query<&mut FpsController>,
+    //mut windows: ResMut<Windows>,
+    //mut fps_controller: Query<&mut FpsController>,
     audio: Res<Audio>,
     mut audio_instances: ResMut<Assets<AudioInstance>>,
     sound_assets: Res<SoundAssets>,
     time: Res<Time>,
     mut background_timer: Local<BackgroundTimer>,
-    mut background_audio_instance: Local<Option<Handle<AudioInstance>>>,
+    background_audio_instance: Option<Res<BackgroundTone>>,
 ) {
     background_timer.tick(time.delta());
 
     if background_timer.just_finished() {
-        *background_audio_instance = Some(
-            audio
-                .play(sound_assets.phone_background.clone())
-                .looped()
-                .with_volume(0.3)
-                .handle(),
-        );
+        let background_audio_instance = audio
+            .play(sound_assets.phone_background.clone())
+            .looped()
+            .with_volume(0.3)
+            .handle();
+
+        cmds.insert_resource(BackgroundTone(background_audio_instance));
     }
 
     if phone_ui_visible.is_changed() {
         if let Ok(mut visibility) = ui_container.get_single_mut() {
-            let primary_win = windows.primary_mut();
-            let mut fps_controller = fps_controller.single_mut();
+            //let primary_win = windows.primary_mut();
+            //let mut fps_controller = fps_controller.single_mut();
 
             if **phone_ui_visible {
                 // Unlock
-                fps_controller.enable_input = false;
                 visibility.is_visible = **phone_ui_visible;
-                primary_win.set_cursor_visibility(true);
-                primary_win.set_cursor_lock_mode(false);
+                //fps_controller.enable_input = false;
+                //primary_win.set_cursor_visibility(true);
+                //primary_win.set_cursor_lock_mode(false);
                 background_timer.reset();
                 background_timer.unpause();
                 audio.play(sound_assets.phone_pickup.clone());
             } else {
                 // Lock
-                fps_controller.enable_input = true;
                 visibility.is_visible = **phone_ui_visible;
-                primary_win.set_cursor_visibility(false);
-                primary_win.set_cursor_lock_mode(true);
-                primary_win.set_cursor_position(vec2(0.0, 0.0));
+                //fps_controller.enable_input = true;
+                //primary_win.set_cursor_visibility(false);
+                //primary_win.set_cursor_lock_mode(true);
+                //primary_win.set_cursor_position(vec2(0.0, 0.0));
                 background_timer.reset();
                 background_timer.pause();
                 audio.play(sound_assets.phone_hangup.clone());
-                if let Some(instance) = &*background_audio_instance {
-                    if let Some(instance) = audio_instances.get_mut(instance) {
+                if let Some(instance) = background_audio_instance {
+                    if let Some(instance) = audio_instances.get_mut(&instance.0) {
                         instance.stop(AudioTween::linear(Duration::from_millis(200)));
                     }
                 }
@@ -272,6 +275,8 @@ pub(super) fn number_not_availble(
     sound_assets: Res<SoundAssets>,
     time: Res<Time>,
     mut timer: Local<NumberNotAvailableTimer>,
+    background_audio_instance: Option<Res<BackgroundTone>>,
+    mut audio_instances: ResMut<Assets<AudioInstance>>,
 ) {
     timer.tick(time.delta());
 
@@ -285,7 +290,16 @@ pub(super) fn number_not_availble(
     }
 
     for ev in phone_submit_events.iter() {
-        if ev.number != "123456" {
+        if ev.number == "5551212" {
+            timer.reset();
+            timer.unpause();
+            audio.play(sound_assets.door_open.clone());
+            if let Some(instance_handle) = &background_audio_instance {
+                if let Some(instance) = audio_instances.get_mut(&instance_handle.0) {
+                    instance.stop(AudioTween::linear(Duration::from_millis(200)));
+                }
+            }
+        } else {
             timer.reset();
             timer.unpause();
             audio.play(sound_assets.phone_number_not_available.clone());
@@ -345,7 +359,7 @@ pub(super) fn press_phone_keys(
                             if let Some(section) = text.sections.iter_mut().next() {
                                 section.value.push(phone_key.char());
 
-                                if section.value.len() >= 6 {
+                                if section.value.len() >= 7 {
                                     phone_submit_events.send(PhoneSubmitEvent {
                                         number: section.value.clone(),
                                     });
@@ -392,7 +406,9 @@ pub(super) fn press_phone_keys(
                     section.value.pop();
                 }
             }
-            audio.play(sound_assets.phone_key_press.clone());
+            audio
+                .play(sound_assets.phone_key_press.clone())
+                .with_volume(0.1);
         }
     }
 }
