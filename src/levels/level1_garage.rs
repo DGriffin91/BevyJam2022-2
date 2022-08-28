@@ -165,7 +165,7 @@ fn open_garage_door(
     garage_opened: Option<Res<GarageOpened>>,
     mut doors: Query<(&Name, &mut DoorLinear)>,
 ) {
-    if let Some(_) = garage_opened {
+    if garage_opened.is_some() {
         for (_, entity) in named.iter_mut().filter_name_contains("BLOCK Garage Exit") {
             cmds.entity(entity).despawn();
         }
