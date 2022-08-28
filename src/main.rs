@@ -224,7 +224,7 @@ fn setup_player(
         .insert(LogicalPlayer(0))
         .insert(FpsControllerInput {
             pitch: 0.0,
-            yaw: -PI / 2.0,
+            yaw: 110.0f32.to_radians(),
             ..default()
         })
         .insert(FpsController {
@@ -239,7 +239,7 @@ fn setup_player(
         })
         .insert_bundle(SpatialBundle {
             visibility: Visibility { is_visible: false },
-            transform: Transform::from_translation(vec3(0.0, 2.0, 0.0)),
+            transform: Transform::from_translation(vec3(-36.0, 2.0, 67.0)),
             ..default()
         });
 
