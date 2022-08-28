@@ -26,6 +26,7 @@ use bevy_kira_audio::prelude::*;
 use bevy_rapier3d::prelude::*;
 use iyes_loopless::prelude::*;
 use levels::level3_chair::RingsSetup;
+use notification::NotificationPlugin;
 
 use crate::assets::{FontAssets, GameState, ImageAssets, ModelAssets, SoundAssets};
 use crate::audio::AudioComponentPlugin;
@@ -50,6 +51,7 @@ mod inventory;
 mod levels;
 mod macros;
 mod materials;
+mod notification;
 mod scene_hook;
 mod sidecar_asset;
 
@@ -107,6 +109,7 @@ fn main() {
         .add_plugin(SidecarAssetPlugin)
         .add_plugin(RapierPhysicsPlugin::<NoUserData>::default())
         .add_plugin(FpsControllerPlugin)
+        .add_plugin(NotificationPlugin)
         .insert_resource(RingsSetup::default());
 
     #[cfg(target_arch = "wasm32")]

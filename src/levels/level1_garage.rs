@@ -6,6 +6,7 @@ use crate::{
     entity::{button::NamedButtonStatuses, door_linear::DoorLinear, NamedIterator},
     inventory::Inventory,
     materials::general::GeneralMaterial,
+    notification::NotificationText,
     scene_hook::{HookedSceneBundle, SceneHook},
 };
 
@@ -47,6 +48,7 @@ fn vending_machine(
     mut selected_level: ResMut<SelectedLevel>,
     inventory: Res<Inventory>,
     unlocked_levels: Res<UnlockedLevels>,
+    mut texts: Query<(&mut Text, &mut NotificationText)>,
 ) {
     for (btn_name, btn_obj_name, level) in [
         (
@@ -74,9 +76,17 @@ fn vending_machine(
         if unlocked_levels.0.contains(&level) {
             let mut hovered = false;
             if let Some(event) = buttons.any(btn_name) {
-                if event.pressed && inventory.money {
-                    // TODO show message "insufficient funds"
-                    selected_level.0 = level;
+                if event.pressed {
+                    if inventory.money {
+                        selected_level.0 = level;
+                    } else {
+                        for (mut text, mut note) in &mut texts {
+                            note.0 = 8.0;
+                            if let Some(section) = text.sections.iter_mut().next() {
+                                section.value = String::from("Insufficient\nfunds");
+                            }
+                        }
+                    }
                 }
                 hovered = true;
             }

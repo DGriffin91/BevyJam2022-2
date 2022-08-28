@@ -29,6 +29,9 @@ struct FragmentInput {
 
 @fragment
 fn fragment(in: FragmentInput) -> @location(0) vec4<f32> {
+    var N = normalize(in.world_normal);
+    var V = normalize(view.world_position.xyz - in.world_position.xyz);
+    let NdotV = max(dot(N, V), 0.0001);
     //Compute normals
 //    let normal = prepare_normal(
 //            0u,
@@ -56,6 +59,12 @@ fn fragment(in: FragmentInput) -> @location(0) vec4<f32> {
     #else
         col = mix(col, textureSample(texture, texture_sampler, in.uv).rgb, material.use_texture);
     #endif
+#endif
+
+#ifndef VERTEX_COLORS
+    if material.use_texture < 0.5 {
+        col *= NdotV; 
+    }
 #endif
 
 

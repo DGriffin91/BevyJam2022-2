@@ -52,6 +52,12 @@ fn create_inventory_toolbar_ui(
             style: Style {
                 size: Size::new(Val::Px(scale.x), Val::Px(scale.y)),
                 justify_content: JustifyContent::Center,
+                position_type: PositionType::Absolute,
+                position: UiRect {
+                    bottom: Val::Percent(0.0),
+                    left: Val::Percent(0.0),
+                    ..default()
+                },
                 ..default()
             },
             color: Color::NONE.into(),
