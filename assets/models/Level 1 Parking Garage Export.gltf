@@ -462,7 +462,7 @@
                 "DM" : {},
                 "speed" : 1.0,
                 "move_to" : [
-                    19.0,
+                    4.900000095367432,
                     0.0,
                     0.0
                 ]
@@ -878,11 +878,13 @@
             "name" : "Exit Text",
             "pbrMetallicRoughness" : {
                 "baseColorFactor" : [
-                    0,
-                    0,
-                    0,
+                    0.01849942095577717,
+                    1,
+                    0.030713727697730064,
                     1
-                ]
+                ],
+                "metallicFactor" : 0,
+                "roughnessFactor" : 0.5
             }
         },
         {
