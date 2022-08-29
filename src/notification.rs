@@ -6,7 +6,7 @@ use crate::{
     assets::{FontAssets, GameState},
     entity::trigger::NamedTriggerStatuses,
     get_display_scale,
-    inventory::{self, Icon, Inventory},
+    inventory::Icon,
     levels::level2_lobby::GarageOpened,
 };
 
@@ -140,11 +140,9 @@ fn fade_in_ending_white(
     garage_opened: Option<Res<GarageOpened>>,
     mut icons: Query<(&Icon, &mut Visibility)>,
 ) {
-    if garage_opened.is_some() {
-        if triggers.is_changed() {
-            if let Some(_status) = triggers.any("End Win Area") {
-                *player_entered_end = true;
-            }
+    if garage_opened.is_some() && triggers.is_changed() {
+        if let Some(_status) = triggers.any("End Win Area") {
+            *player_entered_end = true;
         }
     }
     if *player_entered_end {

@@ -217,7 +217,7 @@ fn render_menu(
             }
         }
     } else if let Some((mut text, mut menu_text)) = texts.iter_mut().next() {
-        if menu_text.0.len() > 0 {
+        if !menu_text.0.is_empty() {
             menu_text.0 = String::from("");
             if let Some(section) = text.sections.iter_mut().next() {
                 section.value = menu_text.0.clone();
