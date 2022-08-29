@@ -1,7 +1,9 @@
+use std::time::Duration;
+
 use bevy::{prelude::*, utils::HashSet};
 use iyes_loopless::prelude::*;
 
-use crate::assets::GameState;
+use crate::assets::{GameState, SoundAssets};
 
 use self::{
     elevator::{ElevatorPlugin, ElevatorScene},
@@ -11,6 +13,8 @@ use self::{
     level4_chairs_pile::Level4ChairsPilePlugin,
     level5_garage_lobby::Level5GarageLobbyPlugin,
 };
+
+use bevy_kira_audio::{prelude::Audio, AudioControl, AudioInstance, AudioTween};
 
 pub mod elevator;
 pub mod level1_garage;
@@ -73,6 +77,10 @@ fn change_level(
     mut cmds: Commands,
     level: Res<Level>,
     scenes: Query<Entity, (With<Handle<Scene>>, Without<ElevatorScene>)>,
+    audio: Res<Audio>,
+    sound_assets: Res<SoundAssets>,
+    mut drones: Local<Vec<Handle<AudioInstance>>>,
+    mut audio_instances: ResMut<Assets<AudioInstance>>,
 ) {
     if level.is_changed() {
         println!("Change level");
@@ -83,5 +91,58 @@ fn change_level(
         }
 
         cmds.insert_resource(NextState(*level));
+
+        for drone in &mut *drones {
+            if let Some(a) = audio_instances.get_mut(drone) {
+                a.stop(AudioTween::linear(Duration::from_secs(1)));
+            }
+        }
+        *drones = Vec::new();
+        match *level {
+            Level::Level2Lobby => drones.push(
+                audio
+                    .play(sound_assets.lobby_music.clone())
+                    .looped()
+                    .fade_in(AudioTween::linear(Duration::from_secs(2)))
+                    .with_volume(0.35)
+                    .handle(),
+            ),
+            Level::Level3Chair => drones.push(
+                audio
+                    .play(sound_assets.rings.clone())
+                    .looped()
+                    .fade_in(AudioTween::linear(Duration::from_secs(2)))
+                    .with_volume(0.8)
+                    .handle(),
+            ),
+            Level::Level4ChairsPile => drones.push(
+                audio
+                    .play(sound_assets.chairs.clone())
+                    .looped()
+                    .fade_in(AudioTween::linear(Duration::from_secs(2)))
+                    .with_volume(0.5)
+                    .handle(),
+            ),
+            Level::Level5GarageLobby => {
+                drones.push(
+                    audio
+                        .play(sound_assets.lobby_in_garage.clone())
+                        .looped()
+                        .fade_in(AudioTween::linear(Duration::from_secs(2)))
+                        .with_volume(0.9)
+                        .handle(),
+                );
+                drones.push(
+                    audio
+                        .play(sound_assets.lobby_music.clone())
+                        .looped()
+                        .fade_in(AudioTween::linear(Duration::from_secs(2)))
+                        .with_volume(0.6)
+                        .with_playback_rate(0.8)
+                        .handle(),
+                );
+            }
+            _ => (),
+        }
     }
 }

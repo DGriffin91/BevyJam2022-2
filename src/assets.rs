@@ -105,8 +105,6 @@ pub struct SoundAssets {
     pub gate: Handle<AudioSource>,
     #[asset(path = "sounds/elevator_transport.flac")]
     pub elevator_transport: Handle<AudioSource>,
-    #[asset(path = "sounds/drone1.flac")]
-    pub drone1: Handle<AudioSource>,
     #[asset(path = "sounds/click.flac")]
     pub click: Handle<AudioSource>,
     #[asset(path = "sounds/bad_click.flac")]
@@ -127,6 +125,20 @@ pub struct SoundAssets {
     pub phone_pickup: Handle<AudioSource>,
     #[asset(path = "sounds/phone_background.flac")]
     pub phone_background: Handle<AudioSource>,
+    // Drones
+    #[asset(path = "sounds/drone1.flac")]
+    pub drone1: Handle<AudioSource>,
+    #[asset(path = "sounds/lobby_in_garage.flac")]
+    pub lobby_in_garage: Handle<AudioSource>,
+    #[asset(path = "sounds/chairs.flac")]
+    pub chairs: Handle<AudioSource>,
+    #[asset(path = "sounds/rings.flac")]
+    pub rings: Handle<AudioSource>,
+    // Music
+    #[asset(path = "sounds/lobby_music.flac")]
+    pub lobby_music: Handle<AudioSource>,
+    #[asset(path = "sounds/ending.flac")]
+    pub ending: Handle<AudioSource>,
 }
 
 pub fn get_verts_indices(mesh: &Mesh) -> (Vec<Vec3>, Vec<[u32; 3]>) {

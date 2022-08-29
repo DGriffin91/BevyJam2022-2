@@ -3,12 +3,13 @@ use bevy::{prelude::*, ui::FocusPolicy, window::WindowResized};
 use iyes_loopless::prelude::*;
 
 use crate::{
-    assets::{FontAssets, GameState},
+    assets::{FontAssets, GameState, SoundAssets},
     entity::trigger::NamedTriggerStatuses,
     get_display_scale,
     inventory::Icon,
     levels::level2_lobby::GarageOpened,
 };
+use bevy_kira_audio::{prelude::Audio, AudioControl};
 
 pub struct NotificationPlugin;
 
@@ -139,10 +140,13 @@ fn fade_in_ending_white(
     mut player_entered_end: Local<bool>,
     garage_opened: Option<Res<GarageOpened>>,
     mut icons: Query<(&Icon, &mut Visibility)>,
+    audio: Res<Audio>,
+    sound_assets: Res<SoundAssets>,
 ) {
-    if garage_opened.is_some() && triggers.is_changed() {
+    if garage_opened.is_some() && triggers.is_changed() && !*player_entered_end {
         if let Some(_status) = triggers.any("End Win Area") {
             *player_entered_end = true;
+            audio.play(sound_assets.ending.clone()).with_volume(0.7);
         }
     }
     if *player_entered_end {

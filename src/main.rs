@@ -175,7 +175,7 @@ fn setup_player(
         .play(sound_assets.drone1.clone())
         .looped()
         .fade_in(AudioTween::linear(Duration::from_secs(5)))
-        .with_volume(0.5);
+        .with_volume(0.4);
 
     rapier_debug.enabled = false; //Can't disable by default
 
