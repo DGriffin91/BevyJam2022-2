@@ -42,6 +42,15 @@ fn setup(mut cmds: Commands, model_assets: Res<ModelAssets>) {
             cmds.insert(Level::Level1Garage);
         }),
     });
+    cmds.spawn_bundle(HookedSceneBundle {
+        scene: SceneBundle {
+            scene: model_assets.level2_lobby_sky.clone(),
+            ..default()
+        },
+        hook: SceneHook::new(move |_entity, _world, cmds| {
+            cmds.insert(Level::Level2Lobby);
+        }),
+    });
 }
 
 fn vending_machine(
