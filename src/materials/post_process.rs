@@ -9,7 +9,7 @@ use bevy::{
 #[uuid = "c4b19f91-149e-4008-b8ce-ce50f5ecb0d3"]
 pub struct PostProcessingMaterial {
     #[uniform(0)]
-    pub monitor_fx: f32,
+    pub monitor_fx: Vec4,
     #[texture(1)]
     pub source_image: Handle<Image>,
 }

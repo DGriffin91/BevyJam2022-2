@@ -48,7 +48,7 @@ fn create_notification_ui(mut cmds: Commands, windows: Res<Windows>, font_assets
             },
             ..default()
         },
-        color: Color::NONE.into(),
+        color: Color::NONE.into(), // Color::GRAY
         focus_policy: FocusPolicy::Pass,
         ..default()
     })

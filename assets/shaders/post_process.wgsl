@@ -1,7 +1,11 @@
 #import bevy_pbr::mesh_view_bindings
 
+struct Material {
+    monitor_fx: vec4<f32>,
+};
+
 @group(1) @binding(0)
-var<uniform> monitor_fx: f32;
+var<uniform> material: Material;
 @group(1) @binding(1)
 var texture: texture_2d<f32>;
 
@@ -106,7 +110,7 @@ fn fragment(
     	monitor_col = vec3(monitor_col * applyy * applyx);
     }
 
-    col = mix(col, monitor_col, monitor_fx);
+    col = mix(col, monitor_col, material.monitor_fx.x);
 
     return vec4(col, 1.0);
 }

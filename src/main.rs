@@ -7,7 +7,7 @@ use assets::{abs_transform, copy_names};
 use bevy::{
     asset::AssetServerSettings,
     diagnostic::LogDiagnosticsPlugin,
-    math::{vec2, vec3},
+    math::{vec2, vec3, vec4},
     prelude::*,
     render::{
         camera::{Projection, RenderTarget},
@@ -284,7 +284,7 @@ fn setup_player(
     // This material has the texture that has been rendered.
     let material_handle = post_processing_materials.add(PostProcessingMaterial {
         source_image: image_handle,
-        monitor_fx: 1.0,
+        monitor_fx: vec4(1.0, 0.0, 0.0, 0.0),
     });
 
     // Post processing 2d quad, with material using the render texture done by the main camera, with a custom shader.

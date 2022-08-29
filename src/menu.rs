@@ -124,14 +124,14 @@ fn add_item(s: &mut String, pos: i32, sel: i32, text: &str, value: &str) {
         s.push_str("  ")
     }
     s.push_str(text);
-    s.push_str(" ");
+    s.push_str(": ");
     s.push_str(value);
-    s.push_str("\n");
+    s.push('\n');
 }
 
 impl GameSettings {
     fn render(&self) -> String {
-        let mut s = String::from("");
+        let mut s = String::from("Select with arrow\nkeys or WASD\n");
         add_item(
             &mut s,
             0,
@@ -193,8 +193,8 @@ fn update_menu(
         let monitor_fx = game_settings.monitor_fx as u32 as f32;
 
         for (_, mat) in post_processing_materials.iter_mut() {
-            if mat.monitor_fx != monitor_fx {
-                mat.monitor_fx = monitor_fx;
+            if mat.monitor_fx.x != monitor_fx {
+                mat.monitor_fx.x = monitor_fx;
             }
         }
     }
@@ -216,13 +216,11 @@ fn render_menu(
                 }
             }
         }
-    } else {
-        if let Some((mut text, mut menu_text)) = texts.iter_mut().next() {
-            if menu_text.0.len() > 0 {
-                menu_text.0 = String::from("");
-                if let Some(section) = text.sections.iter_mut().next() {
-                    section.value = menu_text.0.clone();
-                }
+    } else if let Some((mut text, mut menu_text)) = texts.iter_mut().next() {
+        if menu_text.0.len() > 0 {
+            menu_text.0 = String::from("");
+            if let Some(section) = text.sections.iter_mut().next() {
+                section.value = menu_text.0.clone();
             }
         }
     }
