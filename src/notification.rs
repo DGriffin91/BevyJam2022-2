@@ -4,7 +4,10 @@ use iyes_loopless::prelude::*;
 
 use crate::{
     assets::{FontAssets, GameState},
+    entity::trigger::NamedTriggerStatuses,
     get_display_scale,
+    inventory::{self, Icon, Inventory},
+    levels::level2_lobby::GarageOpened,
 };
 
 pub struct NotificationPlugin;
@@ -17,6 +20,7 @@ impl Plugin for NotificationPlugin {
                 .run_in_state(GameState::RunLevel)
                 .with_system(resize_notification_ui)
                 .with_system(clear_notification)
+                .with_system(fade_in_ending_white)
                 .into(),
         );
     }
@@ -27,6 +31,9 @@ struct NotificationUiContainer;
 
 #[derive(Component)]
 pub struct NotificationText(pub f32);
+
+#[derive(Component)]
+pub struct EndText;
 
 fn create_notification_ui(mut cmds: Commands, windows: Res<Windows>, font_assets: Res<FontAssets>) {
     let window = windows.get_primary().unwrap();
@@ -48,25 +55,22 @@ fn create_notification_ui(mut cmds: Commands, windows: Res<Windows>, font_assets
             },
             ..default()
         },
-        color: Color::NONE.into(), // Color::GRAY
+        color: Color::NONE.into(),
         focus_policy: FocusPolicy::Pass,
         ..default()
     })
     .with_children(|parent| {
         parent
             .spawn_bundle(
-                // Create a TextBundle that has a Text with a single section.
                 TextBundle::from_section(
-                    // Accepts a `String` or any type that converts into a `String`, such as `&str`
                     "",
                     TextStyle {
                         font: font_assets.fira_mono_medium.clone(),
                         font_size: 24.0,
                         color: Color::WHITE,
                     },
-                ) // Set the alignment of the Text
+                )
                 .with_text_alignment(TextAlignment::TOP_LEFT)
-                // Set the style of the TextBundle itself.
                 .with_style(Style {
                     align_self: AlignSelf::FlexStart,
                     position_type: PositionType::Absolute,
@@ -79,6 +83,24 @@ fn create_notification_ui(mut cmds: Commands, windows: Res<Windows>, font_assets
                 }),
             )
             .insert(NotificationText(3.0));
+        parent
+            .spawn_bundle(
+                TextBundle::from_section(
+                    "subfuse",
+                    TextStyle {
+                        font: font_assets.fira_mono_medium.clone(),
+                        font_size: 48.0,
+                        color: Color::rgba(0.0, 0.0, 0.0, 0.0),
+                    },
+                )
+                .with_text_alignment(TextAlignment::CENTER)
+                .with_style(Style {
+                    align_self: AlignSelf::Center,
+                    margin: UiRect::all(Val::Auto),
+                    ..default()
+                }),
+            )
+            .insert(EndText);
     })
     .insert(NotificationUiContainer);
 }
@@ -104,6 +126,40 @@ fn clear_notification(time: Res<Time>, mut texts: Query<(&mut Text, &mut Notific
                     section.value = String::from("");
                 }
             }
+        }
+    }
+}
+
+fn fade_in_ending_white(
+    time: Res<Time>,
+    mut fade: Local<f32>,
+    mut ui: Query<&mut UiColor, With<NotificationUiContainer>>,
+    mut end_text: Query<&mut Text, With<EndText>>,
+    triggers: Res<NamedTriggerStatuses>,
+    mut player_entered_end: Local<bool>,
+    garage_opened: Option<Res<GarageOpened>>,
+    mut icons: Query<(&Icon, &mut Visibility)>,
+) {
+    if garage_opened.is_some() {
+        if triggers.is_changed() {
+            if let Some(_status) = triggers.any("End Win Area") {
+                *player_entered_end = true;
+            }
+        }
+    }
+    if *player_entered_end {
+        *fade += time.delta_seconds() * 0.1;
+        for mut color in ui.iter_mut() {
+            color.0 = Color::rgba(0.7, 0.7, 0.7, fade.clamp(0.0, 1.0));
+        }
+        for mut text in end_text.iter_mut() {
+            if let Some(section) = text.sections.iter_mut().next() {
+                section.style.color = Color::rgba(0.0, 0.0, 0.0, fade.clamp(0.0, 1.0));
+            }
+        }
+        for (_, mut vis) in &mut icons {
+            // Couldn't figure out a good way to show notification ui on top
+            vis.is_visible = false;
         }
     }
 }

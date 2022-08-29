@@ -111,8 +111,6 @@ fn main() {
         .add_plugin(SidecarAssetPlugin)
         .add_plugin(RapierPhysicsPlugin::<NoUserData>::default())
         .add_plugin(FpsControllerPlugin)
-        .add_plugin(NotificationPlugin)
-        .add_plugin(MenuPlugin)
         .insert_resource(RingsSetup::default());
 
     #[cfg(target_arch = "wasm32")]
@@ -125,7 +123,9 @@ fn main() {
 
     app.add_plugin(LevelsPlugin)
         .add_plugin(EntityPlugin)
+        .add_plugin(NotificationPlugin)
         .add_plugin(InventoryPlugin)
+        .add_plugin(MenuPlugin)
         .add_system(window_resized)
         .add_enter_system(GameState::RunLevel, hide_mouse)
         .add_enter_system(GameState::RunLevel, setup_player)

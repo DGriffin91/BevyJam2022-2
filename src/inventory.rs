@@ -33,7 +33,7 @@ pub struct Inventory {
 struct InventoryUiContainer;
 
 #[derive(Component)]
-struct Icon(&'static str);
+pub struct Icon(&'static str);
 
 fn create_inventory_toolbar_ui(
     mut commands: Commands,

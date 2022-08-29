@@ -1,9 +1,12 @@
 use bevy::prelude::*;
+use bevy_rapier3d::prelude::{Collider, Sensor};
 use iyes_loopless::prelude::*;
 
 use crate::{
     assets::ModelAssets,
-    entity::{button::NamedButtonStatuses, door_linear::DoorLinear, NamedIterator},
+    entity::{
+        button::NamedButtonStatuses, door_linear::DoorLinear, trigger::Trigger, NamedIterator,
+    },
     inventory::Inventory,
     materials::general::GeneralMaterial,
     notification::NotificationText,
@@ -171,13 +174,19 @@ fn ring_switches(
 
 fn open_garage_door(
     mut cmds: Commands,
-    mut named: Query<(&Name, Entity)>,
+    mut named: Query<(&mut Name, Entity), Without<DoorLinear>>,
     garage_opened: Option<Res<GarageOpened>>,
     mut doors: Query<(&Name, &mut DoorLinear)>,
 ) {
     if garage_opened.is_some() {
-        for (_, entity) in named.iter_mut().filter_name_contains("BLOCK Garage Exit") {
-            cmds.entity(entity).despawn();
+        for (mut name, entity) in &mut named {
+            if name.contains("BLOCK Garage Exit") {
+                *name = String::from("TRIGGER End Win Area").into();
+                cmds.entity(entity)
+                    .insert(Trigger { enabled: true })
+                    .insert(Sensor)
+                    .remove::<Collider>();
+            }
         }
         for (_, mut door) in doors
             .iter_mut()
