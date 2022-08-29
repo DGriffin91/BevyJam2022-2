@@ -232,7 +232,7 @@ fn setup_player(
         .insert(LockedAxes::ROTATION_LOCKED)
         .insert(AdditionalMassProperties::Mass(1.0))
         .insert(GravityScale(0.0))
-        .insert(Ccd { enabled: false }) // Prevent clipping when going fast
+        .insert(Ccd { enabled: true }) // Prevent clipping when going fast
         .insert(LogicalPlayer(0))
         .insert(FpsControllerInput {
             pitch: 0.0,
@@ -251,7 +251,7 @@ fn setup_player(
         })
         .insert_bundle(SpatialBundle {
             visibility: Visibility { is_visible: false },
-            transform: Transform::from_translation(vec3(-36.0, 2.0, 67.0)),
+            transform: Transform::from_translation(vec3(-36.0, 3.0, 67.0)),
             ..default()
         });
 
