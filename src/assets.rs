@@ -101,6 +101,8 @@ pub struct ModelAssets {
 
 #[derive(AssetCollection)]
 pub struct SoundAssets {
+    #[asset(path = "sounds/phone_call.flac")]
+    pub phone_call: Handle<AudioSource>,
     #[asset(path = "sounds/door_open.flac")]
     pub door_open: Handle<AudioSource>,
     #[asset(path = "sounds/keys_pickup.flac")]

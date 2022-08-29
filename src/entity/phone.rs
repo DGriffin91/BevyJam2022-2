@@ -8,7 +8,9 @@ use serde::{Deserialize, Serialize};
 
 use crate::{
     assets::{FontAssets, ImageAssets, SoundAssets},
-    get_display_scale, spawn_from_scene, PlayerCamera,
+    get_display_scale,
+    notification::NotificationText,
+    spawn_from_scene, PlayerCamera,
 };
 
 pub struct PhoneMenuOpenEvent {
@@ -277,6 +279,7 @@ pub(super) fn number_not_availble(
     mut timer: Local<NumberNotAvailableTimer>,
     background_audio_instance: Option<Res<BackgroundTone>>,
     mut audio_instances: ResMut<Assets<AudioInstance>>,
+    mut texts: Query<(&mut Text, &mut NotificationText), Without<PhoneUiText>>,
 ) {
     timer.tick(time.delta());
 
@@ -293,7 +296,15 @@ pub(super) fn number_not_availble(
         if ev.number == "5551212" {
             timer.reset();
             timer.unpause();
-            audio.play(sound_assets.door_open.clone());
+            audio.play(sound_assets.phone_call.clone());
+            for (mut text, mut note) in &mut texts {
+                note.0 = 8.0;
+                if let Some(section) = text.sections.iter_mut().next() {
+                    section.value = String::from(
+                        "After seeing\nthe rings\nreversed,\nsomething's\nnot right\nwith the\ngarage.",
+                    );
+                }
+            }
             if let Some(instance_handle) = &background_audio_instance {
                 if let Some(instance) = audio_instances.get_mut(&instance_handle.0) {
                     instance.stop(AudioTween::linear(Duration::from_millis(200)));
