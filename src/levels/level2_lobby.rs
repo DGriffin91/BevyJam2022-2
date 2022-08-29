@@ -1,13 +1,13 @@
-use bevy::prelude::*;
-use iyes_loopless::prelude::*;
-
 use crate::{
-    assets::ModelAssets,
+    assets::{ModelAssets, SoundAssets},
     entity::{button::NamedButtonStatuses, phone::PhoneUiVisible, NamedIterator},
     inventory::Inventory,
     materials::general::GeneralMaterial,
     scene_hook::{HookedSceneBundle, SceneHook},
 };
+use bevy::prelude::*;
+use bevy_kira_audio::{prelude::Audio, AudioControl};
+use iyes_loopless::prelude::*;
 
 use super::Level;
 
@@ -144,6 +144,8 @@ fn garage_key(
     mut general_mats: ResMut<Assets<GeneralMaterial>>,
     buttons: Res<NamedButtonStatuses>,
     inventory: Res<Inventory>,
+    audio: Res<Audio>,
+    sound_assets: Res<SoundAssets>,
 ) {
     if let Some(event) = buttons.any("BUTTON Garage Key") {
         for (_, mat_h) in materials.iter_mut().filter_name_contains("Garage Key Cyl") {
@@ -157,9 +159,14 @@ fn garage_key(
                 }
             }
         }
-        if event.pressed && inventory.key {
-            dbg!("Garage opened");
-            cmds.insert_resource(GarageOpened);
+        if event.pressed {
+            if inventory.key {
+                audio.play(sound_assets.click.clone()).with_volume(0.3);
+                audio.play(sound_assets.gate.clone()).with_volume(1.0);
+                cmds.insert_resource(GarageOpened);
+            } else {
+                audio.play(sound_assets.bad_click.clone()).with_volume(0.2);
+            }
         }
     }
 }

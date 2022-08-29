@@ -1,3 +1,6 @@
 /target
 
 .mypy_cache
+
+# reaper temporary files
+*.reapeaks

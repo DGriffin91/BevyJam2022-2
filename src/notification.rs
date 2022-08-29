@@ -63,7 +63,7 @@ fn create_notification_ui(mut cmds: Commands, windows: Res<Windows>, font_assets
         parent
             .spawn_bundle(
                 TextBundle::from_section(
-                    "",
+                    "Escape the hotel",
                     TextStyle {
                         font: font_assets.fira_mono_medium.clone(),
                         font_size: 24.0,
@@ -82,7 +82,7 @@ fn create_notification_ui(mut cmds: Commands, windows: Res<Windows>, font_assets
                     ..default()
                 }),
             )
-            .insert(NotificationText(3.0));
+            .insert(NotificationText(10.0));
         parent
             .spawn_bundle(
                 TextBundle::from_section(

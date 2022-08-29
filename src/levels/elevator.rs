@@ -1,13 +1,14 @@
 #![allow(clippy::type_complexity)]
-use bevy::prelude::*;
-use iyes_loopless::prelude::*;
-
+use crate::assets::SoundAssets;
 use crate::entity::NamedIterator;
 use crate::materials::general::GeneralMaterial;
 use crate::{
     assets::{GameState, ModelAssets},
     entity::{button::NamedButtonStatuses, door_linear::DoorLinear, trigger::NamedTriggerStatuses},
 };
+use bevy::prelude::*;
+use bevy_kira_audio::{prelude::Audio, AudioControl};
+use iyes_loopless::prelude::*;
 
 use super::{Level, SelectedLevel};
 
@@ -49,6 +50,8 @@ fn doors(
     mut inside_near_door: Local<bool>,
     mut level: ResMut<Level>,
     selected_level: Res<SelectedLevel>,
+    audio: Res<Audio>,
+    sound_assets: Res<SoundAssets>,
 ) {
     if triggers.is_changed() {
         if let Some(status) = triggers.any("Elevator Inside Main") {
@@ -96,6 +99,10 @@ fn doors(
                     .state
                     .is_closed()
             {
+                audio
+                    .play(sound_assets.elevator_transport.clone())
+                    .with_volume(0.7);
+                audio.play(sound_assets.click.clone()).with_volume(0.3);
                 if *level == Level::Level1Garage {
                     *level = selected_level.0;
                 } else {

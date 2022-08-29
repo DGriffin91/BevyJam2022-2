@@ -1,7 +1,8 @@
 #![allow(clippy::type_complexity)]
 #![allow(clippy::too_many_arguments)]
 
-use std::f32::consts::PI;
+use bevy_kira_audio::{prelude::Audio, AudioControl, AudioTween};
+use std::{f32::consts::PI, time::Duration};
 
 use assets::{abs_transform, copy_names};
 use bevy::{
@@ -167,7 +168,15 @@ fn setup_player(
     mut post_processing_materials: ResMut<Assets<PostProcessingMaterial>>,
     mut windows: ResMut<Windows>,
     mut rapier_debug: ResMut<DebugRenderContext>,
+    audio: Res<Audio>,
+    sound_assets: Res<SoundAssets>,
 ) {
+    audio
+        .play(sound_assets.drone1.clone())
+        .looped()
+        .fade_in(AudioTween::linear(Duration::from_secs(5)))
+        .with_volume(0.5);
+
     rapier_debug.enabled = false; //Can't disable by default
 
     let window = windows.get_primary_mut().unwrap();

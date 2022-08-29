@@ -1,9 +1,5 @@
-use bevy::prelude::*;
-use bevy_rapier3d::prelude::{Collider, Sensor};
-use iyes_loopless::prelude::*;
-
 use crate::{
-    assets::ModelAssets,
+    assets::{ModelAssets, SoundAssets},
     entity::{
         button::NamedButtonStatuses, door_linear::DoorLinear, trigger::Trigger, NamedIterator,
     },
@@ -12,6 +8,10 @@ use crate::{
     notification::NotificationText,
     scene_hook::{HookedSceneBundle, SceneHook},
 };
+use bevy::prelude::*;
+use bevy_kira_audio::{prelude::Audio, AudioControl};
+use bevy_rapier3d::prelude::{Collider, Sensor};
+use iyes_loopless::prelude::*;
 
 use super::{
     level2_lobby::GarageOpened, level3_chair::RingsSetup, Level, SelectedLevel, UnlockedLevels,
@@ -52,6 +52,8 @@ fn vending_machine(
     inventory: Res<Inventory>,
     unlocked_levels: Res<UnlockedLevels>,
     mut texts: Query<(&mut Text, &mut NotificationText)>,
+    audio: Res<Audio>,
+    sound_assets: Res<SoundAssets>,
 ) {
     for (btn_name, btn_obj_name, level) in [
         (
@@ -81,11 +83,13 @@ fn vending_machine(
             if let Some(event) = buttons.any(btn_name) {
                 if event.pressed {
                     if inventory.money {
+                        audio.play(sound_assets.click.clone()).with_volume(0.3);
                         selected_level.0 = level;
                     } else {
                         for (mut text, mut note) in &mut texts {
                             note.0 = 8.0;
                             if let Some(section) = text.sections.iter_mut().next() {
+                                audio.play(sound_assets.bad_click.clone()).with_volume(0.2);
                                 section.value = String::from("Insufficient\nfunds");
                             }
                         }
@@ -116,6 +120,8 @@ fn ring_switches(
     mut general_mats: ResMut<Assets<GeneralMaterial>>,
     buttons: Res<NamedButtonStatuses>,
     mut rings_setup: ResMut<RingsSetup>,
+    audio: Res<Audio>,
+    sound_assets: Res<SoundAssets>,
 ) {
     for (btn_name, btn_obj_name) in [
         ("BUTTON ring knob 1", "KNOB ring direction knob 1"),
@@ -133,6 +139,7 @@ fn ring_switches(
             }
         }
         if pressed {
+            audio.play(sound_assets.click.clone()).with_volume(0.3);
             if btn_obj_name.contains("knob 1") {
                 rings_setup.direction = !rings_setup.direction;
             } else if btn_obj_name.contains("knob 2") {

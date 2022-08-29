@@ -101,9 +101,19 @@ pub struct ModelAssets {
 
 #[derive(AssetCollection)]
 pub struct SoundAssets {
+    #[asset(path = "sounds/gate.flac")]
+    pub gate: Handle<AudioSource>,
+    #[asset(path = "sounds/elevator_transport.flac")]
+    pub elevator_transport: Handle<AudioSource>,
+    #[asset(path = "sounds/drone1.flac")]
+    pub drone1: Handle<AudioSource>,
+    #[asset(path = "sounds/click.flac")]
+    pub click: Handle<AudioSource>,
+    #[asset(path = "sounds/bad_click.flac")]
+    pub bad_click: Handle<AudioSource>,
     #[asset(path = "sounds/phone_call.flac")]
     pub phone_call: Handle<AudioSource>,
-    #[asset(path = "sounds/door_open.flac")]
+    #[asset(path = "sounds/door_open2.flac")]
     pub door_open: Handle<AudioSource>,
     #[asset(path = "sounds/keys_pickup.flac")]
     pub keys_pickup: Handle<AudioSource>,
