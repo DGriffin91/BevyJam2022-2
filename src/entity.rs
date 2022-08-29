@@ -51,7 +51,6 @@ impl Plugin for EntityPlugin {
             ],
             resources = [PhoneUiEnabled, PhoneUiVisible],
             systems = [
-                test_toggle_phone,
                 number_not_availble,
                 press_phone_keys,
                 phone_interact_events,

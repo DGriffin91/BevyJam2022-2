@@ -151,15 +151,6 @@ impl PhoneKey {
     }
 }
 
-pub(super) fn test_toggle_phone(
-    keys: Res<Input<KeyCode>>,
-    mut phone_ui_visible: ResMut<PhoneUiVisible>,
-) {
-    if keys.just_pressed(KeyCode::F) {
-        **phone_ui_visible = !**phone_ui_visible;
-    }
-}
-
 pub(super) fn resize_phone_ui(
     mut ui_container: Query<&mut Style, (With<PhoneUiContainer>, Without<PhoneUiImage>)>,
     mut ui_image: Query<&mut Style, (With<PhoneUiImage>, Without<PhoneUiContainer>)>,
