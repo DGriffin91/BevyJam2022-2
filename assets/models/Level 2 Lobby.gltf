@@ -1663,23 +1663,6 @@
                 "metallicFactor" : 0,
                 "roughnessFactor" : 0.5
             }
-        },
-        {
-            "doubleSided" : true,
-            "extras" : {
-                "DM" : {}
-            },
-            "name" : "Off White Plastic.001",
-            "pbrMetallicRoughness" : {
-                "baseColorFactor" : [
-                    0.4412228465080261,
-                    0.39918893575668335,
-                    0.3447446823120117,
-                    1
-                ],
-                "metallicFactor" : 0,
-                "roughnessFactor" : 0.5
-            }
         }
     ],
     "meshes" : [
@@ -2406,7 +2389,7 @@
             ]
         },
         {
-            "name" : "Text.005",
+            "name" : "Text.004",
             "primitives" : [
                 {
                     "attributes" : {
@@ -2415,7 +2398,7 @@
                         "TEXCOORD_0" : 221
                     },
                     "indices" : 222,
-                    "material" : 17
+                    "material" : 11
                 }
             ]
         }
