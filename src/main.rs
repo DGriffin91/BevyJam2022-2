@@ -362,7 +362,9 @@ fn toggle_mouse(
         window.set_cursor_lock_mode(false);
     }
 
-    if btn.just_pressed(MouseButton::Left) {
+    if btn.just_pressed(MouseButton::Left)
+        && (!fps_controller.enable_input || window.cursor_visible() || !window.cursor_locked())
+    {
         // Lock
         fps_controller.enable_input = true;
         window.set_cursor_visibility(false);
