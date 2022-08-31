@@ -6,7 +6,7 @@ use bevy_editor_pls::{
     default_windows::hierarchy::HierarchyWindow,
     editor_window::{EditorWindow, EditorWindowContext},
     egui::Slider,
-    AddEditorWindow, EditorEvent, EditorPlugin, EditorState,
+    AddEditorWindow, EditorEvent, EditorPlugin,
 };
 use bevy_editor_pls_default_windows::cameras::EditorCamera;
 use bevy_fps_controller::controller::{FpsController, LogicalPlayer};
@@ -24,7 +24,6 @@ impl Plugin for GameEditorPlugin {
             .add_system_set(
                 ConditionSet::new()
                     .run_in_state(GameState::RunLevel)
-                    .with_system(manage_cursor)
                     .with_system(sync_editor_free_camera)
                     .into(),
             )
@@ -106,48 +105,6 @@ fn sync_editor_free_camera(
                     *cam = *player_cam.single();
                 }
             }
-        }
-    }
-}
-
-pub fn manage_cursor(
-    mut windows: ResMut<Windows>,
-    btn: Res<Input<MouseButton>>,
-    key: Res<Input<KeyCode>>,
-    mut controllers: Query<&mut FpsController>,
-    mut editor_events: EventReader<EditorEvent>,
-    editor_state: Res<EditorState>,
-) {
-    let mut set_fps_mode = false;
-    let mut set_cursor_mode = false;
-    let window = windows.get_primary_mut().unwrap();
-    if btn.just_pressed(MouseButton::Left) && !editor_state.active {
-        set_fps_mode = true;
-    }
-    if key.just_pressed(KeyCode::Escape) {
-        set_cursor_mode = true;
-    }
-    for e in editor_events.iter() {
-        if let EditorEvent::Toggle { now_active } = &e {
-            if *now_active {
-                set_cursor_mode = true;
-            } else {
-                set_fps_mode = true;
-            }
-        }
-    }
-    if set_fps_mode {
-        window.set_cursor_lock_mode(true);
-        window.set_cursor_visibility(false);
-        for mut controller in &mut controllers {
-            controller.enable_input = true;
-        }
-    }
-    if set_cursor_mode {
-        window.set_cursor_lock_mode(false);
-        window.set_cursor_visibility(true);
-        for mut controller in &mut controllers {
-            controller.enable_input = false;
         }
     }
 }

@@ -1,6 +1,8 @@
 #![allow(clippy::type_complexity)]
 #![allow(clippy::too_many_arguments)]
 
+#[cfg(debug_assertions)]
+use bevy_editor_pls::EditorState;
 use bevy_kira_audio::{prelude::Audio, AudioControl, AudioTween};
 use std::{f32::consts::PI, time::Duration};
 
@@ -335,6 +337,7 @@ fn toggle_mouse(
     keys: Res<Input<KeyCode>>,
     mut fps_controller: Query<&mut FpsController>,
     btn: Res<Input<MouseButton>>,
+    #[cfg(debug_assertions)] editor_state: Res<EditorState>,
 ) {
     let window = windows.primary_mut();
     let mut fps_controller = fps_controller.single_mut();
@@ -362,8 +365,17 @@ fn toggle_mouse(
         window.set_cursor_lock_mode(false);
     }
 
+    #[allow(unused_assignments, unused_mut)]
+    let mut editor_active = false;
+
+    #[cfg(debug_assertions)]
+    {
+        editor_active = editor_state.active;
+    }
+
     if btn.just_pressed(MouseButton::Left)
         && (!fps_controller.enable_input || window.cursor_visible() || !window.cursor_locked())
+        && !editor_active
     {
         // Lock
         fps_controller.enable_input = true;
